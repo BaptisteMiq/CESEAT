@@ -1,0 +1,31 @@
+type Restaurant {
+    id: ID!
+    name: String!
+    description: String
+    picture: String
+    createdAt: String!
+    ownerId: String!
+    phoneNumber: String!
+    mail: String
+    type: RestaurantType
+    address: RestaurantAddress!
+    products: [Product]!
+    menus: [Menu]!
+    categories: [Category]!
+}
+
+# Ex: Fastfood, Pizza, etc.
+type RestaurantType {
+    id: ID!
+    label: String!
+    description: String!
+}
+
+type RestaurantAddress {
+    id: ID!
+    line1: String!
+    line2: String
+    city: String!
+    PC: String!
+    country: String!
+}

@@ -1,0 +1,10 @@
+type Product {
+    id: ID!
+    name: String!
+    description: String
+    price: Float!
+    picture: String
+    createdAt: String!
+    allergenicIngredients: [String]!
+    available: Boolean!
+}
