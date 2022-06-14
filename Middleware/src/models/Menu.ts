@@ -27,7 +27,7 @@ export class MenuClass {
 
 const generateQueriesMutations = (schemaComposer: any) => {
     const MenuModel = getModelForClass(MenuClass);
-    const Menu = composeMongoose(MenuModel, { schemaComposer });
+    const Menu = composeMongoose(MenuModel, { schemaComposer, name: "Menu" });
 
     const queries = {
         menus: Menu.mongooseResolvers.findMany(),
