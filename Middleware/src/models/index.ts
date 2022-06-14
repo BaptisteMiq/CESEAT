@@ -1,5 +1,6 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { BeAnObject } from "@typegoose/typegoose/lib/types";
+import axios from "axios";
 import { readdirSync } from "fs";
 import { SchemaComposer } from "graphql-compose";
 import { ObjectTypeComposerWithMongooseResolvers } from "graphql-compose-mongoose";
@@ -79,6 +80,16 @@ export default async () => {
             }
         });
     });
+
+    // Load Users from the Accounts Microservice
+    const getUsers = async () => axios.get("http://localhost:5000/users").then((res) => res.data);
+    const UserQueries = {
+        users: {
+            type: "JSON",
+            resolve: getUsers,
+        },
+    };
+    allQueries = { ...allQueries, ...UserQueries };
 
     schemaComposer.Query.addFields(allQueries);
     schemaComposer.Mutation.addFields(allMutations);
