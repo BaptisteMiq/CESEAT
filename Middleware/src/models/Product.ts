@@ -26,7 +26,7 @@ export class ProductClass {
 
 const generateQueriesMutations = (schemaComposer: any) => {
     const ProductModel = getModelForClass(ProductClass);
-    const Product = composeMongoose(ProductModel, { schemaComposer });
+    const Product = composeMongoose(ProductModel, { schemaComposer, name: "Product" });
 
     const queries = {
         products: Product.mongooseResolvers.findMany(),
