@@ -1,0 +1,28 @@
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysqlpw
+    ports:
+      - 3306:3306
+    volumes:
+      - ./Database/data:/var/lib/mysql
+  middleware:
+    build: ./Middleware
+    image: mysql/mysql-server
+    command: npm run prod
+    volumes:
+      - ./Middleware:/src
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+    # restart: always
+  microservice_accounts:
+    build: ./Microservices/Accounts
+    command: npm run prod
+    volumes:
+      - ./Microservices/Accounts:/app
+    ports:
+      - "5000:5000"
+    restart: always

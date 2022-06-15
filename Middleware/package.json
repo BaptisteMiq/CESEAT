@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js",
-    "watch": "tsc-watch --onSuccess \"node dist/index.js\"",
-    "build": "ts-node -r graphql-import-node/register src/index.ts"
+    "watch": "tsc-watch --onSuccess \"node -r dotenv/config dist/index.js dotenv_config_path=.env.dev\"",
+    "build": "ts-node -r graphql-import-node/register src/index.ts",
+    "dev": "tsc && node -r dotenv/config dist/index.js dotenv_config_path=.env.dev",
+    "prod": "tsc && node -r dotenv/config dist/index.js dotenv_config_path=.env.prod"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "apollo-server": "^3.8.2",
     "apollo-server-koa": "^3.8.2",
     "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "graphql": "^16.5.0",
     "graphql-compose": "^9.0.8",

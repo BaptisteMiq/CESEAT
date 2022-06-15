@@ -82,7 +82,7 @@ export default async () => {
     });
 
     // Load Users from the Accounts Microservice
-    const getUsers = async () => axios.get("http://localhost:5000/users").then((res) => res.data);
+    const getUsers = async () => axios.get(`http://${process.env.MSC_HOST}:${process.env.MSC_PORT}/users`).then((res) => res.data);
     const UserQueries = {
         users: {
             type: "JSON",

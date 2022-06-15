@@ -2,6 +2,7 @@ const mysql = require("mysql");
 const express = require("express");
 const app = express();
 
+// Connection from url
 const con = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
