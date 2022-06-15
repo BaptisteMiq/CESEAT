@@ -1,5 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
+import { Types } from "mongoose";
 
 export class ProductClass {
     @prop()
@@ -17,8 +18,8 @@ export class ProductClass {
     @prop()
     public createdAt: string;
 
-    @prop()
-    public allergenicIngredients: string[];
+    @prop({ items: String })
+    public allergenicIngredients: string;
 
     @prop()
     public available: boolean;

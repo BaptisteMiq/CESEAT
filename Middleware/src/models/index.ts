@@ -54,7 +54,7 @@ export default async () => {
         Object.keys(relations).forEach((relationName: string) => {
             const ref = allModels.find((m: any) => m.name === relations[relationName]);
             if (ref) {
-                console.log(`Adding relation ${relationName} from ${ref.name}`);
+                // console.log(`Adding relation ${relationName} from ${ref.name}`);
                 const isArray = relationName.endsWith("s");
                 if (isArray) {
                     doc.addRelation(relationName, {

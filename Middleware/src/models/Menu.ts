@@ -36,6 +36,8 @@ const generateQueriesMutations = (schemaComposer: any) => {
 
     const mutations = {
         menuCreateOne: Menu.mongooseResolvers.createOne(),
+        menuUpdateById: Menu.mongooseResolvers.updateById(),
+        menuDeleteById: Menu.mongooseResolvers.removeById(),
     };
     
     const relations = {
