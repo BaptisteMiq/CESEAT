@@ -1,29 +1,15 @@
 import {
-  IonPage,
-  IonHeader,
-  IonItem,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonList,
-  IonToggle,
-  IonLabel,
+  IonContent, IonItem, IonLabel, IonList, IonPage, IonToggle
 } from '@ionic/react';
-
 import Store from '../../store';
-import * as selectors from '../../store/selectors';
 import { setSettings } from '../../store/actions';
+import * as selectors from '../../store/selectors';
 
 const Settings = () => {
   const settings = Store.useState(selectors.getSettings);
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Settings</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent>
         <IonList>
           <IonItem>
