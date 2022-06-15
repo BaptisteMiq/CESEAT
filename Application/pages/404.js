@@ -1,3 +1,3 @@
 export default function toto() {
-    return <p>Nique</p>
+    return <p>Error 404</p>
 }
