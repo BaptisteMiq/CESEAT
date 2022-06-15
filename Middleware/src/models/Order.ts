@@ -1,10 +1,10 @@
 import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
 import { CartClass } from "./Cart";
-import { MenuClass } from "./Menu";
+import { OrderStatusClass } from "./OrderStatus";
 import { RestaurantClass } from "./Restaurant";
 
-export class OrderStatusClass {
+export class OrderClass {
     @prop()
     public userId: string;
 
@@ -28,7 +28,7 @@ export class OrderStatusClass {
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
-    const Model = getModelForClass(MenuClass);
+    const Model = getModelForClass(OrderClass);
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "Order" });
 
     const queries = {

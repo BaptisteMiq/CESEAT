@@ -8,7 +8,7 @@ export class TicketStatusClass {
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
-    const Model = getModelForClass(MenuClass);
+    const Model = getModelForClass(TicketStatusClass);
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "TicketStatus" });
 
     const queries = {

@@ -11,7 +11,7 @@ export class OrderStatusClass {
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
-    const Model = getModelForClass(MenuClass);
+    const Model = getModelForClass(OrderStatusClass);
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "OrderStatus" });
 
     const queries = {

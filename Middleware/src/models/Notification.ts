@@ -17,7 +17,7 @@ export class NotificationClass {
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
-    const Model = getModelForClass(MenuClass);
+    const Model = getModelForClass(NotificationClass);
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "Notification" });
 
     const queries = {

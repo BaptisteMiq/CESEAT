@@ -11,7 +11,7 @@ export class LogClass {
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
-    const Model = getModelForClass(MenuClass);
+    const Model = getModelForClass(LogClass);
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "Log" });
 
     const queries = {

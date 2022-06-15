@@ -22,7 +22,7 @@ export class CartClass {
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
-    const Model = getModelForClass(MenuClass);
+    const Model = getModelForClass(CartClass);
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "Cart" });
 
     const queries = {

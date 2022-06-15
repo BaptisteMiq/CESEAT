@@ -20,7 +20,7 @@ export class RestaurantAddressClass {
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
-    const Model = getModelForClass(CategoryClass);
+    const Model = getModelForClass(RestaurantAddressClass);
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "RestaurantAddress" });
 
     const queries = {
