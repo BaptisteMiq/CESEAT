@@ -20,13 +20,17 @@
     "@ionic/react": "^5.5.2",
     "@ionic/react-router": "^5.5.2",
     "autoprefixer": "^10.2.6",
+    "axios": "^0.27.2",
+    "baseui": "^11.0.3",
     "classnames": "^2.2.6",
-    "next": "^11.0.0",
+    "next": "^12.1.6",
     "postcss": "^8.3.5",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-router-dom": "^5.2.0",
     "react-virtuoso": "^1.1.1",
+    "styletron-engine-atomic": "^1.4.8",
+    "styletron-react": "^6.0.2",
     "tailwindcss": "^2.2.0"
   },
   "devDependencies": {
