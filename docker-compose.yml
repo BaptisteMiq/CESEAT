@@ -35,3 +35,10 @@ services:
     ports:
       - "3000:3000"
       # - "8080:8080"
+  nginx:
+    build: ./Proxy
+    depends_on:
+      - microservice_accounts
+    ports:
+      - "5100:5100"
+    restart: always
