@@ -59,18 +59,18 @@ var navigationByUsers = {
   }
 }
 
-export default () => {
+const Menu = () => {
   let history = useHistory();
   const [showNotifications, setShowNotifications] = useState(false);
   return (
       <HeaderNavigation className="">
         <Notifications open={showNotifications} onDidDismiss={() => setShowNotifications(false)} />
         <StyledNavigationList $align={ALIGN.left}>
-          <StyledNavigationItem className="font-bold text-xl">CES'EAT</StyledNavigationItem>
+          <StyledNavigationItem className="font-bold text-xl">CES&apos;EAT</StyledNavigationItem>
         </StyledNavigationList>
         <StyledNavigationList $align={ALIGN.center}>
           { navigationByUsers[typeUser].map(navigationItem => (
-            <StyledNavigationItem className="mr-12 ml-6">
+            <StyledNavigationItem key={navigationItem.label} className="mr-12 ml-6">
               <StyledLink href={navigationItem.link} animateUnderline onClick={(e) => {
                 history.push(navigationItem.link);
                 e.preventDefault();
@@ -107,3 +107,5 @@ export default () => {
       </HeaderNavigation>
   );
 }
+
+export default Menu;
