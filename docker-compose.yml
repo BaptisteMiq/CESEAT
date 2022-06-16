@@ -26,3 +26,12 @@ services:
     ports:
       - "5000:5000"
     restart: always
+  application:
+    build: ./Application
+    # command: npm start
+    command: npm run dev
+    volumes:
+      - ./Application:/app
+    ports:
+      - "3000:3000"
+      # - "8080:8080"
