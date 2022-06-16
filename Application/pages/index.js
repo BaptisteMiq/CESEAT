@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
-import { useEffect } from 'react-router-dom';
 import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
 import { styletron } from '../styletron'
 
@@ -12,7 +11,6 @@ const App = dynamic(() => import('../components/AppShell'), {
 });
 
 export default function Index() {
-  useHistory
   return (
     <StyletronProvider value={styletron} debug={debug} debugAfterHydration>
         <App />
