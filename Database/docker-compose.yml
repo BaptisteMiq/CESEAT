@@ -10,5 +10,3 @@ services:
       - 3306:3306
     volumes:
       - ./data:/var/lib/mysql
-  myapp:
-    image: mysql/mysql-server
