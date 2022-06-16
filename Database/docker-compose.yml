@@ -3,7 +3,7 @@ volumes:
 
 services:
   mysql:
-    image: mysql:latest
+    build: .
     environment:
       - MYSQL_ROOT_PASSWORD=mysqlpw
     ports:
