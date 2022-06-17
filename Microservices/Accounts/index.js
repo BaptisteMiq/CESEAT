@@ -40,6 +40,12 @@ User:
     - CreatedAt
 */
 
+// if(Math.random() > 0.5) {
+//     console.log("CRASH");
+//     while(true) {
+//     }
+// }
+
 con.connect(function (err) {
     if (err) throw err;
     console.log("Connecté à la base de données MySQL!");
@@ -55,10 +61,20 @@ con.connect(function (err) {
 
 // Express routes
 app.get("/users", (req, res) => {
+    // while(true) {
+    //     // Do nothing
+    // }
+    console.log("CONNEXION");
     con.query("SELECT * FROM User", function (err, result, fields) {
         if (err) throw err;
         res.send(result);
     });
+});
+
+app.get("/", (req, res) => {
+    let n = Math.floor(Math.random() * 10);
+    console.log(n);
+    res.send(`Hello World! ${n}`);
 });
 
 const generateSponsorCode = () => {

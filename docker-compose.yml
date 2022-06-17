@@ -17,14 +17,22 @@ services:
       - "4000:4000"
     environment:
       - NODE_ENV=development
-    # restart: always
-  microservice_accounts:
+    restart: always
+  microservice_accounts_1:
     build: ./Microservices/Accounts
     command: npm run prod
     volumes:
       - ./Microservices/Accounts:/app
     ports:
-      - "5000:5000"
+      - "5001:5000"
+    restart: always
+  microservice_accounts_2:
+    build: ./Microservices/Accounts
+    command: npm run prod
+    volumes:
+      - ./Microservices/Accounts:/app
+    ports:
+      - "5002:5000"
     restart: always
   application:
     build: ./Application
@@ -38,7 +46,8 @@ services:
   nginx:
     build: ./Proxy
     depends_on:
-      - microservice_accounts
+      - microservice_accounts_1
+      - microservice_accounts_2
     ports:
       - "5100:5100"
     restart: always
