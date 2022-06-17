@@ -36,13 +36,11 @@ services:
     restart: always
   application:
     build: ./Application
-    # command: npm start
-    command: npm run dev
+    command: npm start
     volumes:
       - ./Application:/app
     ports:
       - "3000:3000"
-      # - "8080:8080"
   nginx:
     build: ./Proxy
     depends_on:
