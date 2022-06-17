@@ -1,9 +1,11 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { BeAnObject } from "@typegoose/typegoose/lib/types";
+import { ApolloError } from "apollo-server";
 import axios from "axios";
 import { readdirSync } from "fs";
 import { SchemaComposer } from "graphql-compose";
 import { ObjectTypeComposerWithMongooseResolvers } from "graphql-compose-mongoose";
+import { getUsersMutations, getUsersQueries } from "./_Users";
 
 type ModelType = ObjectTypeComposerWithMongooseResolvers<DocumentType<any, BeAnObject>, any>;
 
@@ -30,6 +32,7 @@ export default async () => {
     // Import all queries and mutations from every file in the models folder
     await Promise.all(
         readdirSync(__dirname).map(async (file) => {
+            if(file.startsWith("_")) return;
             const { generateQueriesMutations } = require(`../models/${file}`);
             if (typeof generateQueriesMutations !== "function") return;
             const { queries, mutations, relations, MongooseObject } = await generateQueriesMutations(schemaComposer);
@@ -81,15 +84,10 @@ export default async () => {
         });
     });
 
-    // Load Users from the Accounts Microservice
-    const getUsers = async () => axios.get(`http://${process.env.MSC_HOST}:${process.env.MSC_PORT}/users`).then((res) => res.data);
-    const UserQueries = {
-        users: {
-            type: "JSON",
-            resolve: getUsers,
-        },
-    };
-    allQueries = { ...allQueries, ...UserQueries };
+    // Add Users types and queries
+    // These are specials because they are loaded from the Accounts Microservice (querrying the MySQL DB)
+    allQueries = { ...allQueries, ...getUsersQueries(schemaComposer) };
+    allMutations = { ...allMutations, ...getUsersMutations(schemaComposer) };
 
     schemaComposer.Query.addFields(allQueries);
     schemaComposer.Mutation.addFields(allMutations);
