@@ -1,4 +1,14 @@
 services:
+  # Frontend Application
+  # application:
+  #   build: ./Application
+  #   command: npm start
+  #   volumes:
+  #     - ./Application:/app
+  #   ports:
+  #     - "3000:3000"
+  
+  # The MySQL Server for Users
   mysql:
     image: mysql:latest
     environment:
@@ -7,6 +17,8 @@ services:
       - 3306:3306
     volumes:
       - ./Database/data:/var/lib/mysql
+
+  # The Middleware containing the GraphQL Server
   middleware:
     build: ./Middleware
     image: mysql/mysql-server
@@ -18,6 +30,8 @@ services:
     environment:
       - NODE_ENV=development
     restart: always
+
+  # Microservice for Accounts
   microservice_accounts_1:
     build: ./Microservices/Accounts
     command: npm run prod
@@ -34,18 +48,36 @@ services:
     ports:
       - "5002:5000"
     restart: always
-  application:
-    build: ./Application
+
+  # Microservice for the CDN
+  microservice_cdn_1:
+    build: ./Microservices/CDN
     command: npm start
     volumes:
-      - ./Application:/app
+      - ./Microservices/CDN:/app
+      - ./Microservices/CDN/uploads:/uploads
     ports:
-      - "3000:3000"
+      - "3101:3001"
+    restart: always
+  microservice_cdn_2:
+    build: ./Microservices/CDN
+    command: npm start
+    volumes:
+      - ./Microservices/CDN:/app
+      - ./Microservices/CDN/uploads:/uploads
+    ports:
+      - "3102:3001"
+    restart: always
+
+  # Proxy
   nginx:
     build: ./Proxy
     depends_on:
       - microservice_accounts_1
       - microservice_accounts_2
+      - microservice_cdn_1
+      - microservice_cdn_2
     ports:
       - "5100:5100"
+      - "3100:3100"
     restart: always
