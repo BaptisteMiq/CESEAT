@@ -7,6 +7,7 @@ import HomePage from '../pages/Home';
 import Lists from '../pages/Lists';
 import ListDetail from '../pages/ListDetail';
 import Settings from '../pages/Settings';
+import CreateAccount from '../pages/users/createAccount';
 
 const Tabs = () => {
   return (
@@ -20,7 +21,7 @@ const Tabs = () => {
             <Route path="/users/home" component={HomePage} exact={true} />
             <Route path="/users/browse" component={Lists} exact={true} />
             <Route path="/users/browse/:listId" component={ListDetail} exact={true} />
-            <Route path="/users/settings" component={Settings} exact={true} />
+            <Route path="/users/cart" component={CreateAccount} exact={true} />
             <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
           </IonRouterOutlet>
         </IonReactRouter>
@@ -31,7 +32,7 @@ const Tabs = () => {
             <Route path="/users/home" component={HomePage} exact={true} />
             <Route path="/users/browse" component={Lists} exact={true} />
             <Route path="/users/browse/:listId" component={ListDetail} exact={true} />
-            <Route path="/users/settings" component={Settings} exact={true} />
+            <Route path="/users/cart" component={CreateAccount} exact={true} />
             <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
