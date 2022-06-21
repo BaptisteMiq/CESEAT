@@ -9,6 +9,8 @@ services:
   #     - "3000:3000"
   
   # The MySQL Server for Users
+  # data:
+  #   build: - ./Database/dump.
   mysql:
     image: mysql:latest
     environment:
@@ -16,7 +18,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./Database/data:/var/lib/mysql
+      - ./Database/dump:/docker-entrypoint-initdb.d
 
   # The Middleware containing the GraphQL Server
   middleware:
@@ -40,6 +42,8 @@ services:
     ports:
       - "5001:5000"
     restart: always
+    depends_on:
+      - mysql
   microservice_accounts_2:
     build: ./Microservices/Accounts
     command: npm run prod
@@ -48,6 +52,8 @@ services:
     ports:
       - "5002:5000"
     restart: always
+    depends_on:
+      - mysql
 
   # Microservice for the CDN
   microservice_cdn_1:

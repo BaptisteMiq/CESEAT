@@ -1,13 +1,14 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
-import { MenuClass } from "./Menu";
+import { userExists } from "../validators/UserValidator";
 
+// Connection logs
 export class LogClass {
-    @prop()
-    public userId: string;
+    @prop({ required: true, validate: userExists() })
+    public userId!: string;
 
-    @prop()
-    public timestamp: string;
+    @prop({ default: new Date() })
+    public timestamp?: string;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {

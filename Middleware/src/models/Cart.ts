@@ -1,24 +1,23 @@
 import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
+import { minSize } from "../validators/ArrayValidator";
+import { userExists } from "../validators/UserValidator";
 import { MenuClass } from "./Menu";
 import { ProductClass } from "./Product";
 import { RestaurantClass } from "./Restaurant";
 
 export class CartClass {
-    @prop()
-    public name: string;
+    @prop({ required: true, validate: userExists() })
+    public userId!: string;
 
-    @prop()
-    public userId: string;
+    @prop({ ref: RestaurantClass, required: true })
+    public restaurant!: Ref<RestaurantClass>;
 
-    @prop({ ref: RestaurantClass })
-    public restaurant: Ref<RestaurantClass>;
+    @prop({ ref: ProductClass, required: true })
+    public products!: Ref<ProductClass>[];
 
-    @prop({ ref: ProductClass })
-    public products: Ref<ProductClass>[];
-
-    @prop({ ref: MenuClass })
-    public menus: Ref<MenuClass>[];
+    @prop({ ref: MenuClass, required: true })
+    public menus!: Ref<MenuClass>[];
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
@@ -41,6 +40,9 @@ const generateQueriesMutations = (schemaComposer: any) => {
         products: "Product",
         menus: "Menu",
     };
+
+    // // Add success message
+    // mutations.cartCreateOne.setExtension("success", "Le panier a été créé avec succès.");
 
     return { queries, mutations, relations, MongooseObject };
 };

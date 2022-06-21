@@ -1,19 +1,21 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
+import { lengthBetween } from "../validators/StringValidator";
+import { userExists } from "../validators/UserValidator";
 import { MenuClass } from "./Menu";
 
 export class NotificationClass {
-    @prop()
-    public title: string;
+    @prop({ required: true, validate: lengthBetween("title", 1, 255) })
+    public title!: string;
 
-    @prop()
-    public message: string;
+    @prop({ required: true, validate: lengthBetween("message", 1, 1000) })
+    public message!: string;
 
-    @prop()
-    public createdAt: string;
+    @prop({ default: new Date() })
+    public createdAt!: string;
 
-    @prop()
-    public userId: string;
+    @prop({ required: true, validate: userExists() })
+    public userId!: string;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {

@@ -4,7 +4,8 @@ import { ApolloError } from "apollo-server";
 import axios from "axios";
 import { readdirSync } from "fs";
 import { SchemaComposer } from "graphql-compose";
-import { ObjectTypeComposerWithMongooseResolvers } from "graphql-compose-mongoose";
+import { composeMongoose, ObjectTypeComposerWithMongooseResolvers } from "graphql-compose-mongoose";
+import mongoose, { model } from "mongoose";
 import { getUsersMutations, getUsersQueries } from "./_Users";
 
 type ModelType = ObjectTypeComposerWithMongooseResolvers<DocumentType<any, BeAnObject>, any>;
@@ -19,6 +20,9 @@ type Relation = {
     relations: {
         [key: string]: string;
     };
+    areRelationsFromSQL: {
+        [key: string]: boolean;
+    };
 };
 
 export default async () => {
@@ -32,10 +36,12 @@ export default async () => {
     // Import all queries and mutations from every file in the models folder
     await Promise.all(
         readdirSync(__dirname).map(async (file) => {
-            if(file.startsWith("_")) return;
+            if (file.startsWith("_")) return;
             const { generateQueriesMutations } = require(`../models/${file}`);
             if (typeof generateQueriesMutations !== "function") return;
-            const { queries, mutations, relations, MongooseObject } = await generateQueriesMutations(schemaComposer);
+            const { queries, mutations, relations, MongooseObject, areRelationsFromSQL } =
+                await generateQueriesMutations(schemaComposer);
+            let relationsFromSQL = areRelationsFromSQL ?? {};
             if (queries) {
                 allQueries = { ...allQueries, ...queries };
             }
@@ -43,7 +49,7 @@ export default async () => {
                 allMutations = { ...allMutations, ...mutations };
             }
             if (relations) {
-                allRelations.push({ doc: MongooseObject, relations });
+                allRelations.push({ doc: MongooseObject, relations, areRelationsFromSQL: relationsFromSQL });
             }
             if (MongooseObject) {
                 allModels.push({ name: file.replace(".js", ""), doc: MongooseObject });
@@ -51,9 +57,15 @@ export default async () => {
         })
     );
 
+    // Add Users types and queries
+    // These are specials because they are loaded from the Accounts Microservice (querrying the MySQL DB)
+    allQueries = { ...allQueries, ...getUsersQueries(schemaComposer) };
+    allMutations = { ...allMutations, ...getUsersMutations(schemaComposer) };
+
     // Add relations to the schema
     allRelations.forEach((relation) => {
         const { doc, relations } = relation;
+        const isFromSQL = relation.areRelationsFromSQL ?? {};
         Object.keys(relations).forEach((relationName: string) => {
             const ref = allModels.find((m: any) => m.name === relations[relationName]);
             if (ref) {
@@ -73,7 +85,13 @@ export default async () => {
                     doc.addRelation(relationName, {
                         resolver: () => ref.doc.mongooseResolvers.dataLoader(),
                         prepareArgs: {
-                            _id: (source: any) => source[relationName] || null,
+                            // [isFromSQL[relationName] ? "ID" : "_id"]: (source: any) => source[relationName] || null,
+                            // _id: (source: any) => source[relationName] || null,
+                            _id: (source: any) =>
+                                schemaComposer
+                                    .getOTC(ref.name)
+                                    .getResolver("userById")
+                                    .addArgs({ ID: source[relationName] || null }),
                         },
                         projection: {
                             [relationName]: true,
@@ -83,11 +101,6 @@ export default async () => {
             }
         });
     });
-
-    // Add Users types and queries
-    // These are specials because they are loaded from the Accounts Microservice (querrying the MySQL DB)
-    allQueries = { ...allQueries, ...getUsersQueries(schemaComposer) };
-    allMutations = { ...allMutations, ...getUsersMutations(schemaComposer) };
 
     schemaComposer.Query.addFields(allQueries);
     schemaComposer.Mutation.addFields(allMutations);

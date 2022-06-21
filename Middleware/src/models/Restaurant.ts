@@ -3,7 +3,7 @@ import { composeMongoose } from "graphql-compose-mongoose";
 import { CategoryClass } from "./Category";
 import { MenuClass } from "./Menu";
 import { ProductClass } from "./Product";
-import { RestaurantAddressClass } from "./RestaurantAddress";
+import { AddressClass } from "./Address";
 import { RestaurantTypeClass } from "./RestaurantType";
 
 export class RestaurantClass {
@@ -31,8 +31,8 @@ export class RestaurantClass {
     @prop({ ref: RestaurantTypeClass })
     public type: Ref<RestaurantTypeClass>;
 
-    @prop({ ref: RestaurantAddressClass })
-    public address: Ref<RestaurantAddressClass>;
+    @prop({ ref: AddressClass })
+    public address: Ref<AddressClass>;
 
     @prop({ ref: ProductClass })
     public products: Ref<ProductClass>[];
@@ -61,7 +61,7 @@ const generateQueriesMutations = (schemaComposer: any) => {
 
     const relations = {
         type: "RestaurantType",
-        address: "RestaurantAddress",
+        address: "Address",
         menus: "Menu",
         products: "Product",
         categories: "Category",

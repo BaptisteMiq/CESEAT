@@ -40,33 +40,21 @@ User:
     - CreatedAt
 */
 
-// if(Math.random() > 0.5) {
-//     console.log("CRASH");
-//     while(true) {
-//     }
-// }
-
-con.connect(function (err) {
-    if (err) throw err;
-    console.log("Connecté à la base de données MySQL!");
-
-    con.query(
-        "INSERT INTO Role (Label) VALUES ('Utilisateur'), ('Restaurateur') ON DUPLICATE KEY UPDATE Label = Label",
-        function (err, result) {
-            if (err) throw err;
-            console.log("Roles ajoutés dans la base de données MySQL!");
+// Wait for DB to be loaded
+const connectToDB = () => {
+    con.connect(function (err) {
+        if (err) {
+            setTimeout(connectToDB, 1000);
+        } else {
+            console.log("Connecté à la base de données MySQL!");
         }
-    );
-});
+    });
+};
 
 // Express routes
 app.get("/users", (req, res) => {
-    // while(true) {
-    //     // Do nothing
-    // }
-    console.log("CONNEXION");
     con.query("SELECT * FROM User", function (err, result, fields) {
-        if (err) throw err;
+        if (err) res.status(400).send(err.sqlMessage);
         res.send(result);
     });
 });
@@ -91,16 +79,14 @@ app.post("/users/create", (req, res) => {
     const user = req.body;
     // Check required fields
     if (!user.Firstname || !user.Lastname || !user.Password || !user.Mail || !user.PhoneNumber) {
-        console.log("Missing required fields", user);
-        res.status(400).send("Missing required fields");
+        res.status(400).send("Il manque des champs requis.");
         return;
     }
     // Check if user already exists
     con.query("SELECT * FROM User WHERE Mail = ?", [user.Mail], function (err, result, fields) {
-        if (err) throw err;
+        if (err) res.status(400).send(err.sqlMessage);
         if (result.length > 0) {
-            console.log("User already exists", user);
-            res.status(400).send("User already exists");
+            res.status(400).send("Cet utilisateur existe déjà.");
             return;
         }
         // Insert user
@@ -123,10 +109,10 @@ app.post("/users/create", (req, res) => {
             "INSERT INTO User (FirstName, LastName, Password, Mail, PhoneNumber, Avatar, SponsorCode, HasAcceptedGDPR, BillingAddress_ID, DeliveryAddress_ID, Role_ID, CreatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             values,
             function (err, result) {
-                if (err) throw err;
+                if (err) res.status(400).send(err.sqlMessage);
                 // Return created user
                 con.query("SELECT * FROM User WHERE ID = ?", [result.insertId], function (err, result, fields) {
-                    if (err) throw err;
+                    if (err) res.status(400).send(err.sqlMessage);
                     res.send(result[0]);
                 });
             }
@@ -139,21 +125,19 @@ app.post("/users/delete", (req, res) => {
     const user = req.body;
     // Check required fields
     if (!user.ID) {
-        console.log("Missing User ID", user);
-        res.status(400).send("Missing User ID");
+        res.status(400).send("Il manque des champs requis: ID");
         return;
     }
     // Check if user exists
     con.query("SELECT * FROM User WHERE ID = ?", [user.ID], function (err, result, fields) {
-        if (err) throw err;
+        if (err) res.status(400).send(err.sqlMessage);
         if (result.length === 0) {
-            console.log("User does not exist", user);
-            res.status(400).send("User does not exist");
+            res.status(400).send("Cet utilisateur n'existe pas.");
             return;
         }
         // Delete user
         con.query("DELETE FROM User WHERE ID = ?", [user.ID], function (err, result) {
-            if (err) throw err;
+            if (err) res.status(400).send(err.sqlMessage);
             res.send({ ID: user.ID });
         });
     });
@@ -164,21 +148,18 @@ app.post("/users/update", (req, res) => {
     const { ID, record: user } = req.body;
     // Check required fields
     if (!ID) {
-        console.log("Missing User ID", user);
-        res.status(400).send("Missing User ID");
+        res.status(400).send("Il manque des champs requis: ID");
         return;
     }
     if (!user) {
-        console.log("Missing User");
-        res.status(400).send("Missing User");
+        res.status(400).send("Il manque des champs requis: User");
         return;
     }
     // Check if user exists
     con.query("SELECT * FROM User WHERE ID = ?", [ID], function (err, result, fields) {
-        if (err) throw err;
+        if (err) res.status(400).send(err.sqlMessage);
         if (result.length === 0) {
-            console.log("User does not exist", user);
-            res.status(400).send("User does not exist");
+            res.status(400).send("Cet utilisateur n'existe pas.");
             return;
         }
         // Update user
@@ -198,10 +179,10 @@ app.post("/users/update", (req, res) => {
                 ID,
             ],
             function (err, result) {
-                if (err) throw err;
+                if (err) res.status(400).send(err.sqlMessage);
                 // Return updated user
                 con.query("SELECT * FROM User WHERE ID = ?", [ID], function (err, result, fields) {
-                    if (err) throw err;
+                    if (err) res.status(400).send(err.sqlMessage);
                     res.send(result[0]);
                 });
             }
@@ -213,10 +194,9 @@ app.post("/users/update", (req, res) => {
 app.get("/users/:id", (req, res) => {
     const id = req.params.id;
     con.query("SELECT * FROM User WHERE ID = ?", [id], function (err, result, fields) {
-        if (err) throw err;
+        if (err) res.status(400).send(err.sqlMessage);
         if (result.length === 0) {
-            console.log("User does not exist", id);
-            res.status(400).send("User does not exist");
+            res.status(400).send("Cet utilisateur n'existe pas.");
             return;
         }
         res.send(result[0]);
