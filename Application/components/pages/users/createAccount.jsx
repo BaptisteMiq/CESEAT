@@ -2,10 +2,12 @@ import { IonPage } from "@ionic/react";
 import axios from "axios";
 import * as React from 'react';
 import AutoForms from "../../ui/AutoForms";
-
+import { useHistory  } from "react-router-dom";
+import api from "../../api";
 // title = Permet d'afficher le nom de l'input
-// type = Permet de choisir letype d'input : ['UploadFile','Input','PasswordInput','PhoneInput']
-// fullWidth: Permet de chosir si l'input doit être en full largeur ou non [true, false]
+// type = Permet de choisir letype d'input : ['UploadFile','Input','MailInput','PasswordInput','PhoneInput', 'Image']
+// fullWidth = Permet de chosir si l'input doit être en full largeur ou non [true, false]
+// confirm = Permet de mentionner un tag pour vérifier la bonne saisie de l'information
 // placeholder = Permet d'afficher le texte à saisir
 // Flag array avec un label, id du pays et le dialcode
 var generateModal = {
@@ -18,8 +20,8 @@ var generateModal = {
             value: ''
         },
         Image: {
-            title: 'Image',
-            src: "https://www.lamontagne.fr/photoSRC/Gw--/tour-de-ville_4162444.jpeg",
+            title: 'Avatar',
+            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
             type: "Image",
             fullWidth: false
         },
@@ -28,95 +30,117 @@ var generateModal = {
             type: "Input",
             value: "",
             fullWidth: false,
-            placeholder: "Prénom"
+            placeholder: "Prénom",
+            isValid: true
         },
         Lastname: {
             title: "Nom",
             type: "Input",
             value: "",
             fullWidth: false,
-            placeholder: "Nom"
+            placeholder: "Nom",
+            isValid: true
         },
         Mail: {
             title: "Mail",
-            type: "Input",
+            type: "MailInput",
             value: "",
             fullWidth: false,
-            placeholder: "Mail"
+            placeholder: "Mail",
+            isValid: true
         },
         ConfirmMail: {
             title: "Confirmer mail",
-            type: "Input",
+            type: "MailInput",
             value: "",
+            confirm: "Mail",
             fullWidth: false,
-            placeholder: "Confirmer mail"
+            placeholder: "Confirmer mail",
+            isValid: true,
+            isConfirm: false
         },
         Password: {
             title: "Mot de passe",
             type: "PasswordInput",
             value: "",
             fullWidth: false,
-            placeholder: "Mot de passe"
+            placeholder: "Mot de passe",
+            isValid: true
         },
         ConfirmPassword: {
             title: "Confirmer mot de passe",
             type: "PasswordInput",
             value: "",
+            confirm: "Password",
             fullWidth: false,
-            placeholder: "Confirmer mot de passe"
+            placeholder: "Confirmer mot de passe",
+            isValid: true,
+            isConfirm: false
+        },
+        RoleSelect: {
+            title: "Sélectionner le type de compte",
+            type: "SelectInput",
+            value: [{ label: "Utilisateur", id: "1"}],
+            options: [{label: "Utilisateur", id: "1"}, {label: "Restaurateur", id: "2"}, {label: "Livreur", id: "3"}, {label: "Développeur", id: "4"}],
+            fullWidth: true,
+            multi: false,
+            placeholder: ""
         },
         PhoneNumber: {
             title: "Numéro de téléphone",
             type: "PhoneInput",
             flag: {label: 'France', id: 'FR', dialCode: '+33'},
             fullWidth: false,
-            value: ""
+            value: "",
+            isValid: true
         }
     }
 }
 
 
 const CreateAccount = (props) => {
+    let history = useHistory();
+    var handleRegister = async (registerForms) => {
+        var response = await api('post', {
+            query: `mutation UserCreateOne($record: UserCreateInput) {
+                userCreateOne(record: $record) {
+                    record {
+                        ID
+                    }
+                }
+            }`,
+            variables: `{
+                "record": {
+                    "Firstname": "${registerForms.elements.Firstname.value}",
+                    "Lastname": "${registerForms.elements.Lastname.value}",
+                    "Password": "${registerForms.elements.Password.value}",
+                    "Mail": "${registerForms.elements.Mail.value}",
+                    "PhoneNumber": "${registerForms.elements.PhoneNumber.value}",
+                    "Role_ID": "${registerForms.elements.RoleSelect.value[0].id}",
+                    "Avatar": null
+                }
+            }`
+        }, '', 'Le compte utilisateur a bien été créé !', true);
+    }
+    var loginButton = () => {
+        history.push('/users/login');
+    }
 
-    var handleRegister = (test) => {
-        console.log(test)
-    }
-    var button = () => {
-        console.log('tata');
-    }
     var buttonsModel = [
         {
-            buttonlabel: "Se connecter",
+            buttonlabel: "Déja inscrit ?",
             type: 'tertiaire',
+            function: loginButton
+        },
+        {
+            buttonlabel: "S'inscrire",
+            type: 'primaire',
             function: handleRegister
-        },
-        {
-            buttonlabel: "S'inscrire",
-            type: 'primaire',
-            function: button
-        },
-        {
-            buttonlabel: "S'inscrire",
-            type: 'primaire',
-            function: button
         }
     ]
 
     var [dataForms, setDataForms] = React.useState(generateModal);
     var [buttons, setButtons] = React.useState(buttonsModel);
-    // axios({
-    //     url: 'http://localhost:4000/graphql',
-    //     method: 'post',
-    //     data: {
-    //       query: `
-    //         query getUsers {
-    //           users
-    //           }
-    //         `
-    //     }
-    //   }).then((result) => {
-    //     console.log(result.data);
-    //   });
 
     return (
         <IonPage className="overflow-y-auto mb-5">

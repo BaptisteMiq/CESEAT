@@ -1,0 +1,91 @@
+import axios from "axios";
+import { Store } from 'react-notifications-component';
+
+const api = async (method, data, params, successMessage, notification = false) => {
+    
+    var response = await axios({
+        method: method,
+        url: 'http://localhost:4000/graphql',
+        params: params,
+        data: data,
+        headers: {
+            'Content-Type': 'application/json',
+            withCredentials: true
+        }
+    })
+    .then(res => {
+        if(res.data) {
+            if(res.data.data) {
+                console.log(res.data);
+                if((res.data.errors === null || res.data.errors === undefined) && notification) {
+                    Store.addNotification({
+                        title: "Succès",
+                        message: successMessage,
+                        type: "success",
+                        container: "bottom-right",
+                        animationIn: ["animate__animated", "animate__fadeIn"],
+                        animationOut: ["animate__animated", "animate__fadeOut"],
+                        dismiss: {
+                          duration: 10000,
+                          onScreen: true
+                        }
+                      });
+                } else if (res.data.errors && notification) {
+                    res.data.errors.map(error => {
+                        Store.addNotification({
+                            title: "Erreur",
+                            message: error.message,
+                            type: "danger",
+                            container: "bottom-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                              duration: 10000,
+                              onScreen: true
+                            }
+                        });
+                    });
+                }
+            }
+            return res.data;
+        }
+    })
+    .catch(err => {
+        if(err.response) {
+            if(err.response.data.error && notification) {
+                Store.addNotification({
+                    title: "Erreur",
+                    message: err.response.data.error,
+                    type: "danger",
+                    container: "bottom-right",
+                    animationIn: ["animate__animated", "animate__fadeIn"],
+                    animationOut: ["animate__animated", "animate__fadeOut"],
+                    dismiss: {
+                      duration: 10000,
+                      onScreen: true
+                    }
+                });
+            }
+        } else {
+            if(notification) {
+                console.log(err);
+                Store.addNotification({
+                    title: "Erreur",
+                    message: "Impossible de se connecter à l'API",
+                    type: "danger",
+                    container: "bottom-right",
+                    animationIn: ["animate__animated", "animate__fadeIn"],
+                    animationOut: ["animate__animated", "animate__fadeOut"],
+                    dismiss: {
+                      duration: 10000,
+                      onScreen: true
+                    }
+                });
+            }
+        }
+    })
+
+    return response;
+};
+
+export default api;

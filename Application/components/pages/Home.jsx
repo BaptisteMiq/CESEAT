@@ -42,7 +42,7 @@ const HomeCardTest = ({ Restaurant, Adresse, image }) => (
 const Home = () => {
   const homeItems = Store.useState(getHomeItems);
   return (
-    <IonPage className='flex justify-center flex-wrap flex-row static overflow-visible' style={{contain: 'None'}}>
+    <IonPage className='bg-white flex justify-center flex-wrap flex-row static overflow-visible' style={{contain: 'None'}}>
         {homeItems.map((i, index) => (
           <HomeCardTest {...i} key={index} />
         ))}
