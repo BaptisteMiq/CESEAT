@@ -17,7 +17,7 @@ const UserPopup = (props) => {
     var onClickList = (label) => {
         switch (label) {
             case 'UserParameters':
-                history.push('/users/parameters');
+                history.push('/users/modify');
                 break;
             case "Commandes":
                 history.push('/users/orders');

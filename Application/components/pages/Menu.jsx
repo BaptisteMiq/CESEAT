@@ -20,7 +20,6 @@ var user = {
   avatarUrl: "https://www.clickwallpapers.net/wp-content/uploads/2022/02/clickwallpapers-wallpaper-nature-8k-resolution-img_23-scaled.jpg"
 }
 // Affichage du menu par rapport au rôle de l'utilisateur TODO : Le link avec l'authentification
-var typeUser = "users";
 var navigationByUsers = {
   users: [
     {
@@ -34,6 +33,10 @@ var navigationByUsers = {
     {
       label: "Panier",
       link: "/users/cart"
+    },
+    {
+      label: 'Liste',
+      link: '/users/list'
     }
   ],
   restaurant: [
@@ -59,7 +62,8 @@ var navigationByUsers = {
   }
 }
 
-const Menu = () => {
+const Menu = (props) => {
+  var typeUser = props.type;
   let history = useHistory();
   const [showNotifications, setShowNotifications] = useState(false);
   return (

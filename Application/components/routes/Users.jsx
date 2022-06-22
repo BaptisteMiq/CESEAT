@@ -1,39 +1,51 @@
-import { Redirect, Route } from 'react-router-dom';
-import { IonRouterOutlet, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonHeader, isPlatform  } from '@ionic/react';
+import { IonHeader, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, isPlatform } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { home, search, cart, person } from 'ionicons/icons';
-import Menu from '../pages/Menu';
+import { cart, home, person, search } from 'ionicons/icons';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import HomePage from '../pages/Home';
-import Lists from '../pages/Lists';
 import ListDetail from '../pages/ListDetail';
-import Settings from '../pages/Settings';
+import Lists from '../pages/Lists';
+import Menu from '../pages/Menu';
 import CreateAccount from '../pages/users/createAccount';
+import ListUsers from '../pages/users/ListUsers';
+import Login from '../pages/users/Login';
+import Modify from '../pages/users/Modify';
 
-const Tabs = () => {
+const Users = () => {
   return (
     <div>
       {isPlatform('desktop') &&
         <IonReactRouter>
           <IonHeader>
-            <Menu />
+            <Menu type="users"/>
           </IonHeader>
           <IonRouterOutlet className='mt-14 overflow-y-auto'>
-            <Route path="/users/home" component={HomePage} exact={true} />
-            <Route path="/users/browse" component={Lists} exact={true} />
-            <Route path="/users/browse/:listId" component={ListDetail} exact={true} />
-            <Route path="/users/cart" component={CreateAccount} exact={true} />
-            <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
+            <Switch>
+              <Route path="/users/home" component={HomePage} exact={true} />
+              <Route path="/users/browse" component={Lists} exact={true} />
+              <Route path="/users/browse/:listId" component={ListDetail} exact={true} />
+              <Route path="/users/register" component={CreateAccount} exact={true} />
+              <Route path="/users/login" component={Login} exact={true} />
+              <Route path="/users/modify" render={(props) => <Modify {...props} />} exact={true} />
+              <Route path="/users/list" component={ListUsers} exact={true} />
+              <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
+            </Switch>
           </IonRouterOutlet>
         </IonReactRouter>
       }
       { !isPlatform('desktop') && 
           <IonTabs>
           <IonRouterOutlet className='overflow-y-auto'>
-            <Route path="/users/home" component={HomePage} exact={true} />
-            <Route path="/users/browse" component={Lists} exact={true} />
-            <Route path="/users/browse/:listId" component={ListDetail} exact={true} />
-            <Route path="/users/cart" component={CreateAccount} exact={true} />
-            <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
+            <Switch>
+              <Route path="/users/home" component={HomePage} exact={true} />
+              <Route path="/users/browse" component={Lists} exact={true} />
+              <Route path="/users/browse/:listId" component={ListDetail} exact={true} />
+              <Route path="/users/register" component={CreateAccount} exact={true} />
+              <Route path="/users/login" component={Login} exact={true} />
+              <Route path="/users/modify" render={(props) => <Modify {...props} />} exact={true} />
+              <Route path="/users/list" component={ListUsers} exact={true} />
+              <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
+            </Switch>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="tab1" href="/users/home">
@@ -59,4 +71,4 @@ const Tabs = () => {
   );
 };
 
-export default Tabs;
+export default Users;
