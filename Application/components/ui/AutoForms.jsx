@@ -3,7 +3,10 @@ import { Button, KIND } from "baseui/button";
 import { Card, StyledAction, StyledBody } from "baseui/card";
 import { FileUploader } from "baseui/file-uploader";
 import { Input } from 'baseui/input';
+import {validate as validateEmail} from 'email-validator';
+import {FormControl} from 'baseui/form-control';
 import { PhoneInput, StyledFlag } from "baseui/phone-input";
+import { Select } from "baseui/select";
 import {
     HeadingSmall,
     HeadingXSmall
@@ -16,107 +19,127 @@ function CustomFlag(props) {
     return <StyledFlag iso={props.$iso} {...rest} />;
 }
 
-// title = Permet d'afficher le nom de l'input
-// type = Permet de choisir letype d'input : ['UploadFile','Input','PasswordInput','PhoneInput']
-// fullWidth: Permet de chosir si l'input doit être en full largeur ou non [true, false]
-// placeholder = Permet d'afficher le texte à saisir
-var generateModal = {
-    title: "S'inscrire",
-    elements: [
-        {
-            title: 'File Upload',
-            type: 'UploadFile',
-            fullWidth: true,
-            value: ''
-        },
-        {
-            title: "Nom",
-            type: "Input",
-            value: "Joe",
-            fullWidth: false,
-            placeholder: "Nom"
-        },
-        {
-            title: "Prénom",
-            type: "Input",
-            value: "Tintin",
-            fullWidth: false,
-            placeholder: "Prénom"
-        },
-        {
-            title: "Mail",
-            type: "Input",
-            value: "joe.tintin@gmail.com",
-            fullWidth: false,
-            placeholder: "mail"
-        },
-        {
-            title: "Mot de passe",
-            type: "PasswordInput",
-            value: "MonSuperMDP",
-            fullWidth: false,
-            placeholder: "Mot de passe"
-        },
-        {
-            title: "Numéro de téléphone",
-            type: "PhoneInput",
-            fullWidth: false,
-            value: ""
-        }
-    ],
-    buttons: [
-        {
-            buttonlabel: "Annuler",
-            type: 'primaire'
-        },
-        
-        {
-            buttonlabel: "S'inscrire",
-            type: 'primaire'
-        },
-        {
-            buttonlabel: "Se connecter",
-            type: 'secondaire'
-        }
-    ]
-}
-
 const AutoForms = (props) => {
+    
+    var checkMail = (key) => {
+        return validateEmail(props.dataForms.elements[key].value);
+    }
+
+    var checkText = (key, value) => {
+        return value.length >= 3;
+    }
+
+    var checkPassword = (key, value) => {
+        return value.length >= 8;
+    }
+
+    var checkConfirm = (key, value) => {
+        var data = props.dataForms.elements[key];
+        if(data.confirm) {
+            return (value === props.dataForms.elements[data.confirm].value ? true : false);
+        }
+    }
+
     var generateBody = (key, element) => {
         switch (element.type) {
             case 'Input':
                 return (
+                    <FormControl
+                        error={
+                        !props.dataForms.elements[key].isValid
+                            ? "La saisie n'est pas valide !"
+                            : null
+                    }
+                    >
+                        <Input
+                            value={props.dataForms.elements[key].value}
+                            onChange={e => props.setDataForms({
+                                ...props.dataForms, elements: {
+                                    ...props.dataForms.elements,
+                                    [key]: {
+                                        ...props.dataForms.elements[key],
+                                        value: e.target.value,
+                                        isValid: checkText(key, e.target.value)
+                                            }
+                                }
+                            })}
+                            placeholder={element.placeholder}
+                            clearOnEscape
+                        />
+                    </FormControl>
+                );
+        case 'MailInput':
+            return (
+                <FormControl
+                    error={
+                    (props.dataForms.elements[key].confirm && !props.dataForms.elements[key].isConfirm)
+                        ? 'Les emails ne correspondent pas !'
+                        : (!props.dataForms.elements[key].isValid ? 'Ce n\'est pas un email valide !' : null)
+                }
+                >
                     <Input
                         value={props.dataForms.elements[key].value}
-                        onChange={e => props.setDataForms({
+                        onChange={e => {props.setDataForms({
                             ...props.dataForms, elements: {
                                 ...props.dataForms.elements,
                                 [key]: {
                                     ...props.dataForms.elements[key],
-                                    value: e.target.value
-                                        }
+                                    value: e.target.value,
+                                    isValid: checkMail(key),
+                                    isConfirm: checkConfirm(key, e.target.value)
+                                }
                             }
-                        })}
+                        })}}
                         placeholder={element.placeholder}
                         clearOnEscape
                     />
-                );
+                </FormControl>
+            );
             case 'PasswordInput':
                 return (
-                    <Input
+                    <FormControl
+                        error={
+                            (props.dataForms.elements[key].confirm && !props.dataForms.elements[key].isConfirm)
+                            ? 'Les mots de passe ne correspondent pas !'
+                            : (!props.dataForms.elements[key].isValid ? '8 caractères minimum !' : null)
+                    }
+                    >
+                        <Input
+                            value={props.dataForms.elements[key].value}
+                            type="password"
+                            onChange={e => props.setDataForms({
+                                ...props.dataForms, elements: {
+                                    ...props.dataForms.elements,
+                                    [key]: {
+                                        ...props.dataForms.elements[key],
+                                        value: e.target.value,
+                                        isValid: checkPassword(key, e.target.value),
+                                        isConfirm: checkConfirm(key, e.target.value)
+                                        }
+                                }
+                            })}
+                            placeholder={element.placeholder}
+                            clearOnEscape
+                        />
+                    </FormControl>
+                );
+            case 'SelectInput': 
+                return(
+                    <Select
+                        clearable={false}
+                        multi={props.dataForms.elements[key].multi}
+                        options={props.dataForms.elements[key].options}
                         value={props.dataForms.elements[key].value}
-                        type="password"
+                        placeholder={props.dataForms.elements[key].placeholder}
                         onChange={e => props.setDataForms({
                             ...props.dataForms, elements: {
                                 ...props.dataForms.elements,
                                 [key]: {
                                     ...props.dataForms.elements[key],
-                                    value: e.target.value
-                                    }
+                                    value: e.value
+                                }
                             }
                         })}
-                        placeholder={element.placeholder}
-                        clearOnEscape
                     />
                 );
             case 'PhoneInput':
@@ -185,7 +208,7 @@ const AutoForms = (props) => {
                 }}
             >
                 <StyledBody className="flex flex-col">
-                    <HeadingSmall className='font-bold ml-4'>{generateModal.title}</HeadingSmall>
+                    <HeadingSmall className='font-bold ml-4 mb-8 text-center uppercase'>{props.dataForms.title}</HeadingSmall>
                     <div className="flex flex-wrap">
                         {
                             Object.entries(props.dataForms.elements).map( ([key, element]) => (
