@@ -16,7 +16,7 @@ export class MenuClass {
     @prop({ required: true, validate: sizeBetween("price", 0.1, 1e9) })
     public price!: number;
 
-    @prop({ validate: maxLength("image", 1000) })
+    @prop({ validate: maxLength("picture", 1000) })
     public picture?: string;
 
     @prop({ default: new Date() })

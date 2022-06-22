@@ -1,26 +1,26 @@
-import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
-import { MenuClass } from "./Menu";
-import { TicketStatusClass } from "./TicketStatus";
+import { valueBetween } from "../validators/IntValidator";
+import { lengthBetween } from "../validators/StringValidator";
 
 export class PromotionClass {
-    @prop()
-    public label: string;
+    @prop({ required: true, validate: lengthBetween("name", 1, 255) })
+    public label!: string;
 
-    @prop()
-    public description: string;
-    
-    @prop()
-    public value: number;
+    @prop({ required: true, validate: lengthBetween("description", 1, 1000) })
+    public description!: string;
 
-    @prop()
+    @prop({ required: true, validate: valueBetween("value", 0, 100) })
+    public value!: number;
+
+    @prop({ validate: valueBetween("minAmountToBeApplicable", 0, 1e9) })
     public minAmountToBeApplicable: number;
 
     @prop()
-    public limitDate: string;
+    public limitDate?: string;
 
-    @prop()
-    public createdAt: string;
+    @prop({ default: new Date() })
+    public createdAt!: string;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {

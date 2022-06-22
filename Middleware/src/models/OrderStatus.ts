@@ -1,13 +1,13 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
-import { MenuClass } from "./Menu";
+import { lengthBetween, maxLength } from "../validators/StringValidator";
 
 export class OrderStatusClass {
-    @prop()
-    public label: string;
+    @prop({ required: true, validate: lengthBetween("label", 1, 255) })
+    public label!: string;
 
-    @prop()
-    public description: string;
+    @prop({ validate: maxLength("description", 1000) })
+    public description?: string;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {

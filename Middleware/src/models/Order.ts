@@ -1,30 +1,32 @@
 import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
+import { lengthBetween, maxLength } from "../validators/StringValidator";
+import { userExists } from "../validators/UserValidator";
 import { CartClass } from "./Cart";
 import { OrderStatusClass } from "./OrderStatus";
 import { RestaurantClass } from "./Restaurant";
 
 export class OrderClass {
-    @prop()
-    public userId: string;
+    @prop({ required: true, validate: userExists() })
+    public userId!: string;
 
-    @prop({ ref: RestaurantClass })
-    public restaurant: Ref<RestaurantClass>;
+    @prop({ ref: RestaurantClass, required: true })
+    public restaurant!: Ref<RestaurantClass>;
 
-    @prop({ ref: CartClass })
-    public cart: Ref<CartClass>;
-
-    @prop()
-    public tag: number;
+    @prop({ ref: CartClass, required: true })
+    public cart!: Ref<CartClass>;
 
     @prop()
-    public createdAt: string;
+    public tag?: number;
 
-    @prop()
-    public additionalInfo: string;
+    @prop({ default: new Date() })
+    public createdAt!: string;
 
-    @prop({ ref: OrderStatusClass })
-    public status: Ref<OrderStatusClass>;
+    @prop({ validate: maxLength("additionalInfo", 1000) })
+    public additionalInfo!: string;
+
+    @prop({ ref: OrderStatusClass, required: true })
+    public status!: Ref<OrderStatusClass>;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {

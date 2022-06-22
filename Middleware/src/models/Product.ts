@@ -1,28 +1,30 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
 import { Types } from "mongoose";
+import { valueBetween } from "../validators/IntValidator";
+import { lengthBetween, maxLength } from "../validators/StringValidator";
 
 export class ProductClass {
-    @prop()
-    public name: string;
+    @prop({ required: true, validate: lengthBetween("name", 1, 255) })
+    public name!: string;
 
-    @prop()
-    public description: string;
+    @prop({ validate: maxLength("description", 1000) })
+    public description!: string;
 
-    @prop()
-    public price: number;
+    @prop({ required: true, validate: valueBetween("price", 0.1, 1000000) })
+    public price!: number;
 
-    @prop()
-    public picture: string;
+    @prop({ validate: maxLength("image", 1000) })
+    public picture?: string;
 
-    @prop()
-    public createdAt: string;
+    @prop({ default: new Date() })
+    public createdAt!: string;
 
-    @prop({ items: String })
-    public allergenicIngredients: string;
+    @prop({ validate: maxLength("allergenicIngredients", 1000) })
+    public allergenicIngredients?: string;
 
-    @prop()
-    public available: boolean;
+    @prop({ default: true })
+    public available!: boolean;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
