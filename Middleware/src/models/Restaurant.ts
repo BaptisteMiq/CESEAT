@@ -5,43 +5,45 @@ import { MenuClass } from "./Menu";
 import { ProductClass } from "./Product";
 import { AddressClass } from "./Address";
 import { RestaurantTypeClass } from "./RestaurantType";
+import { email, lengthBetween, maxLength } from "../validators/StringValidator";
+import { userExists } from "../validators/UserValidator";
 
 export class RestaurantClass {
-    @prop()
-    public name: string;
+    @prop({ required: true, validate: lengthBetween("name", 1, 255) })
+    public name!: string;
 
-    @prop()
-    public description: string;
+    @prop({ validate: maxLength("description", 1000) })
+    public description!: string;
 
-    @prop()
-    public picture: string;
+    @prop({ validate: maxLength("picture", 1000) })
+    public picture?: string;
 
-    @prop()
-    public createdAt: string;
+    @prop({ default: new Date() })
+    public createdAt!: string;
 
-    @prop()
-    public ownerId: string;
+    @prop({ required: true, validate: userExists() })
+    public ownerId!: string;
 
-    @prop()
-    public phoneNumber: string;
+    @prop({ required: true, validate: lengthBetween("phoneNumber", 1, 255) })
+    public phoneNumber!: string;
 
-    @prop()
-    public mail: string;
+    @prop({ required: true, validate: email() })
+    public mail!: string;
 
-    @prop({ ref: RestaurantTypeClass })
-    public type: Ref<RestaurantTypeClass>;
+    @prop({ ref: RestaurantTypeClass, required: true })
+    public type!: Ref<RestaurantTypeClass>;
 
-    @prop({ ref: AddressClass })
-    public address: Ref<AddressClass>;
+    @prop({ ref: AddressClass, required: true })
+    public address!: Ref<AddressClass>;
 
-    @prop({ ref: ProductClass })
-    public products: Ref<ProductClass>[];
+    @prop({ ref: ProductClass, default: [] })
+    public products!: Ref<ProductClass>[];
 
-    @prop({ ref: MenuClass })
-    public menus: Ref<MenuClass>[];
+    @prop({ ref: MenuClass, default: [] })
+    public menus!: Ref<MenuClass>[];
 
-    @prop({ ref: CategoryClass })
-    public categories: Ref<CategoryClass>[];
+    @prop({ ref: CategoryClass, default: [] })
+    public categories!: Ref<CategoryClass>[];
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
