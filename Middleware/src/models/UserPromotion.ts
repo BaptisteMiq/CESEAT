@@ -1,13 +1,14 @@
 import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
+import { userExists } from "../validators/UserValidator";
 import { PromotionClass } from "./Promotion";
 
 export class UserPromotionClass {
-    @prop()
-    public userId: string;
+    @prop({ required: true, validate: userExists() })
+    public userId!: string;
 
-    @prop({ ref: PromotionClass })
-    public promotion: Ref<PromotionClass>;
+    @prop({ ref: PromotionClass, required: true })
+    public promotion!: Ref<PromotionClass>;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {

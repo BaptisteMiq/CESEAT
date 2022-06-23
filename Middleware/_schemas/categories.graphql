@@ -1,7 +1,0 @@
-type Category {
-    id: ID!
-    name: String!
-    createdAt: String!
-    menus: [Menu]!
-    products: [Product]!
-}

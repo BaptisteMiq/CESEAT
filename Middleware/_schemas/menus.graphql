@@ -1,9 +1,0 @@
-type Menu {
-    id: ID!
-    name: String!
-    description: String
-    price: Float!
-    picture: String
-    createdAt: String!
-    available: Boolean!
-}

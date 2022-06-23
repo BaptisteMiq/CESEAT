@@ -1,7 +1,0 @@
-type Cart {
-    id: ID!
-    userId: String!
-    restaurant: Restaurant
-    products: [Product]!
-    menus: [Menu]!
-}

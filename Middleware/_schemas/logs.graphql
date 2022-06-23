@@ -1,5 +1,0 @@
-type Log {
-    id: ID!
-    userId: String!
-    timestamp: String!
-}

@@ -1,13 +1,14 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
+import { lengthBetween } from "../validators/StringValidator";
 import { CategoryClass } from "./Category";
 
 export class RestaurantTypeClass {
-    @prop()
-    public label: string;
+    @prop({ required: true, validate: lengthBetween("label", 3, 255) })
+    public label!: string;
 
-    @prop()
-    public description: string;
+    @prop({ validate: lengthBetween("description", 3, 1000) })
+    public description?: string;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {

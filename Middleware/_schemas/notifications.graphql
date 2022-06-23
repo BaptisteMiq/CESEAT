@@ -1,7 +1,0 @@
-type Notification {
-    id: ID!
-    createdAt: String!
-    title: String!
-    body: String!
-    userId: String!
-}

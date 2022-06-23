@@ -1,10 +1,10 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
-import { MenuClass } from "./Menu";
+import { lengthBetween } from "../validators/StringValidator";
 
 export class TicketStatusClass {
-    @prop()
-    public label: string;
+    @prop({ required: true, validate: lengthBetween("label", 3, 255) })
+    public label!: string;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {

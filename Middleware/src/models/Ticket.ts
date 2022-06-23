@@ -1,23 +1,24 @@
 import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
-import { MenuClass } from "./Menu";
+import { lengthBetween } from "../validators/StringValidator";
+import { userExists } from "../validators/UserValidator";
 import { TicketStatusClass } from "./TicketStatus";
 
 export class TicketClass {
-    @prop()
-    public userId: string;
+    @prop({ required: true, validate: userExists() })
+    public userId!: string;
 
-    @prop()
-    public title: string;
+    @prop({ required: true, validate: lengthBetween("title", 3, 255) })
+    public title!: string;
 
-    @prop()
-    public message: string;
+    @prop({ required: true, validate: lengthBetween("message", 3, 1000) })
+    public message!: string;
 
-    @prop({ ref: TicketStatusClass })
-    public status: Ref<TicketStatusClass>;
+    @prop({ ref: TicketStatusClass, required: true })
+    public status!: Ref<TicketStatusClass>;
 
-    @prop()
-    public createdAt: string;
+    @prop({ default: new Date() })
+    public createdAt!: string;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
