@@ -47,4 +47,9 @@ npm run dev
 
 ### 4. Démarrer l'Application NextJS
 
+```bash
+cd Application
+npm run dev
+```
+
 - Hôte: <http://localhost:3000/>
