@@ -1,7 +1,6 @@
 import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
-import { sizeBetween } from "../validators/ArrayValidator";
-import { maxValue, minValue } from "../validators/IntValidator";
+import { valueBetween } from "../validators/IntValidator";
 import { lengthBetween, maxLength } from "../validators/StringValidator";
 import { ProductClass } from "./Product";
 
@@ -12,8 +11,7 @@ export class MenuClass {
     @prop({ validate: maxLength("description", 255) })
     public description?: string;
 
-    // @prop({ required: true, validate: [minValue("price", 0.1), maxValue("price", 1e9)] })
-    @prop({ required: true, validate: sizeBetween("price", 0.1, 1e9) })
+    @prop({ required: true, validate: valueBetween("price", 0.1, 1e9) })
     public price!: number;
 
     @prop({ validate: maxLength("picture", 1000) })
@@ -43,9 +41,9 @@ const generateQueriesMutations = (schemaComposer: any) => {
         menuUpdateById: Menu.mongooseResolvers.updateById(),
         menuDeleteById: Menu.mongooseResolvers.removeById(),
     };
-    
+
     const relations = {
-        products: "Product"
+        products: "Product",
     };
 
     return { queries, mutations, relations, MongooseObject: Menu };

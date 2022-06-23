@@ -92,6 +92,7 @@ export const getUsersMutations = (schemaComposer: SchemaComposer) => {
             Mail: "String",
             PhoneNumber: "String",
             Avatar: "String",
+            Role_ID: "String",
         },
     });
     const UserMutations = {
