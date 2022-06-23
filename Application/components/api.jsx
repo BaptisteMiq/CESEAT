@@ -16,7 +16,6 @@ const api = async (method, data, params, successMessage, notification = false) =
     .then(res => {
         if(res.data) {
             if(res.data.data) {
-                console.log(res.data);
                 if((res.data.errors === null || res.data.errors === undefined) && notification) {
                     Store.addNotification({
                         title: "Succès",
@@ -68,7 +67,6 @@ const api = async (method, data, params, successMessage, notification = false) =
             }
         } else {
             if(notification) {
-                console.log(err);
                 Store.addNotification({
                     title: "Erreur",
                     message: "Impossible de se connecter à l'API",

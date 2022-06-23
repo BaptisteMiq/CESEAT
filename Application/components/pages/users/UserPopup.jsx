@@ -22,6 +22,9 @@ const UserPopup = (props) => {
             case "Commandes":
                 history.push('/users/orders');
                 break;
+            case "Gérer ses adresses":
+                history.push('/users/address');
+                break;
             case "Promotions":
                 history.push('/users/promotions');
                 break;
@@ -65,8 +68,9 @@ const UserPopup = (props) => {
            <StatefulMenu
                 items={[
                     { label: "Commandes" },
+                    { label: "Gérer ses adresses"},
                     { label: "Promotions" },
-                    { label: "Support" },
+                    { label: "Support" }
                 ]}
                 onItemSelect={ props => onClickList(props.item.label)}
             />
