@@ -1,9 +1,9 @@
 import { IonPage } from "@ionic/react";
 import axios from "axios";
 import * as React from 'react';
-import AutoForms from "../../../ui/AutoForms";
+import AutoForms from "../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
-import api from "../../../api";
+import api from "../../api";
 
 // title = Permet d'afficher le nom de l'input
 // type = Permet de choisir letype d'input : ['UploadFile','Input','PasswordInput','PhoneInput']
@@ -11,50 +11,46 @@ import api from "../../../api";
 // placeholder = Permet d'afficher le texte à saisir
 // Flag array avec un label, id du pays et le dialcode
 var generateModal = {
-    title: "Créer un produit",
+    title: "Ajouter une adresse",
     elements: {
-        UploadFile: {
-            title: 'File Upload',
-            type: 'UploadFile',
-            fullWidth: false,
-            value: ''
-        },
-        Image: {
-            title: 'Image',
-            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
-            type: "Image",
-            fullWidth: false
-        },
-        Name: {
-            title: "Nom du produit",
+        Line1: {
+            title: "Adresse",
             type: "Input",
             value: "",
-            fullWidth: false,
-            placeholder: "Nom",
+            fullWidth: true,
+            placeholder: "Adresse",
             isValid: true
         },
-        Description: {
-            title: "Description",
+        Line2: {
+            title: "Complément d'adresse",
             type: "Input",
             value: "",
-            fullWidth: false,
-            placeholder: "Description",
+            fullWidth: true,
+            placeholder: "Complément d'adresse",
             isValid: true
         },
-        Price: {
-            title: "Prix",
+        City: {
+            title: "Ville",
             type: "Input",
             value: "",
             fullWidth: false,
-            placeholder: "0",
+            placeholder: "Ville",
             isValid: true
         },
-        AllergenicIngredients: {
-            title: "Ingrédients allergènes",
+        PC: {
+            title: "Code Postal",
             type: "Input",
             value: "",
             fullWidth: false,
-            placeholder: "Ingrédients allergènes",
+            placeholder: "Code Postal",
+            isValid: true
+        },
+        Country: {
+            title: "Pays",
+            type: "Input",
+            value: "",
+            fullWidth: false,
+            placeholder: "Pays",
             isValid: true
         }
     }
@@ -63,24 +59,29 @@ var generateModal = {
 
 const CreateProduct = (props) => {
     let history = useHistory();
-    var handleCreate = async (productForms) => {
+    var handleCreate = async (addressForms) => {
         var response = await api('post', {
-            query: `mutation ProductCreateOne($record: CreateOneProductInput!) {
-                productCreateOne(record: $record) {
-                  recordId
+            query: `mutation AddressCreateOne($record: CreateOneAddressInput!) {
+                addressCreateOne(record: $record) {
+                  record {
+                    line1
+                    line2
+                    city
+                    PC
+                    country
+                  }
                 }
               }`,
             variables: `{
                 "record": {
-                    "name": "${productForms.elements.Name.value}",
-                    "description": "${productForms.elements.Description.value}",
-                    "price": ${productForms.elements.Price.value},
-                    "allergenicIngredients": "${productForms.elements.AllergenicIngredients.value}",
-                    "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
-                    "available": true
+                    "line1": "${addressForms.elements.Line1.value}",
+                    "line2": "${addressForms.elements.Line2.value}",
+                    "city": "${addressForms.elements.City.value}",
+                    "PC": "${addressForms.elements.PC.value}",
+                    "country": "${addressForms.elements.Country.value}"
                 }
             }`
-        }, '', 'Le produit a bien été créé !', true);
+        }, '', 'L\'adresse a bien été créé !', true);
     }
     var cancelButton = () => {
         history.goBack();
@@ -93,7 +94,7 @@ const CreateProduct = (props) => {
             function: cancelButton
         },
         {
-            buttonlabel: "Créer le produit",
+            buttonlabel: "Créer l'adresse",
             type: 'primaire',
             function: handleCreate
         }

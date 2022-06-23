@@ -1,12 +1,12 @@
 import { IonPage } from "@ionic/react";
 import axios from "axios";
 import * as React from 'react';
-import AutoForms from "../../ui/AutoForms";
+import AutoForms from "../../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
-import api from "../../api";
+import api from "../../../api";
 
 var generateModal = {
-    title: "Modifier son compte",
+    title: "Modifier le produit",
     elements: {
         UploadFile: {
             title: 'File Upload',
@@ -15,78 +15,87 @@ var generateModal = {
             value: ''
         },
         Image: {
-            title: 'Avatar',
+            title: 'Image',
             src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
             type: "Image",
             fullWidth: false
         },
-        Firstname: {
-            title: "Prénom",
+        Name: {
+            title: "Nom du produit",
             type: "Input",
-            value: '',
+            value: "",
             fullWidth: false,
-            placeholder: "Prénom"
+            placeholder: "Nom",
+            isValid: true
         },
-        Lastname: {
-            title: "Nom",
+        Description: {
+            title: "Description",
             type: "Input",
-            value: '',
+            value: "",
             fullWidth: false,
-            placeholder: "Nom"
+            placeholder: "Description",
+            isValid: true
         },
-        Mail: {
-            title: "Mail",
+        Price: {
+            title: "Prix",
             type: "Input",
-            value: '',
-            fullWidth: true,
-            placeholder: "Mail"
-        },
-        Password: {
-            title: "Mot de passe",
-            type: "PasswordInput",
-            value: '',
-            fullWidth: true,
-            placeholder: "Mot de passe"
-        },
-        PhoneNumber: {
-            title: "Numéro de téléphone",
-            type: "PhoneInput",
-            flag: {label: 'France', id: 'FR', dialCode: '+33'},
+            value: "",
             fullWidth: false,
-            value: ''
+            placeholder: "0",
+            isValid: true
+        },
+        AllergenicIngredients: {
+            title: "Ingrédients allergènes",
+            type: "Input",
+            value: "",
+            fullWidth: false,
+            placeholder: "Ingrédients allergènes",
+            isValid: true
+        },
+        Available: {
+            title: "Disponibilité du produit",
+            type: "SelectInput",
+            value: [{"label": "Disponible", "id": "2"}],
+            option: [{"label": "Indisponible", "id": "1"}, {"label": "Disponible", "id": "2"}],
+            fullWidth: false,
+            multi: false,
+            placeholder: ""
         }
     }
-};
+}
 const Modify = (props) => {
     if(props.location.state) {
-        var id = props.location.state.userID ? props.location.state.userID : 2;
-    } else {
-        var id =  2;
+        var id = props.location.state.productID ? props.location.state.productID : "62b1ccb74b500fbdb6202ede";
+    }
+    else if (localStorage.getItem('modifyProductID')) {
+        var id = localStorage.getItem('modifyProductID') ? localStorage.getItem('modifyProductID') : null;
+    }  
+    else {
+        var id =  "62b1ccb74b500fbdb6202ede";
     }
     var [updateId, setUpdateid] = React.useState(null); 
-    var [user, setUser] = React.useState({
-        ID: '',
-        Firstname: '',
-        Lastname: '',
-        Password: '',
-        Mail: '',
-        PhoneNumber: '',
-        Avatar: ''
+    var [product, setProduct] = React.useState({
+        _id: '',
+        name: '',
+        description: '',
+        price: '',
+        allergenicIngredients: '',
+        available: false,
+        image: ''
     });
-    var getUser = async (id) => {
+    var getProduct = async (id) => {
         await axios({
             url: 'http://localhost:4000/graphql',
             method: 'post',
             data: {
-                query: `query($id: String)  {
-                    userById(ID: $id) {
-                      Firstname
-                      ID
-                      Lastname
-                      Password
-                      Mail
-                      PhoneNumber
-                      Avatar
+                query: `query Query($id: MongoID!) {
+                    productById(_id: $id) {
+                      name
+                      description
+                      price
+                      picture
+                      allergenicIngredients
+                      available
                     }
                   }`,
                 variables: `{
@@ -94,9 +103,9 @@ const Modify = (props) => {
                 }`
             }
           }).then(response => {
-            setUser(response.data.data.userById);
+            setProduct(response.data.data.productById);
             generateModal = {
-                title: "Modifier son compte",
+                title: "Modifier le produit",
                 elements: {
                     UploadFile: {
                         title: 'File Upload',
@@ -105,48 +114,54 @@ const Modify = (props) => {
                         value: ''
                     },
                     Image: {
-                        title: 'Avatar',
+                        title: 'Image',
                         src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
                         type: "Image",
                         fullWidth: false
                     },
-                    Firstname: {
-                        title: "Prénom",
+                    Name: {
+                        title: "Nom du produit",
                         type: "Input",
-                        value: user.Firstname,
+                        value: product.name,
                         fullWidth: false,
-                        placeholder: "Prénom"
+                        placeholder: "Nom",
+                        isValid: true
                     },
-                    Lastname: {
-                        title: "Nom",
+                    Description: {
+                        title: "Description",
                         type: "Input",
-                        value: user.Lastname,
+                        value: product.description,
                         fullWidth: false,
-                        placeholder: "Nom"
+                        placeholder: "Description",
+                        isValid: true
                     },
-                    Mail: {
-                        title: "Mail",
+                    Price: {
+                        title: "Prix",
                         type: "Input",
-                        value: user.Mail,
-                        fullWidth: true,
-                        placeholder: "Mail"
-                    },
-                    Password: {
-                        title: "Mot de passe",
-                        type: "PasswordInput",
-                        value: user.Password,
-                        fullWidth: true,
-                        placeholder: "Mot de passe"
-                    },
-                    PhoneNumber: {
-                        title: "Numéro de téléphone",
-                        type: "PhoneInput",
-                        flag: {label: 'France', id: 'FR', dialCode: '+33'},
+                        value: product.price,
                         fullWidth: false,
-                        value: user.PhoneNumber
+                        placeholder: "0",
+                        isValid: true
+                    },
+                    AllergenicIngredients: {
+                        title: "Ingrédients allergènes",
+                        type: "Input",
+                        value: product.allergenicIngredients,
+                        fullWidth: false,
+                        placeholder: "Ingrédients allergènes",
+                        isValid: true
+                    },
+                    Available: {
+                        title: "Disponibilité du produit",
+                        type: "SelectInput",
+                        value: [{"label": product.available ? "Disponible" : "Indisponible", id: product.available ? 2 : 1}],
+                        options: [{"label": "Indisponible", id: "1"}, {"label": "Disponible", id: "2"}],
+                        fullWidth: false,
+                        multi: false,
+                        placeholder: ""
                     }
                 }
-            };
+            }
             setDataForms(generateModal);
             setUpdateid(id);
           })
@@ -156,32 +171,38 @@ const Modify = (props) => {
     React.useEffect(async () => {
         if(updateId !== id) {
             //On recherche les informatiosn de l'utilisateur
-            await getUser(id);
+            await getProduct(id);
         }
-    }, [user]);
+    }, [product]);
 
     var history = useHistory();
     var handleModify = async (modifyForms) => {
         var response = await api('post', {
-            query: `mutation Mutation($id: String, $record: UserCreateInput) {
-                userUpdateById(ID: $id, record: $record) {
-                    record {
-                    ID
-                    }
+            query: `mutation ProductUpdateById($id: MongoID!, $record: UpdateByIdProductInput!) {
+                productUpdateById(_id: $id, record: $record) {
+                  record {
+                    name
+                    description
+                    price
+                    picture
+                    allergenicIngredients
+                    available
+                  }
                 }
-            }`,
+              }`,
             variables: `{
                 "id": "${id}",
                 "record": {
-                    "Firstname": "${modifyForms.elements.Firstname.value}",
-                    "Lastname": "${modifyForms.elements.Lastname.value}",
-                    "Password": "${modifyForms.elements.Password.value}",
-                    "Mail": "${modifyForms.elements.Mail.value}",
-                    "PhoneNumber": "${modifyForms.elements.PhoneNumber.value}",
-                    "Avatar": null
+                    "name": "${modifyForms.elements.Name.value}",
+                    "description": "${modifyForms.elements.Description.value}",
+                    "price": ${modifyForms.elements.Price.value},
+                    "allergenicIngredients": "${modifyForms.elements.AllergenicIngredients.value}",
+                    "available": ${modifyForms.elements.Available.value[0].label === "Disponible" ? true : false},
+                    "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
                 }
               }`
-        }, '', 'Le compte utilisateur a bien été modifié !', true);
+        }, '', 'Le produit a bien été modifié !', true);
+        history.goBack();
     }
     var cancelButton = () => {
         history.goBack();
@@ -189,7 +210,7 @@ const Modify = (props) => {
     
     var buttonsModel = [
         {
-            buttonlabel: "Annuler",
+            buttonlabel: "Retour",
             type: 'secondary',
             function: cancelButton
         },
