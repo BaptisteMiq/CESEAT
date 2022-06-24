@@ -1,8 +1,13 @@
-import { ApolloServer, UserInputError } from "apollo-server";
-import { GraphQLError, GraphQLFormattedError, isLeafType } from "graphql";
+// import { ApolloServer, UserInputError } from "apollo-server";
+import { GraphQLError, GraphQLFormattedError } from "graphql";
 import "graphql-import-node";
 import { connect } from "mongoose";
 import buildSchema from "./models";
+
+import express from "express";
+import { ApolloServer, UserInputError } from "apollo-server-express";
+
+import cookieParser from "cookie-parser";
 
 (async () => {
     const schema = await buildSchema();
@@ -10,7 +15,6 @@ import buildSchema from "./models";
         schema,
         csrfPrevention: true,
         formatError(err: GraphQLError) {
-            console.log(err.message);
             if (err instanceof UserInputError) {
                 // Variable "$record" got invalid value null at "record.products"; Expected non-nullable type "[MongoID]!" not to be null.
                 // Retrieve the string products with regex
@@ -55,23 +59,18 @@ import buildSchema from "./models";
             }
             return err;
         },
+        context: ({ req, res }) => {
+            return { req, res };
+        },
     });
 
-    // const typeDefs = importSchema(path.resolve(__dirname, "../schemas/schema.graphql"));
+    connect("mongodb+srv://Admin:Admin@ceseat.omcvzez.mongodb.net/?retryWrites=true&w=majority").then(async () => {
+        const app = express();
+        app.use(cookieParser());
+        await server.start();
+        server.applyMiddleware({ app });
 
-    // Construct a schema, using GraphQL schema language
-    // const schema = buildSchema(typeDefs);
-
-    connect("mongodb+srv://Admin:Admin@ceseat.omcvzez.mongodb.net/?retryWrites=true&w=majority").then(() => {
-        // UserModel.CreateUser({
-        //     name: "Test",
-        //     email: "test@gmail.com",
-        //     avatar: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-        // });
-
-        server.listen().then(({ url }) => {
-            console.log(`🚀 Server ready at ${url}`);
-        });
+        app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`));
 
         console.log("Running a GraphQL API server at http://localhost:4000/graphql");
     });

@@ -1,5 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
+import { AuthMiddleware, RequireUser } from "../Auth";
 import { userExists } from "../validators/UserValidator";
 
 // Connection logs
@@ -16,7 +17,7 @@ const generateQueriesMutations = (schemaComposer: any) => {
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "Log" });
 
     const queries = {
-        logs: MongooseObject.mongooseResolvers.findMany(),
+        logs: MongooseObject.mongooseResolvers.findMany().withMiddlewares([RequireUser, AuthMiddleware]),
         logById: MongooseObject.mongooseResolvers.findById(),
     };
 

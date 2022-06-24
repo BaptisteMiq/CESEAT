@@ -1,8 +1,9 @@
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
 import { Types } from "mongoose";
 import { valueBetween } from "../validators/IntValidator";
 import { lengthBetween, maxLength } from "../validators/StringValidator";
+import { RestaurantClass } from "./Restaurant";
 
 export class ProductClass {
     @prop({ required: true, validate: lengthBetween("name", 1, 255) })
@@ -25,6 +26,9 @@ export class ProductClass {
 
     @prop({ default: true })
     public available!: boolean;
+
+    // @prop({ ref: RestaurantClass, required: true })
+    // public restaurant: Ref<RestaurantClass>;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
@@ -42,7 +46,9 @@ const generateQueriesMutations = (schemaComposer: any) => {
         productDeleteById: Product.mongooseResolvers.removeById(),
     };
 
-    const relations = {};
+    const relations = {
+        restaurant: "Restaurant",
+    };
 
     return { queries, mutations, relations, MongooseObject: Product };
 };

@@ -1,6 +1,8 @@
 const mysql = require("mysql");
 const express = require("express");
 const app = express();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Connection from url
 const con = mysql.createConnection({
@@ -201,6 +203,135 @@ app.get("/users/:id", (req, res) => {
         }
         res.send(result[0]);
     });
+});
+
+// Register
+app.post("/register", (req, res) => {
+    const user = req.body;
+    try {
+        const { Firstname, Lastname, Password, Mail, PhoneNumber } = user;
+        if (!Firstname || !Lastname || !Password || !Mail || !PhoneNumber) {
+            res.status(400).send("Il manque des champs requis.");
+            return;
+        }
+        con.query("SELECT * FROM User WHERE Mail = ?", [Mail], function (err, result, fields) {
+            if (err) res.status(400).send(err.sqlMessage);
+            if (result.length > 0) {
+                res.status(400).send("Cet utilisateur existe déjà.");
+                return;
+            }
+
+            const encryptedPassword = bcrypt.hashSync(Password, 10);
+
+            const RoleID = 1;
+
+            const values = [
+                user.Firstname,
+                user.Lastname,
+                encryptedPassword,
+                user.Mail,
+                user.PhoneNumber,
+                user.Avatar || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+                generateSponsorCode(),
+                false,
+                null,
+                null,
+                1,
+                new Date(),
+            ];
+
+            const token = jwt.sign(
+                { user_id: Mail, Firstname, Lastname, PhoneNumber, Role_ID: RoleID },
+                process.env.TOKEN_KEY,
+                {
+                    expiresIn: "200h",
+                }
+            );
+
+            con.query(
+                "INSERT INTO User (FirstName, LastName, Password, Mail, PhoneNumber, Avatar, SponsorCode, HasAcceptedGDPR, BillingAddress_ID, DeliveryAddress_ID, Role_ID, CreatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                values,
+                function (err, result) {
+                    if (err) res.status(400).send(err.sqlMessage);
+                    // Return created user with token
+                    con.query("SELECT * FROM User WHERE ID = ?", [result.insertId], function (err, result, fields) {
+                        if (err) res.status(400).send(err.sqlMessage);
+                        const user = result[0];
+                        console.log("User created", user, token);
+                        res.send({ user, token });
+                    });
+                }
+            );
+        });
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
+// /verify/1
+app.get("/verify/:authorizedUsers", (req, res) => {
+    const authorizedUsers = req.params.authorizedUsers;
+
+    if (!authorizedUsers) {
+        return res.status(400).send("Le type d'utilisateur n'est pas spécifié.");
+    }
+    const authorizedUsersArray = authorizedUsers.split("-");
+
+    const config = process.env;
+
+    let token = req.headers["authorization"];
+
+    if (!token) {
+        return res.status(403).send("Un token d'autorisation est requis.");
+    }
+
+    token = token.replace("Bearer ", "");
+    try {
+        const decoded = jwt.verify(token, config.TOKEN_KEY);
+        req.user = decoded;
+
+        if (!authorizedUsersArray.includes(decoded.Role_ID.toString())) {
+            return res.status(403).send("Vous n'avez pas les droits pour accéder à cette ressource.");
+        }
+
+        return res.send(decoded);
+    } catch (err) {
+        return res.status(401).send("Token invalide.");
+    }
+});
+
+app.post("/login", (req, res) => {
+    const user = req.body;
+    try {
+        const { Mail, Password } = user;
+        if (!Mail || !Password) {
+            res.status(400).send("Il manque des champs requis.");
+            return;
+        }
+        con.query("SELECT * FROM User WHERE Mail = ?", [Mail], function (err, result, fields) {
+            if (err) res.status(400).send(err.sqlMessage);
+            if (result.length === 0) {
+                res.status(400).send("Cet utilisateur n'existe pas.");
+                return;
+            }
+            const user = result[0];
+            if (!bcrypt.compareSync(Password, user.Password)) {
+                res.status(400).send("Mot de passe incorrect.");
+                return;
+            }
+            const token = jwt.sign(
+                { user_id: user.Mail, Firstname: user.Firstname, Lastname: user.Lastname, PhoneNumber: user.PhoneNumber, Role_ID: user.Role_ID },
+                process.env.TOKEN_KEY,
+                {
+                    expiresIn: "200h",
+                }
+            );
+            res.send({ user, token });
+        }
+        );
+    } catch (error) {
+        res.status(400).send(error);
+    }
 });
 
 // Start the server

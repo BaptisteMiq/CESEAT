@@ -80,6 +80,7 @@ export const getUsersMutations = (schemaComposer: SchemaComposer) => {
         name: "CreateOneUserPayload",
         fields: {
             record: UserType,
+            token: "String",
         },
     });
 
@@ -101,12 +102,16 @@ export const getUsersMutations = (schemaComposer: SchemaComposer) => {
             args: {
                 record: UserCreateInput,
             },
-            resolve: async (root: any, { record }: any) => {
+            resolve: async (root: any, { record }: any, context: any) => {
                 return axios
-                    .post(`http://${process.env.MSC_HOST}:${process.env.MSC_PORT}/users/create`, record)
+                    .post(`http://${process.env.MSC_HOST}:${process.env.MSC_PORT}/register/`, record)
                     .then((res) => {
+                        context.res.cookie("token", res.data.token, {
+                            httpOnly: true,
+                        });
                         return {
-                            record: res.data,
+                            record: res.data.user,
+                            token: res.data.token,
                         };
                     })
                     .catch((err) => {
@@ -147,6 +152,32 @@ export const getUsersMutations = (schemaComposer: SchemaComposer) => {
                     .then((res) => {
                         return {
                             record: res.data,
+                        };
+                    })
+                    .catch((err) => {
+                        throw new ApolloError(err.response.data);
+                    });
+            },
+        },
+        userLogin: {
+            type: ResultUserPayload,
+            args: {
+                Mail: "String",
+                Password: "String",
+            },
+            resolve: async (root: any, { Mail, Password }: any, context: any) => {
+                return axios
+                    .post(`http://${process.env.MSC_HOST}:${process.env.MSC_PORT}/login/`, {
+                        Mail,
+                        Password,
+                    })
+                    .then((res) => {
+                        context.res.cookie("token", res.data.token, {
+                            httpOnly: true,
+                        });
+                        return {
+                            record: res.data.user,
+                            token: res.data.token,
                         };
                     })
                     .catch((err) => {
