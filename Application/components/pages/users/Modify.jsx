@@ -60,7 +60,10 @@ var generateModal = {
 const Modify = (props) => {
     if(props.location.state) {
         var id = props.location.state.userID ? props.location.state.userID : 2;
-    } else {
+    } else if (localStorage.getItem('modifyUserID')) {
+        var id = localStorage.getItem('modifyUserID') ? localStorage.getItem('modifyUserID') : 2;
+    }
+    else {
         var id =  2;
     }
     var [updateId, setUpdateid] = React.useState(null); 
@@ -95,58 +98,60 @@ const Modify = (props) => {
             }
           }).then(response => {
             setUser(response.data.data.userById);
-            generateModal = {
-                title: "Modifier son compte",
-                elements: {
-                    UploadFile: {
-                        title: 'File Upload',
-                        type: 'UploadFile',
-                        fullWidth: false,
-                        value: ''
-                    },
-                    Image: {
-                        title: 'Avatar',
-                        src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
-                        type: "Image",
-                        fullWidth: false
-                    },
-                    Firstname: {
-                        title: "Prénom",
-                        type: "Input",
-                        value: user.Firstname,
-                        fullWidth: false,
-                        placeholder: "Prénom"
-                    },
-                    Lastname: {
-                        title: "Nom",
-                        type: "Input",
-                        value: user.Lastname,
-                        fullWidth: false,
-                        placeholder: "Nom"
-                    },
-                    Mail: {
-                        title: "Mail",
-                        type: "Input",
-                        value: user.Mail,
-                        fullWidth: true,
-                        placeholder: "Mail"
-                    },
-                    Password: {
-                        title: "Mot de passe",
-                        type: "PasswordInput",
-                        value: user.Password,
-                        fullWidth: true,
-                        placeholder: "Mot de passe"
-                    },
-                    PhoneNumber: {
-                        title: "Numéro de téléphone",
-                        type: "PhoneInput",
-                        flag: {label: 'France', id: 'FR', dialCode: '+33'},
-                        fullWidth: false,
-                        value: user.PhoneNumber
+            if(user) {
+                generateModal = {
+                    title: "Modifier son compte",
+                    elements: {
+                        UploadFile: {
+                            title: 'File Upload',
+                            type: 'UploadFile',
+                            fullWidth: false,
+                            value: ''
+                        },
+                        Image: {
+                            title: 'Avatar',
+                            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+                            type: "Image",
+                            fullWidth: false
+                        },
+                        Firstname: {
+                            title: "Prénom",
+                            type: "Input",
+                            value: user.Firstname,
+                            fullWidth: false,
+                            placeholder: "Prénom"
+                        },
+                        Lastname: {
+                            title: "Nom",
+                            type: "Input",
+                            value: user.Lastname,
+                            fullWidth: false,
+                            placeholder: "Nom"
+                        },
+                        Mail: {
+                            title: "Mail",
+                            type: "Input",
+                            value: user.Mail,
+                            fullWidth: true,
+                            placeholder: "Mail"
+                        },
+                        Password: {
+                            title: "Mot de passe",
+                            type: "PasswordInput",
+                            value: user.Password,
+                            fullWidth: true,
+                            placeholder: "Mot de passe"
+                        },
+                        PhoneNumber: {
+                            title: "Numéro de téléphone",
+                            type: "PhoneInput",
+                            flag: {label: 'France', id: 'FR', dialCode: '+33'},
+                            fullWidth: false,
+                            value: user.PhoneNumber
+                        }
                     }
-                }
-            };
+                };
+            }
             setDataForms(generateModal);
             setUpdateid(id);
           })
@@ -182,6 +187,7 @@ const Modify = (props) => {
                 }
               }`
         }, '', 'Le compte utilisateur a bien été modifié !', true);
+        history.goBack();
     }
     var cancelButton = () => {
         history.goBack();

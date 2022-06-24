@@ -10,6 +10,9 @@ import CreateAccount from '../pages/users/createAccount';
 import ListUsers from '../pages/users/ListUsers';
 import Login from '../pages/users/Login';
 import Modify from '../pages/users/Modify';
+import CreateAddress from '../pages/address/CreateAddress';
+import ListAddress from '../pages/address/ListAddress';
+import ModifyAddress from '../pages/address/ModifyAddress';
 
 const Users = () => {
   return (
@@ -28,6 +31,9 @@ const Users = () => {
               <Route path="/users/login" component={Login} exact={true} />
               <Route path="/users/modify" render={(props) => <Modify {...props} />} exact={true} />
               <Route path="/users/list" component={ListUsers} exact={true} />
+              <Route path="/users/address/create" component={CreateAddress} exact={true} />
+              <Route path="/users/address" component={ListAddress} exact={true} />
+              <Route path="/users/address/modify" render={(props) => <ModifyAddress {...props} />} exact={true} />
               <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
             </Switch>
           </IonRouterOutlet>
@@ -44,6 +50,9 @@ const Users = () => {
               <Route path="/users/login" component={Login} exact={true} />
               <Route path="/users/modify" render={(props) => <Modify {...props} />} exact={true} />
               <Route path="/users/list" component={ListUsers} exact={true} />
+              <Route path="/users/address/create" component={CreateAddress} exact={true} />
+              <Route path="/users/address" component={ListAddress} exact={true} />
+              <Route path="/users/address/modify" render={(props) => <ModifyAddress {...props} />} exact={true} />
               <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
             </Switch>
           </IonRouterOutlet>

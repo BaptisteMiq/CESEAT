@@ -5,6 +5,10 @@ import { Route, Switch } from 'react-router-dom';
 import Menu from '../pages/Menu';
 import CreateProduct from '../pages/restaurant/products/CreatePoduct';
 import ListProduct from '../pages/restaurant/products/ListProduct';
+import Modify from '../pages/restaurant/products/ModifyProduct';
+import CreateMenu from '../pages/restaurant/menus/CreateMenu';
+import ListMenu from '../pages/restaurant/menus/ListMenu';
+import ModifyMenu from '../pages/restaurant/menus/ModifyMenu';
 
 const Restaurants = () => {
   return (
@@ -18,6 +22,10 @@ const Restaurants = () => {
             <Switch>
               <Route path="/restaurant/product/create" component={CreateProduct} exact={true} />
               <Route path="/restaurant/product" component={ListProduct} exact={true} />
+              <Route path="/restaurant/product/modify" render={(props) => <Modify {...props} />} exact={true} />
+              <Route path="/restaurant/menu/create" component={CreateMenu} exact={true} />
+              <Route path="/restaurant/menu" component={ListMenu} exact={true} />
+              <Route path="/restaurant/menu/modify" render={(props) => <ModifyMenu {...props} />} exact={true} />
             </Switch>
           </IonRouterOutlet>
         </IonReactRouter>
@@ -26,8 +34,12 @@ const Restaurants = () => {
           <IonTabs>
           <IonRouterOutlet className='overflow-y-auto'>
             <Switch>
-              <Route path="/product/create" component={CreateProduct} exact={true} />
+              <Route path="/restaurant/product/create" component={CreateProduct} exact={true} />
+              <Route path="/restaurant/product/modify" render={(props) => <Modify {...props} />} exact={true} />
               <Route path="/restaurant/product" component={ListProduct} exact={true} />
+              <Route path="/restaurant/menu/create" component={CreateMenu} exact={true} />
+              <Route path="/restaurant/menu" component={ListMenu} exact={true} />
+              <Route path="/restaurant/menu/modify" render={(props) => <ModifyMenu {...props} />} exact={true} />
             </Switch>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">

@@ -28,34 +28,13 @@ const ListUsers = (props) => {
               }`
         }, '', 'Liste des utilisateurs bien récupérée !', false);
         if(response) {
-            setUsers(response.data.users);
+            setUsers(response.data.users ? response.data.users : []);
             setGetUsers(false);
         }
     }
-    // await axios({
-    //     url: 'http://localhost:4000/graphql',
-    //     method: 'post',
-    //     data: {
-    //         query: `query Query {
-    //             users {
-    //               ID
-    //               Firstname
-    //               Lastname
-    //               Password
-    //               Mail
-    //               PhoneNumber
-    //               Avatar
-    //               Role_ID
-    //             }
-    //           }`
-    //     }
-    //   }).then(response => {
-    //     setUsers(response.data.data.users);
-    //     setGetUsers(false);
-    //   })
-    // }
 
     var modifyUser = (user) => {
+        localStorage.setItem('modifyUserID', user.ID);
         history.push({
             pathname: '/users/modify',
             state: {userID: user.ID}
@@ -85,7 +64,6 @@ const ListUsers = (props) => {
     React.useEffect(async () => {
         await getusers();
     }, [getUsers])
-
     return (
         <IonPage className="overflow-y-auto mb-5 flex flex-col">
             <div className="mb-5 flex flex-wrap align-center justify-center">

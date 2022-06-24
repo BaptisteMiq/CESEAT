@@ -26,7 +26,7 @@ const AutoForms = (props) => {
     }
 
     var checkText = (key, value) => {
-        return value.length >= 3;
+        return value.length >= 1;
     }
 
     var checkPassword = (key, value) => {
