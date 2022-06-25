@@ -6,6 +6,17 @@ import { Input } from 'baseui/input';
 import {validate as validateEmail} from 'email-validator';
 import {FormControl} from 'baseui/form-control';
 import { PhoneInput, StyledFlag } from "baseui/phone-input";
+import CreateAddress from "../pages/address/CreateAddress";
+import { KIND as ButtonKind } from "baseui/button";
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    ModalButton,
+    SIZE,
+    ROLE
+  } from "baseui/modal";
 import { Select } from "baseui/select";
 import {
     HeadingSmall,
@@ -21,6 +32,7 @@ function CustomFlag(props) {
 
 const AutoForms = (props) => {
     
+    const [isOpen, setIsOpen] = React.useState(false);
     var checkMail = (key) => {
         return validateEmail(props.dataForms.elements[key].value);
     }
@@ -93,6 +105,167 @@ const AutoForms = (props) => {
                         placeholder={element.placeholder}
                         clearOnEscape
                     />
+                </FormControl>
+            );
+        case 'AddressInput':
+            return (
+                <FormControl
+
+                >
+                    <div>
+                    <Modal
+                        onClose={() => setIsOpen(false)}
+                        closeable
+                        isOpen={isOpen}
+                        animate
+                        autoFocus
+                        size={SIZE.default}
+                        role={ROLE.dialog}
+                        >
+                        <ModalHeader>Modifier une adresse</ModalHeader>
+                        <ModalBody>
+                            <div className="flex flex-wrap">
+                                <div className='flex flex-auto flex-col m-3' style={{minWidth: '240px'}}>
+                                    <h1 className="font-bold">Adresse</h1>
+                                    <Input
+                                        value={props.dataForms.elements[key].value.line1}
+                                        onChange={e => props.setDataForms({
+                                            ...props.dataForms, elements: {
+                                                ...props.dataForms.elements,
+                                                [key]: {
+                                                    ...props.dataForms.elements[key],
+                                                    value: {
+                                                        ...props.dataForms.elements[key].value,
+                                                        line1: e.target.value
+                                                    }
+                                                    }
+                                            }
+                                        })}
+                                        placeholder='Adresse'
+                                        clearOnEscape
+                                    />
+                                </div>
+                                <div className='flex flex-auto flex-col m-3' style={{minWidth: '240px'}}>
+                                    <h1 className="font-bold">Complément d'adresse</h1>
+                                    <Input
+                                        value={props.dataForms.elements[key].value.line2}
+                                        onChange={e => props.setDataForms({
+                                            ...props.dataForms, elements: {
+                                                ...props.dataForms.elements,
+                                                [key]: {
+                                                    ...props.dataForms.elements[key],
+                                                    value: {
+                                                        ...props.dataForms.elements[key].value,
+                                                        line2: e.target.value
+                                                    }
+                                                    }
+                                            }
+                                        })}
+                                        placeholder="Complément d'adresse"
+                                        clearOnEscape
+                                    />
+                                </div>
+                                <div className='flex flex-auto flex-col m-3' style={{minWidth: '240px'}}>
+                                    <h1 className="font-bold">Ville</h1>
+                                    <Input
+                                        value={props.dataForms.elements[key].value.city}
+                                        onChange={e => props.setDataForms({
+                                            ...props.dataForms, elements: {
+                                                ...props.dataForms.elements,
+                                                [key]: {
+                                                    ...props.dataForms.elements[key],
+                                                    value: {
+                                                        ...props.dataForms.elements[key].value,
+                                                        city: e.target.value
+                                                    }
+                                                    }
+                                            }
+                                        })}
+                                        placeholder='Ville'
+                                        clearOnEscape
+                                    />
+                                </div> 
+                                <div className='flex flex-auto flex-col m-3' style={{minWidth: '240px'}}>
+                                    <h1 className="font-bold">Code Postal</h1>
+                                    <Input
+                                        value={props.dataForms.elements[key].value.PC}
+                                        onChange={e => props.setDataForms({
+                                            ...props.dataForms, elements: {
+                                                ...props.dataForms.elements,
+                                                [key]: {
+                                                    ...props.dataForms.elements[key],
+                                                    value: {
+                                                        ...props.dataForms.elements[key].value,
+                                                        PC: e.target.value
+                                                    }
+                                                    }
+                                            }
+                                        })}
+                                        placeholder='Code Postal'
+                                        clearOnEscape
+                                    />
+                                </div> 
+                                <div className='flex flex-auto flex-col m-3' style={{minWidth: '240px'}}>
+                                    <h1 className="font-bold">Pays</h1>
+                                    <Input
+                                        value={props.dataForms.elements[key].value.country}
+                                        onChange={e => props.setDataForms({
+                                            ...props.dataForms, elements: {
+                                                ...props.dataForms.elements,
+                                                [key]: {
+                                                    ...props.dataForms.elements[key],
+                                                    value: {
+                                                        ...props.dataForms.elements[key].value,
+                                                        country: e.target.value
+                                                    }
+                                                    }
+                                            }
+                                        })}
+                                        placeholder='Pays'
+                                        clearOnEscape
+                                    />
+                                </div> 
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <ModalButton kind={ButtonKind.tertiary} onClick={() => setIsOpen(false)}>
+                                Annuler
+                            </ModalButton>
+                            <ModalButton onClick={() => setIsOpen(false)}>Modifier</ModalButton>
+                        </ModalFooter>
+                        </Modal>
+                        <Input
+                            value={props.dataForms.elements[key].value.line1 + ", " + props.dataForms.elements[key].value.line2 + ", " + props.dataForms.elements[key].value.city + ", " + props.dataForms.elements[key].value.PC + ", " + props.dataForms.elements[key].value.country}
+                            disabled
+                            onChange={e => props.setDataForms({
+                                ...props.dataForms, elements: {
+                                    ...props.dataForms.elements,
+                                    [key]: {
+                                        ...props.dataForms.elements[key],
+                                        value: e.target.value,
+                                        isValid: checkPassword(key, e.target.value),
+                                        isConfirm: checkConfirm(key, e.target.value)
+                                        }
+                                }
+                            })}
+                            placeholder={element.placeholder}
+                            clearOnEscape
+                        >
+                        </Input>
+                        <Button
+                            overrides={{
+                            BaseButton: {
+                                style: () => ({
+                                    width: '100%'
+                                })
+                            }
+                            }}
+                            kind={'secondary'}
+                            onClick={() => setIsOpen(true)}
+                        >
+                            Modifier une adresse
+                        </Button>
+                    </div>
                 </FormControl>
             );
             case 'PasswordInput':

@@ -1,9 +1,9 @@
 import { IonPage } from "@ionic/react";
 import axios from "axios";
 import * as React from 'react';
-import AutoForms from "../../../ui/AutoForms";
+import AutoForms from "../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
-import api from "../../../api";
+import api from "../../api";
 
 // title = Permet d'afficher le nom de l'input
 // type = Permet de choisir letype d'input : ['UploadFile','Input','PasswordInput','PhoneInput']
@@ -12,12 +12,11 @@ import api from "../../../api";
 // Flag array avec un label, id du pays et le dialcode
 
 
-const CreateMenu = (props) => {
+const CreateRestaurant = (props) => {
     let history = useHistory();
-    var [products, setProducts] = React.useState([]);
-    var [getProducts, setGetProducts] = React.useState(true);
+    var [getTypes, setGetTypes] = React.useState(true);
     var generateModal = {
-        title: "Créer un menu",
+        title: "Créer un restaurant",
         elements: {
             UploadFile: {
                 title: 'File Upload',
@@ -32,7 +31,7 @@ const CreateMenu = (props) => {
                 fullWidth: false
             },
             Name: {
-                title: "Nom du menu",
+                title: "Nom du restaurant",
                 type: "Input",
                 value: "",
                 fullWidth: false,
@@ -47,53 +46,63 @@ const CreateMenu = (props) => {
                 placeholder: "Description",
                 isValid: true
             },
-            Price: {
-                title: "Prix",
-                type: "Input",
+            Mail: {
+                title: "Mail",
+                type: "MailInput",
                 value: "",
                 fullWidth: false,
+                placeholder: "Mail",
+                isValid: true
+            },
+            Adresse: {
+                title: "Adresse",
+                type: "AddressInput",
+                value: {"line1": "", "line2": "", "city": "", "PC": "", "country": ""},
+                fullWidth: false,
+                placeholder: "Adresse",
+                isValid: true
+            },
+            PhoneNumber: {
+                title: "Numéro de téléphone",
+                type: "PhoneInput",
+                value: "",
+                fullWidth: true,
                 placeholder: "0",
                 isValid: true
             },
-            Available: {
-                title: "Disponibilité du menu",
-                type: "SelectInput",
-                value: [{"label": "Disponible" , id: 2 }],
-                options: [{"label": "Indisponible", id: "1"}, {"label": "Disponible", id: "2"}],
-                fullWidth: false,
-                multi: false,
-                placeholder: ""
-            },
-            Products: {
-                title: "Sélectionner des produits à ajouter dans le menu",
+            Type: {
+                title: "Type de restaurant",
                 type: "SelectInput",
                 value: [],
                 options: [],
                 fullWidth: false,
-                multi: true,
+                multi: false,
                 placeholder: ""
             }
         }
     }
-    var getListOfProducts = async () => {
+
+    var getListOfTypes = async () => {
 
         var response = await api('post', {
-            query: `query Query {
-                products {
-                  name
-                  _id
+            query: `query RestaurantTypes {
+                restaurantTypes {
+                  label
+                  description
+                  id : _id
                 }
               }`
-        }, '', 'Liste des menus bien récupérée !', false);
+        }, '', 'Liste des types bien récupérée !', false);
         if(response) {
 
-            var listOfproducts = [];
-            response.data.products.map(product => {
-                listOfproducts.push({"label": product.name, id: product._id});
+            var listOfTypes = [];
+            console.log(response);
+            response.data.restaurantTypes.map(type => {
+                listOfTypes.push({"label": type.label, id: type.id});
             });
 
             generateModal = {
-                title: "Créer un menu",
+                title: "Créer un restaurant",
                 elements: {
                     UploadFile: {
                         title: 'File Upload',
@@ -108,7 +117,7 @@ const CreateMenu = (props) => {
                         fullWidth: false
                     },
                     Name: {
-                        title: "Nom du menu",
+                        title: "Nom du restaurant",
                         type: "Input",
                         value: "",
                         fullWidth: false,
@@ -123,65 +132,88 @@ const CreateMenu = (props) => {
                         placeholder: "Description",
                         isValid: true
                     },
-                    Price: {
-                        title: "Prix",
-                        type: "Input",
+                    Mail: {
+                        title: "Mail",
+                        type: "MailInput",
                         value: "",
                         fullWidth: false,
+                        placeholder: "Mail",
+                        isValid: true
+                    },
+                    Adresse: {
+                        title: "Adresse",
+                        type: "AddressInput",
+                        value: {"line1": "", "line2": "", "city": "", "PC": "", "country": ""},
+                        fullWidth: true,
+                        placeholder: "Adresse",
+                        isValid: true
+                    },
+                    PhoneNumber: {
+                        title: "Numéro de téléphone",
+                        type: "PhoneInput",
+                        value: "",
+                        fullWidth: true,
                         placeholder: "0",
                         isValid: true
                     },
-                    Available: {
-                        title: "Disponibilité du menu",
+                    Type: {
+                        title: "Type de restaurant",
                         type: "SelectInput",
-                        value: [{"label": "Disponible" , id: 2 }],
-                        options: [{"label": "Indisponible", id: "1"}, {"label": "Disponible", id: "2"}],
+                        value: [],
+                        options: listOfTypes,
                         fullWidth: false,
                         multi: false,
-                        placeholder: ""
-                    },
-                    Products: {
-                        title: "Sélectionner des produits à ajouter dans le menu",
-                        type: "SelectInput",
-                        value: [listOfproducts[0] ? listOfproducts[0] : null],
-                        options: listOfproducts,
-                        fullWidth: false,
-                        multi: true,
                         placeholder: ""
                     }
                 }
             }
             setDataForms(generateModal);
-            setProducts(listOfproducts);
-            setGetProducts(false);
+            setGetTypes(false);
         }
     }
 
     var handleCreate = async (menuForms) => {
-        var listProductId = [];
-        menuForms.elements.Products.value.map(product => {
-            listProductId.push(product.id);
-        });
 
+        console.log(menuForms);
+
+        var responseAddress = await api('post', {
+            query: `mutation AddressCreateOne($record: CreateOneAddressInput!) {
+                addressCreateOne(record: $record) {
+                record {
+                    line1
+                    line2
+                    city
+                    PC
+                    country
+                    _id
+                }
+                }
+            }`,
+            variables: `{
+                "record": {
+                    "line1": "${menuForms.elements.Adresse.value.line1}",
+                    "line2": "${menuForms.elements.Adresse.value.line2}",
+                    "city": "${menuForms.elements.Adresse.value.city}",
+                    "PC": "${menuForms.elements.Adresse.value.PC}",
+                    "country": "${menuForms.elements.Adresse.value.country}"
+                }
+            }`
+        }, '', 'L\'adresse a bien été créé !', true);
+
+
+        console.log(responseAddress);
         var response = await api('post', {
-            query: `mutation MenuUpdateById($id: MongoID!, $record: UpdateByIdMenuInput!) {
-                menuUpdateById(_id: $id, record: $record) {
+            query: `mutation RestaurantCreateOne($record: CreateOneRestaurantInput!) {
+                restaurantCreateOne(record: $record) {
                   record {
                     name
                     description
-                    price
                     picture
-                    available
+                    ownerId
+                    phoneNumber
+                    mail
+                    createdAt
                     _id
-                    products {
-                      name
-                      description
-                      price
-                      picture
-                      allergenicIngredients
-                      available
-                      _id
-                    }
                   }
                 }
               }`,
@@ -189,13 +221,18 @@ const CreateMenu = (props) => {
                 "record": {
                     "name": "${menuForms.elements.Name.value}",
                     "description": "${menuForms.elements.Description.value}",
-                    "price": ${menuForms.elements.Price.value},
+                    "type": "${menuForms.elements.Type.value.map(type => { return type.id ;})}",
+                    "mail": "${menuForms.elements.Mail.value}",
+                    "phoneNumber": "${menuForms.elements.PhoneNumber.value}",
+                    "ownerId": "1",
                     "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
-                    "available": ${menuForms.elements.Available.value[0].label === "Disponible" ? true : false},
-                    "products": [${menuForms.elements.Products.value.map(product => { return '"'+ product.id +'"';})}]
+                    "address": "${responseAddress.data.addressCreateOne.record._id}",
+                    "products": [],
+                    "menus": [],
+                    "categories": []
                 }
             }`
-        }, '', 'Le menu a bien été créé !', true);
+        }, '', 'Le restaurant a bien été créé !', true);
     }
     var cancelButton = () => {
         history.goBack();
@@ -208,15 +245,15 @@ const CreateMenu = (props) => {
             function: cancelButton
         },
         {
-            buttonlabel: "Créer le menu",
+            buttonlabel: "Créer le restaurant",
             type: 'primaire',
             function: handleCreate
         }
     ]
 
     React.useEffect(async () => {
-        await getListOfProducts();
-    }, [getProducts]);
+        await getListOfTypes();
+    }, [getTypes]);
 
     var [dataForms, setDataForms] = React.useState(generateModal);
     var [buttons, setButtons] = React.useState(buttonsModel);
@@ -228,4 +265,4 @@ const CreateMenu = (props) => {
     );
 };
 
-export default CreateMenu;
+export default CreateRestaurant;
