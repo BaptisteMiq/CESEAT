@@ -1,7 +1,7 @@
 import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
-import { minSize } from "../validators/ArrayValidator";
 import { userExists } from "../validators/UserValidator";
+import { Require, U } from "./../Auth";
 import { MenuClass } from "./Menu";
 import { ProductClass } from "./Product";
 import { RestaurantClass } from "./Restaurant";
@@ -25,14 +25,15 @@ const generateQueriesMutations = (schemaComposer: any) => {
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "Cart" });
 
     const queries = {
-        carts: MongooseObject.mongooseResolvers.findMany(),
-        cartById: MongooseObject.mongooseResolvers.findById(),
+        carts: MongooseObject.mongooseResolvers.findMany().withMiddlewares(Require([U.REST, U.DRIVER])),
+        myCarts: MongooseObject.mongooseResolvers.findMany().withMiddlewares(Require([U.OWN])),
+        cartById: MongooseObject.mongooseResolvers.findById().withMiddlewares(Require([U.REST, U.DRIVER])),
     };
 
     const mutations = {
-        cartCreateOne: MongooseObject.mongooseResolvers.createOne(),
-        cartUpdateById: MongooseObject.mongooseResolvers.updateById(),
-        cartDeleteById: MongooseObject.mongooseResolvers.removeById(),
+        cartCreateOne: MongooseObject.mongooseResolvers.createOne().withMiddlewares(Require([U.USER])),
+        cartUpdateById: MongooseObject.mongooseResolvers.updateById().withMiddlewares(Require([U.USER])),
+        cartDeleteById: MongooseObject.mongooseResolvers.removeById().withMiddlewares(Require([U.USER])),
     };
 
     const relations = {
@@ -40,9 +41,6 @@ const generateQueriesMutations = (schemaComposer: any) => {
         products: "Product",
         menus: "Menu",
     };
-
-    // // Add success message
-    // mutations.cartCreateOne.setExtension("success", "Le panier a été créé avec succès.");
 
     return { queries, mutations, relations, MongooseObject };
 };

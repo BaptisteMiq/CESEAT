@@ -240,18 +240,17 @@ app.post("/register", (req, res) => {
                 new Date(),
             ];
 
-            const token = jwt.sign(
-                { user_id: Mail, Firstname, Lastname, PhoneNumber, Role_ID: RoleID },
-                process.env.TOKEN_KEY,
-                {
-                    expiresIn: "200h",
-                }
-            );
-
             con.query(
                 "INSERT INTO User (FirstName, LastName, Password, Mail, PhoneNumber, Avatar, SponsorCode, HasAcceptedGDPR, BillingAddress_ID, DeliveryAddress_ID, Role_ID, CreatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 values,
                 function (err, result) {
+                    const token = jwt.sign(
+                        { Mail, Firstname, Lastname, PhoneNumber, Role_ID: RoleID, ID: result.insertId },
+                        process.env.TOKEN_KEY,
+                        {
+                            expiresIn: "200h",
+                        }
+                    );
                     if (err) res.status(400).send(err.sqlMessage);
                     // Return created user with token
                     con.query("SELECT * FROM User WHERE ID = ?", [result.insertId], function (err, result, fields) {
@@ -290,7 +289,7 @@ app.get("/verify/:authorizedUsers", (req, res) => {
         const decoded = jwt.verify(token, config.TOKEN_KEY);
         req.user = decoded;
 
-        if (!authorizedUsersArray.includes(decoded.Role_ID.toString())) {
+        if (decoded.Role_ID !== 6 && !authorizedUsersArray.includes(decoded.Role_ID.toString())) {
             return res.status(403).send("Vous n'avez pas les droits pour accéder à cette ressource.");
         }
 
@@ -320,17 +319,37 @@ app.post("/login", (req, res) => {
                 return;
             }
             const token = jwt.sign(
-                { user_id: user.Mail, Firstname: user.Firstname, Lastname: user.Lastname, PhoneNumber: user.PhoneNumber, Role_ID: user.Role_ID },
+                {
+                    Mail: user.Mail,
+                    Firstname: user.Firstname,
+                    Lastname: user.Lastname,
+                    PhoneNumber: user.PhoneNumber,
+                    Role_ID: user.Role_ID,
+                    ID: user.ID,
+                },
                 process.env.TOKEN_KEY,
                 {
                     expiresIn: "200h",
                 }
             );
             res.send({ user, token });
-        }
-        );
+        });
     } catch (error) {
         res.status(400).send(error);
+    }
+});
+
+app.get("/decode", (req, res) => {
+    let token = req.headers["authorization"];
+    if (!token) {
+        return res.status(403).send("Un token d'autorisation est requis.");
+    }
+    token = token.replace("Bearer ", "");
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+        res.send(decoded);
+    } catch (err) {
+        return res.status(401).send("Token invalide.");
     }
 });
 

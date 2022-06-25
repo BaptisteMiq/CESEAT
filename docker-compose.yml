@@ -21,14 +21,27 @@ services:
       - ./Database/dump:/docker-entrypoint-initdb.d
 
   # The Middleware containing the GraphQL Server
-  middleware:
+  middleware_1:
     build: ./Middleware
     image: mysql/mysql-server
     command: npm run prod
     volumes:
       - ./Middleware:/src
     ports:
-      - "4000:4000"
+      - "4001:4000"
+    environment:
+      - NODE_ENV=development
+    restart: always
+
+  # The Middleware containing the GraphQL Server
+  middleware_2:
+    build: ./Middleware
+    image: mysql/mysql-server
+    command: npm run prod
+    volumes:
+      - ./Middleware:/src
+    ports:
+      - "4002:4000"
     environment:
       - NODE_ENV=development
     restart: always
@@ -83,7 +96,12 @@ services:
       - microservice_accounts_2
       - microservice_cdn_1
       - microservice_cdn_2
+      - middleware_1
+      - middleware_2
     ports:
       - "5100:5100"
       - "3100:3100"
+      - "4100:4100"
+      - "80:80"
+      - "443:443"
     restart: always

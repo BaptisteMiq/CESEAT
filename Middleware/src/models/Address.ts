@@ -1,5 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { composeMongoose } from "graphql-compose-mongoose";
+import { RequireComm, RequireTech, AuthMiddleware, RequireRest, RequireDriver, RequireUser } from "../Auth";
 import { lengthBetween, maxLength } from "../validators/StringValidator";
 
 export class AddressClass {
@@ -24,14 +25,14 @@ const generateQueriesMutations = (schemaComposer: any) => {
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "Address" });
 
     const queries = {
-        addresses: MongooseObject.mongooseResolvers.findMany(),
+        addresses: MongooseObject.mongooseResolvers.findMany().withMiddlewares([RequireComm, AuthMiddleware]),
         addressById: MongooseObject.mongooseResolvers.findById(),
     };
 
     const mutations = {
-        addressCreateOne: MongooseObject.mongooseResolvers.createOne(),
-        addressUpdateById: MongooseObject.mongooseResolvers.updateById(),
-        addressDeleteById: MongooseObject.mongooseResolvers.removeById(),
+        addressCreateOne: MongooseObject.mongooseResolvers.createOne().withMiddlewares([RequireUser, RequireRest, RequireDriver, AuthMiddleware]),
+        addressUpdateById: MongooseObject.mongooseResolvers.updateById().withMiddlewares([RequireUser, RequireRest, RequireDriver, AuthMiddleware]),
+        addressDeleteById: MongooseObject.mongooseResolvers.removeById().withMiddlewares([RequireUser, RequireRest, RequireDriver, AuthMiddleware]),
     };
 
     const relations = {};
