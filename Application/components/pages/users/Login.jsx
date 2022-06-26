@@ -3,6 +3,7 @@ import axios from "axios";
 import * as React from 'react';
 import AutoForms from "../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
+import api from "../../api";
 
 // title = Permet d'afficher le nom de l'input
 // type = Permet de choisir letype d'input : ['UploadFile','Input','PasswordInput','PhoneInput']
@@ -32,32 +33,29 @@ var generateModal = {
 
 const Login = (props) => {
     var history = useHistory();
-    var handleLogin = (registerForms) => {
-        // axios({
-        //     url: 'http://localhost:4000/graphql',
-        //     method: 'post',
-        //     data: {
-        //         query: `mutation UserCreateOne($record: UserCreateInput) {
-        //         userCreateOne(record: $record) {
-        //           record {
-        //             ID
-        //           }
-        //         }
-        //       }`,
-        //         variables: `{
-        //             "record": {
-        //                 "Firstname": "${registerForms.elements.Firstname.value}",
-        //                 "Lastname": "${registerForms.elements.Lastname.value}",
-        //                 "Password": "${registerForms.elements.Password.value}",
-        //                 "Mail": "${registerForms.elements.Mail.value}",
-        //                 "PhoneNumber": "${registerForms.elements.PhoneNumber.value}",
-        //                 "Avatar": null
-        //             }
-        //         }`
-        //     }
-        //   }).then((result) => {
-        //     console.log(result.data);
-        //   });
+    var handleLogin = async (registerForms) => {
+
+        var response = await api('post', {
+            query: `mutation UserLogin($mail: String, $password: String) {
+                userLogin(Mail: $mail, Password: $password) {
+                  token
+                  record {
+                    ID
+                    Role_ID
+                  }
+                }
+              }`,
+            variables: `{
+                "password": "${registerForms.elements.Password.value}",
+                "mail": "${registerForms.elements.Mail.value}"
+            }`
+        }, '', 'Le compte utilisateur est bien connecté !', true);
+        
+        console.log(response);
+        if(response) {
+            localStorage.setItem('Token', response.data.userLogin.token);
+            history.push('/users/home');
+        }
     }
     var registerButton = () => {
         history.push('/users/register');
