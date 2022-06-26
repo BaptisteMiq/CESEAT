@@ -9,6 +9,7 @@ import Modify from '../pages/restaurant/products/ModifyProduct';
 import CreateMenu from '../pages/restaurant/menus/CreateMenu';
 import ListMenu from '../pages/restaurant/menus/ListMenu';
 import ModifyMenu from '../pages/restaurant/menus/ModifyMenu';
+import CreateRestaurant from '../pages/restaurant/CreateRestaurant';
 
 const Restaurants = () => {
   return (
@@ -20,6 +21,7 @@ const Restaurants = () => {
           </IonHeader>
           <IonRouterOutlet className='mt-14 overflow-y-auto'>
             <Switch>
+              <Route path="/restaurant/create" component={CreateRestaurant} exact={true} />
               <Route path="/restaurant/product/create" component={CreateProduct} exact={true} />
               <Route path="/restaurant/product" component={ListProduct} exact={true} />
               <Route path="/restaurant/product/modify" render={(props) => <Modify {...props} />} exact={true} />
@@ -34,6 +36,7 @@ const Restaurants = () => {
           <IonTabs>
           <IonRouterOutlet className='overflow-y-auto'>
             <Switch>
+              <Route path="/restaurant/create" component={CreateRestaurant} exact={true} />
               <Route path="/restaurant/product/create" component={CreateProduct} exact={true} />
               <Route path="/restaurant/product/modify" render={(props) => <Modify {...props} />} exact={true} />
               <Route path="/restaurant/product" component={ListProduct} exact={true} />

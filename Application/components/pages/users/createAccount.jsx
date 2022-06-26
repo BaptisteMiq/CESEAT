@@ -107,6 +107,7 @@ const CreateAccount = (props) => {
                     record {
                         ID
                     }
+                    token
                 }
             }`,
             variables: `{
@@ -121,6 +122,12 @@ const CreateAccount = (props) => {
                 }
             }`
         }, '', 'Le compte utilisateur a bien été créé !', true);
+
+        
+        if(response) {
+            localStorage.setItem('Token', response.data.userCreateOne.token);
+            history.push('/users/home');
+        }
     }
     var loginButton = () => {
         history.push('/users/login');

@@ -3,6 +3,7 @@ import { Store } from 'react-notifications-component';
 
 const api = async (method, data, params, successMessage, notification = false) => {
     
+    var token = localStorage.getItem('Token');
     var response = await axios({
         method: method,
         url: 'http://localhost:4000/graphql',
@@ -10,7 +11,8 @@ const api = async (method, data, params, successMessage, notification = false) =
         data: data,
         headers: {
             'Content-Type': 'application/json',
-            withCredentials: true
+            withCredentials: true,
+            Authorization: token
         }
     })
     .then(res => {
