@@ -5,6 +5,9 @@ import { lengthBetween } from "../validators/StringValidator";
 export class RoleClass {
     @prop({ required: true, validate: lengthBetween("label", 3, 255) })
     public label!: string;
+
+    @prop({ required: true})
+    public ID!: string;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {

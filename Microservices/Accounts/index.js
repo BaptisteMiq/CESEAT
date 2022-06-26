@@ -87,7 +87,7 @@ app.post("/users/create", (req, res) => {
     // Check if user already exists
     con.query("SELECT * FROM User WHERE Mail = ?", [user.Mail], function (err, result, fields) {
         if (err) res.status(400).send(err.sqlMessage);
-        if (result.length > 0) {
+        if (result && result.length > 0) {
             res.status(400).send("Cet utilisateur existe déjà.");
             return;
         }
@@ -223,7 +223,7 @@ app.post("/register", (req, res) => {
 
             const encryptedPassword = bcrypt.hashSync(Password, 10);
 
-            const RoleID = 1;
+            const RoleID = user.Role_ID || 1;
 
             const values = [
                 user.Firstname,
@@ -236,7 +236,7 @@ app.post("/register", (req, res) => {
                 false,
                 null,
                 null,
-                1,
+                RoleID,
                 new Date(),
             ];
 

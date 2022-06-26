@@ -13,6 +13,8 @@ import Modify from '../pages/users/Modify';
 import CreateAddress from '../pages/address/CreateAddress';
 import ListAddress from '../pages/address/ListAddress';
 import ModifyAddress from '../pages/address/ModifyAddress';
+import Cart from '../pages/users/Cart';
+import Order from '../pages/users/Order';
 
 const Users = () => {
   return (
@@ -34,6 +36,8 @@ const Users = () => {
               <Route path="/users/address/create" component={CreateAddress} exact={true} />
               <Route path="/users/address" component={ListAddress} exact={true} />
               <Route path="/users/address/modify" render={(props) => <ModifyAddress {...props} />} exact={true} />
+              <Route path="/users/cart" render={(props) => <Cart {...props} />} exact={true} />
+              <Route path="/users/orders" render={(props) => <Order {...props} />} exact={true} />
               <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
             </Switch>
           </IonRouterOutlet>
@@ -53,6 +57,8 @@ const Users = () => {
               <Route path="/users/address/create" component={CreateAddress} exact={true} />
               <Route path="/users/address" component={ListAddress} exact={true} />
               <Route path="/users/address/modify" render={(props) => <ModifyAddress {...props} />} exact={true} />
+              <Route path="/users/cart" render={(props) => <Cart {...props} />} exact={true} />
+              <Route path="/users/orders" render={(props) => <Order {...props} />} exact={true} />
               <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
             </Switch>
           </IonRouterOutlet>
