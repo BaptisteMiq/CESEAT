@@ -35,9 +35,13 @@ var navigationByUsers = {
       link: "/users/cart"
     },
     {
+      label: 'Commandes',
+      link: '/users/orders'
+    },
+    {
       label: 'Liste',
       link: '/users/list'
-    }
+    },
   ],
   restaurant: [
     {

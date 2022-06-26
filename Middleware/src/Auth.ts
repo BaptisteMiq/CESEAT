@@ -47,6 +47,10 @@ export const AuthMiddleware: ResolverMiddleware<any, any> = async (resolve, sour
                     args.filter = {};
                 }
                 args.filter.userId = data.ID;
+                if(!args.record) {
+                    args.record = {};
+                }
+                args.record.userId = data.ID;
                 context.user = data;
             } else {
                 // If not, user is not authorized.

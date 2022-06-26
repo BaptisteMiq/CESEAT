@@ -7,8 +7,9 @@ import { ProductClass } from "./Product";
 import { RestaurantClass } from "./Restaurant";
 
 export class CartClass {
-    @prop({ required: true, validate: userExists() })
-    public userId!: string;
+    // @prop({ required: true, validate: userExists() })
+    @prop()
+    public userId?: string;
 
     @prop({ ref: RestaurantClass, required: true })
     public restaurant!: Ref<RestaurantClass>;
@@ -18,6 +19,9 @@ export class CartClass {
 
     @prop({ ref: MenuClass, required: true })
     public menus!: Ref<MenuClass>[];
+
+    @prop({ default: false })
+    public isOrdered!: boolean;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
@@ -32,7 +36,9 @@ const generateQueriesMutations = (schemaComposer: any) => {
 
     const mutations = {
         cartCreateOne: MongooseObject.mongooseResolvers.createOne().withMiddlewares(Require([U.USER])),
+        myCartCreateOne: MongooseObject.mongooseResolvers.createOne().withMiddlewares(Require([U.OWN])),
         cartUpdateById: MongooseObject.mongooseResolvers.updateById().withMiddlewares(Require([U.USER])),
+        myCartUpdateById: MongooseObject.mongooseResolvers.updateById().withMiddlewares(Require([U.OWN])),
         cartDeleteById: MongooseObject.mongooseResolvers.removeById().withMiddlewares(Require([U.USER])),
     };
 

@@ -70,7 +70,7 @@ export default async () => {
             const ref = allModels.find((m: any) => m.name === relations[relationName]);
             if (ref) {
                 // console.log(`Adding relation ${relationName} from ${ref.name}`);
-                const isArray = relationName.endsWith("s");
+                const isArray = relationName.endsWith("s") && relationName !== "status"  && relationName !== "address";
                 if (isArray) {
                     doc.addRelation(relationName, {
                         resolver: () => ref.doc.mongooseResolvers.dataLoaderMany(),
@@ -85,13 +85,12 @@ export default async () => {
                     doc.addRelation(relationName, {
                         resolver: () => ref.doc.mongooseResolvers.dataLoader(),
                         prepareArgs: {
-                            // [isFromSQL[relationName] ? "ID" : "_id"]: (source: any) => source[relationName] || null,
-                            // _id: (source: any) => source[relationName] || null,
-                            _id: (source: any) =>
-                                schemaComposer
-                                    .getOTC(ref.name)
-                                    .getResolver("userById")
-                                    .addArgs({ ID: source[relationName] || null }),
+                            _id: (source: any) => source[relationName] || null,
+                            // _id: (source: any) =>
+                            //     schemaComposer
+                            //         .getOTC(ref.name)
+                            //         .getResolver("userById")
+                            //         .addArgs({ ID: source[relationName] || null }),
                         },
                         projection: {
                             [relationName]: true,

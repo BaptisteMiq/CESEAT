@@ -185,6 +185,16 @@ export const getUsersMutations = (schemaComposer: SchemaComposer) => {
                     });
             },
         },
+        userLogout: {
+            type: ResultUserPayload,
+            resolve: async (root: any, args: any, context: any) => {
+                context.res.clearCookie("token");
+                return {
+                    record: null,
+                    token: null,
+                }
+            }
+        }
     };
     return UserMutations;
 };
