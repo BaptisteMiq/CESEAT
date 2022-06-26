@@ -2,6 +2,20 @@ import { ApolloError } from "apollo-server";
 import axios from "axios";
 import { ResolverMiddleware } from "graphql-compose";
 
+export const decodeToken = async (token: string) => {
+    const decodeURL = `http://${process.env.MSC_HOST}:${process.env.MSC_PORT}/decode`;
+    const { data } = await axios
+        .get(decodeURL, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .catch((err) => {
+            throw new ApolloError(err.message);
+        });
+    return data;
+};
+
 export const U = {
     OWN: 0,
     USER: 1,
@@ -47,7 +61,7 @@ export const AuthMiddleware: ResolverMiddleware<any, any> = async (resolve, sour
                     args.filter = {};
                 }
                 args.filter.userId = data.ID;
-                if(!args.record) {
+                if (!args.record) {
                     args.record = {};
                 }
                 args.record.userId = data.ID;

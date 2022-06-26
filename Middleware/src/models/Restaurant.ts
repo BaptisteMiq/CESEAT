@@ -7,6 +7,9 @@ import { AddressClass } from "./Address";
 import { RestaurantTypeClass } from "./RestaurantType";
 import { email, lengthBetween, maxLength } from "../validators/StringValidator";
 import { userExists } from "../validators/UserValidator";
+import { ApolloError } from "apollo-server-express";
+import { Require, U } from "../Auth";
+import { graphql } from "graphql";
 
 export class RestaurantClass {
     @prop({ required: true, validate: lengthBetween("name", 1, 255) })
@@ -53,6 +56,21 @@ const generateQueriesMutations = (schemaComposer: any) => {
     const queries = {
         restaurants: MongooseObject.mongooseResolvers.findMany(),
         restaurantById: MongooseObject.mongooseResolvers.findById(),
+        myRestaurant: MongooseObject.mongooseResolvers.findOne().withMiddlewares(
+            Require([U.OWN]).concat([
+                async (resolve: any, source: any, args: any, context: any, info: any) => {
+                    if (!context || !context.user) {
+                        throw new ApolloError("Vous devez être connecté pour accéder à votre restaurant.");
+                    }
+
+                    if (!args.filter) {
+                        args.filter = {};
+                    }
+                    args.filter.ownerId = context.user.ID.toString();
+                    return resolve(source, args, context, info);
+                },
+            ])
+        ),
     };
 
     const mutations = {
