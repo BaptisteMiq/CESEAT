@@ -6,6 +6,7 @@ import Users from './routes/Users';
 import history from './routes/history';
 import { ReactNotifications } from 'react-notifications-component';
 import Restaurants from './routes/Restaurants';
+import { AuthRoute } from './routes/protected.route';
 
 window.matchMedia("(prefers-color-scheme: dark)").addListener(async (status) => {
   try {
@@ -16,13 +17,14 @@ window.matchMedia("(prefers-color-scheme: dark)").addListener(async (status) => 
 });
 
 const AppShell = () => {
+  var roleID = localStorage.getItem('RoleID');
   return (
     <IonApp>
       <ReactNotifications />
       <IonReactRouter history={history}>
         <IonRouterOutlet id="main">
-          <Route path="/users" render={() => <Users history={history} />} />
-          <Route path="/restaurant" render={() => <Restaurants history={history} />} />
+          <Route path="/users" component={Users} />
+          <Route path="/restaurant" component={Restaurants} />
           <Route exact path="/" render={() => <Redirect to="/users" />} />
         </IonRouterOutlet>
       </IonReactRouter>

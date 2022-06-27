@@ -15,6 +15,7 @@ import ListAddress from '../pages/address/ListAddress';
 import ModifyAddress from '../pages/address/ModifyAddress';
 import Cart from '../pages/users/Cart';
 import Order from '../pages/users/Order';
+import { AuthRoute } from './protected.route';
 
 const Users = () => {
   return (
@@ -26,18 +27,18 @@ const Users = () => {
           </IonHeader>
           <IonRouterOutlet className='mt-14 overflow-y-auto'>
             <Switch>
-              <Route path="/users/home" component={HomePage} exact={true} />
-              <Route path="/users/browse" component={Lists} exact={true} />
-              <Route path="/users/browse/:listId" component={ListDetail} exact={true} />
-              <Route path="/users/register" component={CreateAccount} exact={true} />
-              <Route path="/users/login" component={Login} exact={true} />
-              <Route path="/users/modify" render={(props) => <Modify {...props} />} exact={true} />
-              <Route path="/users/list" component={ListUsers} exact={true} />
-              <Route path="/users/address/create" component={CreateAddress} exact={true} />
-              <Route path="/users/address" component={ListAddress} exact={true} />
-              <Route path="/users/address/modify" render={(props) => <ModifyAddress {...props} />} exact={true} />
-              <Route path="/users/cart" render={(props) => <Cart {...props} />} exact={true} />
-              <Route path="/users/orders" render={(props) => <Order {...props} />} exact={true} />
+              <AuthRoute path="/users/home" accessWithoutAuth={false} component={HomePage} exact={true} />
+              <AuthRoute path="/users/browse" accessWithoutAuth={false} component={Lists} exact={true} />
+              <AuthRoute path="/users/browse/:listId" accessWithoutAuth={false} component={ListDetail} exact={true} />
+              <AuthRoute path="/users/register" accessWithoutAuth={true} component={CreateAccount} exact={true} />
+              <AuthRoute path="/users/login" accessWithoutAuth={true} component={Login} exact={true} />
+              <AuthRoute path="/users/modify" accessWithoutAuth={false} component={Modify} exact={true} />
+              <AuthRoute path="/users/list" component={ListUsers} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/address/create" component={CreateAddress} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/address" component={ListAddress} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/address/modify" component={ModifyAddress} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/cart" component={Cart} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/orders" component={Order} accessWithoutAuth={false} exact={true} />
               <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
             </Switch>
           </IonRouterOutlet>
@@ -47,18 +48,18 @@ const Users = () => {
           <IonTabs>
           <IonRouterOutlet className='overflow-y-auto'>
             <Switch>
-              <Route path="/users/home" component={HomePage} exact={true} />
-              <Route path="/users/browse" component={Lists} exact={true} />
-              <Route path="/users/browse/:listId" component={ListDetail} exact={true} />
-              <Route path="/users/register" component={CreateAccount} exact={true} />
-              <Route path="/users/login" component={Login} exact={true} />
-              <Route path="/users/modify" render={(props) => <Modify {...props} />} exact={true} />
-              <Route path="/users/list" component={ListUsers} exact={true} />
-              <Route path="/users/address/create" component={CreateAddress} exact={true} />
-              <Route path="/users/address" component={ListAddress} exact={true} />
-              <Route path="/users/address/modify" render={(props) => <ModifyAddress {...props} />} exact={true} />
-              <Route path="/users/cart" render={(props) => <Cart {...props} />} exact={true} />
-              <Route path="/users/orders" render={(props) => <Order {...props} />} exact={true} />
+              <AuthRoute path="/users/home" component={HomePage} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/browse" component={Lists} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/browse/:listId" component={ListDetail} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/register" component={CreateAccount} accessWithoutAuth={true} exact={true} />
+              <AuthRoute path="/users/login" component={Login} accessWithoutAuth={true} exact={true} />
+              <AuthRoute path="/users/modify" component={Modify} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/list" component={ListUsers} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/address/create" component={CreateAddress} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/address" component={ListAddress} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/address/modify"component={ModifyAddress} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/cart" component={Cart} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/orders" component={Order} accessWithoutAuth={false} exact={true} />
               <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
             </Switch>
           </IonRouterOutlet>
