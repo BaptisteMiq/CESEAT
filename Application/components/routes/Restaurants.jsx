@@ -10,6 +10,7 @@ import CreateMenu from '../pages/restaurant/menus/CreateMenu';
 import ListMenu from '../pages/restaurant/menus/ListMenu';
 import ModifyMenu from '../pages/restaurant/menus/ModifyMenu';
 import CreateRestaurant from '../pages/restaurant/CreateRestaurant';
+import { AuthRoute } from './protected.route';
 
 const Restaurants = () => {
   return (
@@ -21,13 +22,13 @@ const Restaurants = () => {
           </IonHeader>
           <IonRouterOutlet className='mt-14 overflow-y-auto'>
             <Switch>
-              <Route path="/restaurant/create" component={CreateRestaurant} exact={true} />
-              <Route path="/restaurant/product/create" component={CreateProduct} exact={true} />
-              <Route path="/restaurant/product" component={ListProduct} exact={true} />
-              <Route path="/restaurant/product/modify" render={(props) => <Modify {...props} />} exact={true} />
-              <Route path="/restaurant/menu/create" component={CreateMenu} exact={true} />
-              <Route path="/restaurant/menu" component={ListMenu} exact={true} />
-              <Route path="/restaurant/menu/modify" render={(props) => <ModifyMenu {...props} />} exact={true} />
+              <AuthRoute path="/restaurant/create" component={CreateRestaurant} exact={true} />
+              <AuthRoute path="/restaurant/product/create" component={CreateProduct} exact={true} />
+              <AuthRoute path="/restaurant/product" component={ListProduct} exact={true} />
+              <AuthRoute path="/restaurant/product/modify" component={Modify} exact={true} />
+              <AuthRoute path="/restaurant/menu/create" component={CreateMenu} exact={true} />
+              <AuthRoute path="/restaurant/menu" component={ListMenu} exact={true} />
+              <AuthRoute path="/restaurant/menu/modify" component={ModifyMenu} exact={true} />
             </Switch>
           </IonRouterOutlet>
         </IonReactRouter>
@@ -36,13 +37,13 @@ const Restaurants = () => {
           <IonTabs>
           <IonRouterOutlet className='overflow-y-auto'>
             <Switch>
-              <Route path="/restaurant/create" component={CreateRestaurant} exact={true} />
-              <Route path="/restaurant/product/create" component={CreateProduct} exact={true} />
-              <Route path="/restaurant/product/modify" render={(props) => <Modify {...props} />} exact={true} />
-              <Route path="/restaurant/product" component={ListProduct} exact={true} />
-              <Route path="/restaurant/menu/create" component={CreateMenu} exact={true} />
-              <Route path="/restaurant/menu" component={ListMenu} exact={true} />
-              <Route path="/restaurant/menu/modify" render={(props) => <ModifyMenu {...props} />} exact={true} />
+              <AuthRoute path="/restaurant/create" component={CreateRestaurant} exact={true} />
+              <AuthRoute path="/restaurant/product/create" component={CreateProduct} exact={true} />
+              <AuthRoute path="/restaurant/product/modify" component={Modify} exact={true} />
+              <AuthRoute path="/restaurant/product" component={ListProduct} exact={true} />
+              <AuthRoute path="/restaurant/menu/create" component={CreateMenu} exact={true} />
+              <AuthRoute path="/restaurant/menu" component={ListMenu} exact={true} />
+              <AuthRoute path="/restaurant/menu/modify" component={ModifyMenu} exact={true} />
             </Switch>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">

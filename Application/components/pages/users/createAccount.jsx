@@ -126,6 +126,7 @@ const CreateAccount = (props) => {
         
         if(response) {
             localStorage.setItem('Token', response.data.userCreateOne.token);
+            localStorage.setItem('authenticated', true);
             history.push('/users/home');
         }
     }

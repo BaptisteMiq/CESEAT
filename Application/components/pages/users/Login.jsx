@@ -51,9 +51,9 @@ const Login = (props) => {
             }`
         }, '', 'Le compte utilisateur est bien connecté !', true);
         
-        console.log(response);
         if(response) {
             localStorage.setItem('Token', response.data.userLogin.token);
+            localStorage.setItem('authenticated', true);
             history.push('/users/home');
         }
     }
