@@ -11,24 +11,46 @@ import ListMenu from '../pages/restaurant/menus/ListMenu';
 import ModifyMenu from '../pages/restaurant/menus/ModifyMenu';
 import CreateRestaurant from '../pages/restaurant/CreateRestaurant';
 import { AuthRoute } from './protected.route';
+import api from '../api';
+import React from 'react';
 
-const Restaurants = () => {
+const Restaurants = (props) => {
+  var [getRestaurant, setGetRestaurant] = React.useState(false);
+  var checkRestaurant = async () => {
+    var response = await api('post', {
+        query: `query MyRestaurant {
+          myRestaurant {
+            _id
+          }
+        }`
+    }, '', 'Le restaurant a bien été récupéré !', false);
+
+    console.log(response.data);
+    if(response.data.myRestaurant) {
+      setGetRestaurant(true);
+    }
+  }
+
+  React.useEffect(()=> {
+    checkRestaurant();
+  }, [getRestaurant])
+
   return (
     <div>
       {isPlatform('desktop') &&
         <IonReactRouter>
           <IonHeader>
-            <Menu type="restaurant"/>
+            <Menu user={props.user} type="restaurant"/>
           </IonHeader>
           <IonRouterOutlet className='mt-14 overflow-y-auto'>
             <Switch>
-              <AuthRoute path="/restaurant/create" component={CreateRestaurant} exact={true} />
-              <AuthRoute path="/restaurant/product/create" component={CreateProduct} exact={true} />
-              <AuthRoute path="/restaurant/product" component={ListProduct} exact={true} />
-              <AuthRoute path="/restaurant/product/modify" component={Modify} exact={true} />
-              <AuthRoute path="/restaurant/menu/create" component={CreateMenu} exact={true} />
-              <AuthRoute path="/restaurant/menu" component={ListMenu} exact={true} />
-              <AuthRoute path="/restaurant/menu/modify" component={ModifyMenu} exact={true} />
+              <AuthRoute path="/restaurant/create" roleId={[2]} component={CreateRestaurant} exact={true} />
+              <AuthRoute path="/restaurant/product/create" roleId={[2]} component={CreateProduct} exact={true} />
+              <AuthRoute path="/restaurant/product" roleId={[2]} component={ListProduct} exact={true} />
+              <AuthRoute path="/restaurant/product/modify" roleId={[2]} component={Modify} exact={true} />
+              <AuthRoute path="/restaurant/menu/create" roleId={[2]} component={CreateMenu} exact={true} />
+              <AuthRoute path="/restaurant/menu" roleId={[2]} component={ListMenu} exact={true} />
+              <AuthRoute path="/restaurant/menu/modify" roleId={[2]} component={ModifyMenu} exact={true} />
             </Switch>
           </IonRouterOutlet>
         </IonReactRouter>
@@ -37,13 +59,13 @@ const Restaurants = () => {
           <IonTabs>
           <IonRouterOutlet className='overflow-y-auto'>
             <Switch>
-              <AuthRoute path="/restaurant/create" component={CreateRestaurant} exact={true} />
-              <AuthRoute path="/restaurant/product/create" component={CreateProduct} exact={true} />
-              <AuthRoute path="/restaurant/product/modify" component={Modify} exact={true} />
-              <AuthRoute path="/restaurant/product" component={ListProduct} exact={true} />
-              <AuthRoute path="/restaurant/menu/create" component={CreateMenu} exact={true} />
-              <AuthRoute path="/restaurant/menu" component={ListMenu} exact={true} />
-              <AuthRoute path="/restaurant/menu/modify" component={ModifyMenu} exact={true} />
+              <AuthRoute path="/restaurant/create" roleId={[2]} component={CreateRestaurant} exact={true} />
+              <AuthRoute path="/restaurant/product/create" roleId={[2]} component={CreateProduct} exact={true} />
+              <AuthRoute path="/restaurant/product/modify" roleId={[2]} component={Modify} exact={true} />
+              <AuthRoute path="/restaurant/product" roleId={[2]} component={ListProduct} exact={true} />
+              <AuthRoute path="/restaurant/menu/create" roleId={[2]} component={CreateMenu} exact={true} />
+              <AuthRoute path="/restaurant/menu" roleId={[2]} component={ListMenu} exact={true} />
+              <AuthRoute path="/restaurant/menu/modify" roleId={[2]} component={ModifyMenu} exact={true} />
             </Switch>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">

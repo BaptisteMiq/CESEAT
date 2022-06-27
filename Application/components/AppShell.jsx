@@ -17,14 +17,13 @@ window.matchMedia("(prefers-color-scheme: dark)").addListener(async (status) => 
 });
 
 const AppShell = () => {
-  var roleID = localStorage.getItem('RoleID');
   return (
     <IonApp>
       <ReactNotifications />
       <IonReactRouter history={history}>
         <IonRouterOutlet id="main">
-          <Route path="/users" component={Users} />
-          <Route path="/restaurant" component={Restaurants} />
+          <AuthRoute path="/users" accessWithoutAuth={true} component={Users} />
+          <AuthRoute path="/restaurant" accessWithoutAuth={true} component={Restaurants} />
           <Route exact path="/" render={() => <Redirect to="/users" />} />
         </IonRouterOutlet>
       </IonReactRouter>

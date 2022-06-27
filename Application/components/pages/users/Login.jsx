@@ -18,14 +18,16 @@ var generateModal = {
             type: "Input",
             value: "",
             fullWidth: true,
-            placeholder: "Mail"
+            placeholder: "Mail",
+            isValid: true
         },
         Password: {
             title: "Mot de passe",
             type: "PasswordInput",
             value: "",
             fullWidth: true,
-            placeholder: "Mot de passe"
+            placeholder: "Mot de passe",
+            isValid: true
         }
     }
 }
@@ -50,11 +52,11 @@ const Login = (props) => {
                 "mail": "${registerForms.elements.Mail.value}"
             }`
         }, '', 'Le compte utilisateur est bien connecté !', true);
-        
-        if(response) {
+        if(response.data.userLogin) {
             localStorage.setItem('Token', response.data.userLogin.token);
             localStorage.setItem('authenticated', true);
             history.push('/users/home');
+            history.go(0);
         }
     }
     var registerButton = () => {

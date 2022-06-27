@@ -14,6 +14,7 @@ import { useHistory  } from "react-router-dom";
 import Notifications from './Notifications';
 import UserPopup from './users/UserPopup';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import { Button, SHAPE, SIZE } from 'baseui/button';
 
 var user = {
   name: "Baptiste Miquel",
@@ -71,7 +72,7 @@ const Menu = (props) => {
   let history = useHistory();
   const [showNotifications, setShowNotifications] = useState(false);
   return (
-      <HeaderNavigation className="">
+      <HeaderNavigation className="max-h-16">
         <Notifications open={showNotifications} onDidDismiss={() => setShowNotifications(false)} />
         <StyledNavigationList $align={ALIGN.left}>
           <StyledNavigationItem className="font-bold text-xl">CES&apos;EAT</StyledNavigationItem>
@@ -90,27 +91,50 @@ const Menu = (props) => {
           )) }
         </StyledNavigationList>
         <StyledNavigationList $align={ALIGN.left}>
-          <IonButtons slot="end" style={{ paddingRight: "10px"}} >
-            <IonButton onClick={() => setShowNotifications(true)}>
-              <IonIcon icon={notificationsOutline} />
-            </IonButton>
-          </IonButtons>
-          <StatefulPopover
-            content={() => (
-             <UserPopup user={user}/>
-            )}
-            placement={PLACEMENT.leftTop}
-            triggerType={TRIGGER_TYPE.hover}
-          >
-            <IonButtons slot="end" style={{ paddingRight: "20px"}}>
-                <Avatar
-                  name={user.name}
-                  size="scale900"
-                  src={user.avatarUrl}
+          { props.user ? (
+            <div className='flex'>
+              <IonButtons slot="end" style={{ paddingRight: "10px"}} >
+                <IonButton onClick={() => setShowNotifications(true)}>
+                  <IonIcon icon={notificationsOutline} />
+                </IonButton>
+              </IonButtons>
+              <StatefulPopover
+                content={() => (
+                <UserPopup user={props.user}/>
+                )}
+                placement={PLACEMENT.leftTop}
+                triggerType={TRIGGER_TYPE.hover}
+              >
+                <IonButtons slot="end" style={{ paddingRight: "20px"}}>
+                    <Avatar
+                      name={props.user.Firstname + " " + props.user.Lastname}
+                      size="scale900"
+                      src={props.user.avatarUrl}
+                    >
+                    </Avatar>
+                </IonButtons>
+              </StatefulPopover>
+            </div>) :
+            <div>
+              <Button
+                onClick={() => (history.push('/users/register'))}
+                shape={SHAPE.pill}
+                size={SIZE.compact}
+                className="mx-2"
+                kind='secondary'
                 >
-                </Avatar>
-            </IonButtons>
-          </StatefulPopover>
+                S'inscrire
+              </Button>
+              <Button
+                onClick={() => (history.push('/users/login'))}
+                shape={SHAPE.pill}
+                size={SIZE.compact}
+                className="mx-2"
+                kind='primary'
+                >
+                Se connecter
+              </Button>
+            </div> }
         </StyledNavigationList>
       </HeaderNavigation>
   );

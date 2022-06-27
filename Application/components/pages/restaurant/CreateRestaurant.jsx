@@ -96,7 +96,6 @@ const CreateRestaurant = (props) => {
         if(response) {
 
             var listOfTypes = [];
-            console.log(response);
             response.data.restaurantTypes.map(type => {
                 listOfTypes.push({"label": type.label, id: type.id});
             });
@@ -174,19 +173,17 @@ const CreateRestaurant = (props) => {
 
     var handleCreate = async (menuForms) => {
 
-        console.log(menuForms);
-
         var responseAddress = await api('post', {
             query: `mutation AddressCreateOne($record: CreateOneAddressInput!) {
                 addressCreateOne(record: $record) {
-                record {
-                    line1
-                    line2
-                    city
-                    PC
-                    country
-                    _id
-                }
+                    record {
+                        line1
+                        line2
+                        city
+                        PC
+                        country
+                        _id
+                    }
                 }
             }`,
             variables: `{
@@ -201,7 +198,7 @@ const CreateRestaurant = (props) => {
         }, '', 'L\'adresse a bien été créé !', true);
 
 
-        console.log(responseAddress);
+        console.log(props);
         var response = await api('post', {
             query: `mutation RestaurantCreateOne($record: CreateOneRestaurantInput!) {
                 restaurantCreateOne(record: $record) {
@@ -224,7 +221,7 @@ const CreateRestaurant = (props) => {
                     "type": "${menuForms.elements.Type.value.map(type => { return type.id ;})}",
                     "mail": "${menuForms.elements.Mail.value}",
                     "phoneNumber": "${menuForms.elements.PhoneNumber.value}",
-                    "ownerId": "1",
+                    "ownerId": "${props.user ? props.user.ID : null}",
                     "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
                     "address": "${responseAddress.data.addressCreateOne.record._id}",
                     "products": [],

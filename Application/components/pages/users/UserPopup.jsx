@@ -34,14 +34,21 @@ const UserPopup = (props) => {
         }
     }
 
+    var logout = () => {
+        localStorage.removeItem('Token');
+        localStorage.setItem('authenticated', false);
+        history.push('/users/login');
+        history.go(0);
+    }
+
     return (
         <div className='UserPopup w-52'> 
            <div className="flex flex-col items-center">
             <div className="m-5 Avatar">
                 <Avatar
-                        name="Jane Doe"
+                        name={props.user.Firstname + " " + props.user.Lastname}
                         size="scale1600"
-                        src="https://via.placeholder.com/120x120"
+                        src={props.user.Avatar}
                         overrides={{
                             Avatar: {
                             style: ({ $theme }) => ({
@@ -61,6 +68,16 @@ const UserPopup = (props) => {
                     size={SIZE.compact}
                     >
                     Gestion du compte
+                </Button>
+            </div>
+            <div className="UserButton mb-5">
+                <Button
+                    onClick={() => logout()}
+                    shape={SHAPE.pill}
+                    size={SIZE.compact}
+                    kind={"secondary"}
+                    >
+                     Déconnexion
                 </Button>
             </div>
            </div>
