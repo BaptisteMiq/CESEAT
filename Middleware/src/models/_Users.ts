@@ -28,8 +28,6 @@ export const getUsersQueries = (schemaComposer: SchemaComposer) => {
         Avatar: "String",
         SponsorCode: "String",
         HasAcceptedGDPR: "Boolean",
-        BillingAddress_ID: "String",
-        DeliveryAddress_ID: "String",
         Role_ID: "String",
         CreatedAt: "String",
     };

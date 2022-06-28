@@ -13,6 +13,7 @@ import CreateRestaurant from '../pages/restaurant/CreateRestaurant';
 import { AuthRoute } from './protected.route';
 import api from '../api';
 import React from 'react';
+import Order from '../pages/restaurant/order/Order';
 
 const Restaurants = (props) => {
   var [getRestaurant, setGetRestaurant] = React.useState(false);
@@ -51,6 +52,7 @@ const Restaurants = (props) => {
               <AuthRoute path="/restaurant/menu/create" roleId={[2]} component={CreateMenu} exact={true} />
               <AuthRoute path="/restaurant/menu" roleId={[2]} component={ListMenu} exact={true} />
               <AuthRoute path="/restaurant/menu/modify" roleId={[2]} component={ModifyMenu} exact={true} />
+              <AuthRoute path="/restaurant/orders" roleId={[2]} component={Order} exact={true} />
             </Switch>
           </IonRouterOutlet>
         </IonReactRouter>
@@ -66,6 +68,7 @@ const Restaurants = (props) => {
               <AuthRoute path="/restaurant/menu/create" roleId={[2]} component={CreateMenu} exact={true} />
               <AuthRoute path="/restaurant/menu" roleId={[2]} component={ListMenu} exact={true} />
               <AuthRoute path="/restaurant/menu/modify" roleId={[2]} component={ModifyMenu} exact={true} />
+              <AuthRoute path="/restaurant/orders" roleId={[2]} component={Order} exact={true} />
             </Switch>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">

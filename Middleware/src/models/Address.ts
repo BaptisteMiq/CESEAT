@@ -1,6 +1,18 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
+import { ApolloError } from "apollo-server-express";
+import { graphql } from "graphql";
 import { composeMongoose } from "graphql-compose-mongoose";
-import { RequireComm, RequireTech, AuthMiddleware, RequireRest, RequireDriver, RequireUser } from "../Auth";
+import {
+    RequireComm,
+    RequireTech,
+    AuthMiddleware,
+    RequireRest,
+    RequireDriver,
+    RequireUser,
+    Require,
+    U,
+    decodeToken,
+} from "../Auth";
 import { lengthBetween, maxLength } from "../validators/StringValidator";
 
 export class AddressClass {
@@ -18,6 +30,9 @@ export class AddressClass {
 
     @prop({ required: true, validate: lengthBetween("country", 1, 255) })
     public country!: string;
+
+    @prop()
+    public userId: string;
 }
 
 const generateQueriesMutations = (schemaComposer: any) => {
@@ -26,13 +41,23 @@ const generateQueriesMutations = (schemaComposer: any) => {
 
     const queries = {
         addresses: MongooseObject.mongooseResolvers.findMany().withMiddlewares([RequireComm, AuthMiddleware]),
+        myAddresses: MongooseObject.mongooseResolvers.findMany().withMiddlewares(Require([U.OWN])),
         addressById: MongooseObject.mongooseResolvers.findById(),
     };
 
     const mutations = {
-        addressCreateOne: MongooseObject.mongooseResolvers.createOne().withMiddlewares([RequireUser, RequireRest, RequireDriver, AuthMiddleware]),
-        addressUpdateById: MongooseObject.mongooseResolvers.updateById().withMiddlewares([RequireUser, RequireRest, RequireDriver, AuthMiddleware]),
-        addressDeleteById: MongooseObject.mongooseResolvers.removeById().withMiddlewares([RequireUser, RequireRest, RequireDriver, AuthMiddleware]),
+        addressCreateOne: MongooseObject.mongooseResolvers
+            .createOne()
+            .withMiddlewares([RequireUser, RequireRest, RequireDriver, AuthMiddleware]),
+        myAddressCreateOne: MongooseObject.mongooseResolvers
+        .createOne()
+            .withMiddlewares(Require([U.OWN])),
+        addressUpdateById: MongooseObject.mongooseResolvers
+            .updateById()
+            .withMiddlewares([RequireUser, RequireRest, RequireDriver, AuthMiddleware]),
+        addressDeleteById: MongooseObject.mongooseResolvers
+            .removeById()
+            .withMiddlewares([RequireUser, RequireRest, RequireDriver, AuthMiddleware]),
     };
 
     const relations = {};

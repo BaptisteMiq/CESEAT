@@ -14,7 +14,7 @@ const ListAddress = (props) => {
 
         var response = await api('post', {
             query: `query Query {
-                addresses {
+                myAddresses {
                   line1
                   line2
                   city
@@ -25,7 +25,7 @@ const ListAddress = (props) => {
               }`
         }, '', 'Liste des adresses bien récupérée !', false);
         if(response) {
-            setAddress(response.data.addresses);
+            setAddress(response.data.myAddresses);
             setGetAddress(false);
         }
     }

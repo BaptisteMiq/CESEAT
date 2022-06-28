@@ -62,7 +62,7 @@ const CreateProduct = (props) => {
     var handleCreate = async (addressForms) => {
         var response = await api('post', {
             query: `mutation AddressCreateOne($record: CreateOneAddressInput!) {
-                addressCreateOne(record: $record) {
+                myAddressCreateOne(record: $record) {
                   record {
                     line1
                     line2
