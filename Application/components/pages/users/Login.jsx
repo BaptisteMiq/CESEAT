@@ -35,6 +35,8 @@ const Login = (props) => {
     var history = useHistory();
     var handleLogin = async (registerForms) => {
 
+        alert("Login button clicked");
+
         var response = await api('post', {
             query: `mutation UserLogin($mail: String, $password: String) {
                 userLogin(Mail: $mail, Password: $password) {
@@ -52,6 +54,7 @@ const Login = (props) => {
         }, '', 'Le compte utilisateur est bien connecté !', true);
         
         if(response) {
+            alert("Youpi ça marche", response.data.userLogin.token)
             localStorage.setItem('Token', response.data.userLogin.token);
             localStorage.setItem('authenticated', true);
             history.push('/users/home');

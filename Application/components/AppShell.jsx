@@ -12,7 +12,9 @@ import socketIOClient from 'socket.io-client';
 import React, { useEffect, useState } from 'react';
 import { newNotification } from './ui/Notifs';
 
-const socket = socketIOClient(`http://${process.env.NEXT_PUBLIC_MDW_HOST}:${process.env.NEXT_PUBLIC_MDW_PORT}/graphql`);
+const socket = socketIOClient(process.env.NEXT_PUBLIC_MDW_URL, {
+  transport: ['websocket']
+  });
 export const SocketContext = React.createContext(socket);
 
 window.matchMedia('(prefers-color-scheme: dark)').addListener(async status => {

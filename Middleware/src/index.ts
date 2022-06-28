@@ -84,9 +84,14 @@ import { Server } from "socket.io";
         // Socket.IO
         const io = new Server(socketAndGQLServer, {
             cors: {
-                origin: "*",
+                origin: "https://baptistemiq-ceseat-57vjjjpqh7549-3000.githubpreview.dev",
             },
+            path: '/socket.io',
+            transports: ['websocket'],
         });
+        io.engine.on("connection_error", (err: any) => {
+            console.log(err);
+          });
 
         io.on("connection", (socket: any) => {
             console.log("New socket client connected");
