@@ -19,6 +19,7 @@
     "apollo-server-koa": "^3.8.2",
     "axios": "^0.27.2",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "graphql": "^16.5.0",
@@ -33,7 +34,8 @@
     "koa-router": "^10.1.1",
     "mongodb": "^4.7.0",
     "mongoose": "^6.3.6",
-    "mongoose-autopopulate": "^0.16.1"
+    "mongoose-autopopulate": "^0.16.1",
+    "socket.io": "^4.5.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.3",

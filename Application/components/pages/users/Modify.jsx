@@ -78,7 +78,7 @@ const Modify = (props) => {
     });
     var getUser = async (id) => {
         await axios({
-            url: 'http://localhost:4000/graphql',
+            url: `http://${process.env.NEXT_PUBLIC_MDW_HOST}:${process.env.NEXT_PUBLIC_MDW_PORT}/graphql`,
             method: 'post',
             data: {
                 query: `query($id: String)  {

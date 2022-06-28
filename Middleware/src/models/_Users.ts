@@ -170,9 +170,9 @@ export const getUsersMutations = (schemaComposer: SchemaComposer) => {
                         Password,
                     })
                     .then((res) => {
-                        context.res.cookie("token", res.data.token, {
-                            httpOnly: true,
-                        });
+                        // context.res.cookie("token", res.data.token, {
+                        //     httpOnly: true,
+                        // });
                         return {
                             record: res.data.user,
                             token: res.data.token,
@@ -186,7 +186,7 @@ export const getUsersMutations = (schemaComposer: SchemaComposer) => {
         userLogout: {
             type: ResultUserPayload,
             resolve: async (root: any, args: any, context: any) => {
-                context.res.clearCookie("token");
+                // context.res.clearCookie("token");
                 return {
                     record: null,
                     token: null,

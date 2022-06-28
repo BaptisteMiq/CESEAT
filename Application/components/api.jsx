@@ -6,7 +6,7 @@ const api = async (method, data, params, successMessage, notification = false) =
     var token = localStorage.getItem('Token');
     var response = await axios({
         method: method,
-        url: 'http://localhost:4000/graphql',
+        url: `http://${process.env.NEXT_PUBLIC_MDW_HOST}:${process.env.NEXT_PUBLIC_MDW_PORT}/graphql`,
         params: params,
         data: data,
         headers: {

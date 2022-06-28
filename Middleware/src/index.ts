@@ -8,6 +8,11 @@ import express from "express";
 import { ApolloServer, UserInputError } from "apollo-server-express";
 
 import cookieParser from "cookie-parser";
+import cors from "cors";
+
+// Socket.IO
+import http from "http";
+import { Server } from "socket.io";
 
 (async () => {
     const schema = await buildSchema();
@@ -66,12 +71,33 @@ import cookieParser from "cookie-parser";
 
     connect("mongodb+srv://Admin:Admin@ceseat.omcvzez.mongodb.net/?retryWrites=true&w=majority").then(async () => {
         const app = express();
+        app.use(cors());
         app.use(cookieParser());
         await server.start();
         server.applyMiddleware({ app });
 
-        app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`));
+        // app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`));
+        const socketAndGQLServer = http.createServer(app);
 
         console.log("Running a GraphQL API server at http://localhost:4000/graphql");
+
+        // Socket.IO
+        const io = new Server(socketAndGQLServer, {
+            cors: {
+                origin: "*",
+            },
+        });
+
+        io.on("connection", (socket: any) => {
+            console.log("New socket client connected");
+            socket.on("orderStatus", (message: any) => {
+                console.log("Received message: ", message);
+                io.emit("orderStatus", message);
+            });
+        });
+
+        socketAndGQLServer.listen(4000, () => {
+            console.log("Server is running");
+        });
     });
 })();

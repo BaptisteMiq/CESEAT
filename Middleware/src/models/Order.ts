@@ -24,6 +24,9 @@ export class OrderClass {
     @prop({ ref: RestaurantClass, required: true })
     public restaurant!: Ref<RestaurantClass>;
 
+    @prop()
+    public deliveryUserId?: string;
+
     @prop({ ref: CartClass, required: true })
     public cart!: Ref<CartClass>;
 
@@ -81,6 +84,7 @@ const generateQueriesMutations = (schemaComposer: any) => {
                     for (let i = 0; i < mutationAndVariables.data.queries.length; i++) {
                         const query = mutationAndVariables.data.queries[i];
                         const variables = mutationAndVariables.data.variables[i];
+                        console.log(query, variables);
                         const result = await graphql({
                             schema,
                             source: query,
