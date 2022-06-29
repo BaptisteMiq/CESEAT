@@ -1,19 +1,19 @@
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { IonApp, IonHeader, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route } from 'react-router-dom';
-import Users from './routes/Users';
-import history from './routes/history';
-import { ReactNotifications } from 'react-notifications-component';
-import Restaurants from './routes/Restaurants';
-import Delivery from './routes/Delivery';
-import { AuthRoute } from './routes/protected.route';
-import Menu from './pages/Menu';
-import socketIOClient from 'socket.io-client';
 import React, { useEffect, useState } from 'react';
-import { newNotification } from './ui/Notifs';
+import { ReactNotifications } from 'react-notifications-component';
+import { Redirect, Route } from 'react-router-dom';
+import socketIOClient from 'socket.io-client';
+import Delivery from './routes/Delivery';
+import history from './routes/history';
+import { AuthRoute } from './routes/protected.route';
+import Restaurants from './routes/Restaurants';
+import Users from './routes/Users';
 
-const socket = socketIOClient(`http://${process.env.NEXT_PUBLIC_MDW_HOST}:${process.env.NEXT_PUBLIC_MDW_PORT}/graphql`);
+const socket = socketIOClient(process.env.NEXT_PUBLIC_SOCKET, {
+  withCredentials: true
+});
 export const SocketContext = React.createContext(socket);
 
 window.matchMedia('(prefers-color-scheme: dark)').addListener(async status => {

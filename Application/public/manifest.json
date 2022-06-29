@@ -1,0 +1,22 @@
+{
+    "name": "CESEAT",
+    "short_name": "CESEAT",
+    "display": "standalone",
+    "orientation": "portrait",
+    "theme_color": "#FFFFFF",
+    "background_color": "#FFFFFF",
+    "start_url": "/",
+    "icons": [
+      {
+        "src": "/img/icon2.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/img/icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }

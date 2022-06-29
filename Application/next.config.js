@@ -1,3 +1,5 @@
+const withPWA = require('next-pwa')
+
 module.exports = {
   basePath: '',
   images: {
@@ -6,4 +8,7 @@ module.exports = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  pwa: {
+    dest: 'public'
+  }
 };

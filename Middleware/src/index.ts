@@ -84,9 +84,14 @@ import { Server } from "socket.io";
         // Socket.IO
         const io = new Server(socketAndGQLServer, {
             cors: {
-                origin: "*",
-            },
+                origin: process.env.APPLICATION_URL,
+                methods: ["GET", "POST"],
+                credentials: true
+              }
         });
+        io.engine.on("connection_error", (err: any) => {
+            console.log(err);
+          });
 
         io.on("connection", (socket: any) => {
             console.log("New socket client connected");

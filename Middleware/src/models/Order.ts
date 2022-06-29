@@ -64,7 +64,7 @@ const generateQueriesMutations = (schemaComposer: any) => {
                 },
                 type: "CreateOneOrderPayload",
                 resolve: async (root: any) => {
-                    const mutationAndVariables = await axios(`http://localhost:4500/makeOrder`, {
+                    const mutationAndVariables = await axios(`http://${process.env.MSC_HOST}:${process.env.MSC_PORT_ORDERS}/makeOrder`, {
                         method: "POST",
                         data: {
                             additionalInfo: root.args.record.additionalInfo,

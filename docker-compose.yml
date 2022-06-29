@@ -21,27 +21,14 @@ services:
       - ./Database/dump:/docker-entrypoint-initdb.d
 
   # The Middleware containing the GraphQL Server
-  middleware_1:
+  middleware:
     build: ./Middleware
     image: mysql/mysql-server
     command: npm run prod
     volumes:
       - ./Middleware:/src
     ports:
-      - "4001:4000"
-    environment:
-      - NODE_ENV=development
-    restart: always
-
-  # The Middleware containing the GraphQL Server
-  middleware_2:
-    build: ./Middleware
-    image: mysql/mysql-server
-    command: npm run prod
-    volumes:
-      - ./Middleware:/src
-    ports:
-      - "4002:4000"
+      - "4000:4000"
     environment:
       - NODE_ENV=development
     restart: always
@@ -68,6 +55,28 @@ services:
     depends_on:
       - mysql
 
+  # Microservice for the Orders
+  microservice_orders_1:
+    build: ./Microservices/Orders
+    command: npm run prod
+    volumes:
+      - ./Microservices/Orders:/app
+    ports:
+      - "4501:4500"
+    restart: always
+    depends_on:
+      - mysql
+  microservice_orders_2:
+    build: ./Microservices/Orders
+    command: npm run prod
+    volumes:
+      - ./Microservices/Accounts:/app
+    ports:
+      - "4502:4500"
+    restart: always
+    depends_on:
+      - mysql
+
   # Microservice for the CDN
   microservice_cdn_1:
     build: ./Microservices/CDN
@@ -88,20 +97,31 @@ services:
       - "3102:3001"
     restart: always
 
+  # Microservice for the Sockets
+  microservice_sockets_1:
+    build: ./Microservices/Sockets
+    command: npm run prod
+    volumes:
+      - ./Microservices/Sockets:/app
+    ports:
+      - "4700:4700"
+    restart: always
+
   # Proxy
   nginx:
     build: ./Proxy
     depends_on:
       - microservice_accounts_1
       - microservice_accounts_2
+      - microservice_orders_1
+      - microservice_orders_2
       - microservice_cdn_1
       - microservice_cdn_2
-      - middleware_1
-      - middleware_2
     ports:
       - "5100:5100"
       - "3100:3100"
-      - "4100:4100"
+      # - "4100:4100"
+      - "4600:4600"
       - "80:80"
       - "443:443"
     restart: always

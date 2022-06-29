@@ -72,7 +72,7 @@ const Modify = (props) => {
     });
     var getAddress = async (id) => {
         await axios({
-            url: `http://${process.env.NEXT_PUBLIC_MDW_HOST}:${process.env.NEXT_PUBLIC_MDW_PORT}/graphql`,
+            url: process.env.NEXT_PUBLIC_MDW_URL,
             method: 'post',
             data: {
                 query: `query AddressById($id: MongoID!) {
