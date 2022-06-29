@@ -49,7 +49,7 @@ const UserPopup = (props) => {
                 <Avatar
                         name={props.user.Firstname + " " + props.user.Lastname}
                         size="scale1600"
-                        src={props.user.Avatar}
+                        src={process.env.NEXT_PUBLIC_CDN + props.user.Avatar}
                         overrides={{
                             Avatar: {
                             style: ({ $theme }) => ({
