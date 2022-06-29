@@ -8,6 +8,7 @@ APPS+=("Database"       "cd Database && docker compose build && docker compose d
 APPS+=("MSC Accounts"   "cd Microservices/Accounts && npm run dev")
 APPS+=("MSC CDN"        "cd Microservices/CDN && npm run dev")
 APPS+=("MSC Orders"        "cd Microservices/Orders && npm run dev")
+APPS+=("MSC Sockets"        "cd Microservices/Sockets && npm run dev")
 APPS+=("Middleware"     "cd Middleware && npm run watch")
 
 for ((i = 0; i < ${#APPS[@]}; i++)); do
