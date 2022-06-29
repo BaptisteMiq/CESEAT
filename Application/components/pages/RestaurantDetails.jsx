@@ -164,7 +164,8 @@ const RestaurantDetails = () => {
         }`,
         variables: `{
           "filter": {
-            "restaurant": "${localStorage.getItem('restaurantID')}"
+            "restaurant": "${localStorage.getItem('restaurantID')}",
+            "isOrdered": false
           }
         }`,
       },

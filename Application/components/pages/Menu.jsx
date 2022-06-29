@@ -65,9 +65,9 @@ var navigationByUsers = {
   ],
   deliveryMan: [
     {
-      label: "Commande",
+      label: "Commandes",
       link: "/delivery/orders"
-    }
+    },
   ]
 }
 
