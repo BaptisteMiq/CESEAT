@@ -223,7 +223,7 @@ const Order = props => {
                           latitude: 43.5410339,
                           zoom: 17,
                         }}
-                        style={{ width: '80%', height: '300px' }}
+                        style={{ width: '100%', height: '400px' }}
                         mapStyle="mapbox://styles/mapbox/streets-v9"
                         mapboxAccessToken={MAPBOX_TOKEN}
                       >
@@ -287,7 +287,7 @@ const Order = props => {
                           latitude: 43.5483358,
                           zoom: 17,
                         }}
-                        style={{ width: '80%', height: '300px' }}
+                        style={{ width: '100%', height: '400px' }}
                         mapStyle="mapbox://styles/mapbox/streets-v9"
                         mapboxAccessToken={MAPBOX_TOKEN}
                       >

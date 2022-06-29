@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
     cors: {
-        origin: "https://baptistemiq-ceseat-p57444qrh9474-3000.githubpreview.dev",
+        origin: process.env.APPLICATION_URL,
         methods: ["GET", "POST"],
         credentials: true,
     },

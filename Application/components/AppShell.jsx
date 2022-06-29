@@ -1,18 +1,16 @@
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route } from 'react-router-dom';
-import Users from './routes/Users';
-import history from './routes/history';
-import { ReactNotifications } from 'react-notifications-component';
-import Restaurants from './routes/Restaurants';
-import Delivery from './routes/Delivery';
-import { AuthRoute } from './routes/protected.route';
-import socketIOClient from 'socket.io-client';
 import React, { useEffect, useState } from 'react';
-import { newNotification } from './ui/Notifs';
+import { ReactNotifications } from 'react-notifications-component';
+import { Redirect, Route } from 'react-router-dom';
+import socketIOClient from 'socket.io-client';
+import Delivery from './routes/Delivery';
+import history from './routes/history';
+import Restaurants from './routes/Restaurants';
+import Users from './routes/Users';
 
-const socket = socketIOClient(`https://baptistemiq-ceseat-p57444qrh9474-4700.githubpreview.dev/`, {
+const socket = socketIOClient(process.env.NEXT_PUBLIC_SOCKET, {
   withCredentials: true
 });
 export const SocketContext = React.createContext(socket);

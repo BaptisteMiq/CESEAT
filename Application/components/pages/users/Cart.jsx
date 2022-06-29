@@ -125,7 +125,7 @@ const Cart = props => {
     <IonPage className="overflow-y-auto mb-5 flex flex-col justify-center items-center">
       <div
         className="mb-5 flex flex-wrap align-center justify-center overflow-scroll"
-        style={{ width: '500px' }}
+        style={{ maxWidth: '500px' }}
       >
         {carts !== null && (
           <>

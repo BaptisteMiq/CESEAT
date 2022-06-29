@@ -84,7 +84,7 @@ import { Server } from "socket.io";
         // Socket.IO
         const io = new Server(socketAndGQLServer, {
             cors: {
-                origin: "https://baptistemiq-ceseat-p57444qrh9474-3000.githubpreview.dev",
+                origin: process.env.APPLICATION_URL,
                 methods: ["GET", "POST"],
                 credentials: true
               }
