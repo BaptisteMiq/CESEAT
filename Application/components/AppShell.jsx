@@ -36,9 +36,9 @@ const AppShell = () => {
       <SocketContext.Provider value={socket}>
         <IonReactRouter history={history}>
           <IonRouterOutlet id="main">
-            <AuthRoute path="/users" accessWithoutAuth={true} roleId={[1, 2]} component={Users} />
-            <AuthRoute path="/restaurant" accessWithoutAuth={false} roleId={[2]} component={Restaurants} />
-            <Route path="/delivery" component={Delivery} />
+            <AuthRoute path="/users" accessWithoutAuth={true} roleId={[0, 1, 2]} component={Users} />
+            <AuthRoute path="/restaurant" accessWithoutAuth={false} roleId={[0, 2]} component={Restaurants} />
+            <AuthRoute path="/delivery" accessWithoutAuth={false} roleId={[0, 3]} component={Delivery} />
             <Route exact path="/" render={() => <Redirect to="/users" />} />
           </IonRouterOutlet>
         </IonReactRouter>

@@ -93,6 +93,7 @@ const CreateRestaurant = (props) => {
                 }
               }`
         }, '', 'Liste des types bien récupérée !', false);
+
         if(response) {
 
             var listOfTypes = [];
@@ -228,6 +229,10 @@ const CreateRestaurant = (props) => {
                 }
             }`
         }, '', 'Le restaurant a bien été créé !', true);
+        localStorage.setItem("restaurantID", response.data.restaurantCreateOne.record._id);
+        localStorage.setItem('ownRestaurant', true);
+        history.push('/restaurant/orders');
+        history.go(0);
     }
     var cancelButton = () => {
         history.goBack();
