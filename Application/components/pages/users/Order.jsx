@@ -1,19 +1,27 @@
-// @ts-check
-
-import { IonPage, isPlatform } from '@ionic/react';
+import { IonPage } from '@ionic/react';
+import { Accordion, Panel } from 'baseui/accordion';
 import { Button, KIND, SIZE } from 'baseui/button';
-import { Card, StyledBody } from 'baseui/card';
 import { Heading, HeadingLevel } from 'baseui/heading';
-import { cart } from 'ionicons/icons';
 import Image from 'next/image';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../../api';
-import { Accordion, Panel } from 'baseui/accordion';
+import { SocketContext } from '../../AppShell';
+import { newNotification } from '../../ui/Notifs';
 
 const Order = props => {
   var history = useHistory();
   const [orders, setOrders] = React.useState(null);
+  const socket = React.useContext(SocketContext);
+
+  React.useEffect(() => {
+    socket.on('orderStatus', data => {
+      if (window.location.href.includes(data.to)) {
+        newNotification(data.message);
+        getOrders();
+      }
+    });
+  }, []);
 
   var getOrders = async () => {
     var response = await api(
@@ -54,16 +62,16 @@ const Order = props => {
               }`,
       },
       '',
-      'Paniers récupérés !',
+      '',
       false
     );
     if (response) {
-      const orders = response.data.myOrders;
+      const orders = response.data.myOrders.filter(order => order.cart);
       setOrders(orders);
     }
   };
 
-  const cancelOrder = async order => {
+  const cancelOrder = async (order, notif = true) => {
     const response = await api(
       'post',
       {
@@ -76,9 +84,19 @@ const Order = props => {
       },
       '',
       'Commande annulée !',
-      true
+      notif
     );
     if (response) {
+      if (notif) {
+        socket.emit('orderStatus', {
+          to: 'restaurant',
+          message: `La commande ${order.tag} vient d'être annulée!`,
+        });
+        socket.emit('orderStatus', {
+          to: 'delivery',
+          message: `La commande ${order.tag} vient d'être annulée!`,
+        });
+      }
       getOrders();
     }
   };
@@ -200,7 +218,6 @@ const Order = props => {
                           <div className="justify-center align-center items-center flex flex-auto my-10">
                             <Image src="/img/content.gif" height="180" width="180" />
                           </div>
-                          <p className="mt-2">Vous serez notifié lorsqu'il sera arrivé.</p>
                         </HeadingLevel>
                       </div>
                     </div>
@@ -239,24 +256,45 @@ const Order = props => {
                       </div>
                     </Panel>
                   </Accordion>
-                  <div className="justify-center align-center items-center flex flex-auto flex-col my-2">
-                    <Button
-                      className="mt-4 m-4"
-                      overrides={{
-                        BaseButton: {
-                          style: () => ({
-                            width: '100%',
-                            maxWidth: '200px',
-                          }),
-                        },
-                      }}
-                      size={SIZE.compact}
-                      kind={KIND.primary}
-                      onClick={() => cancelOrder(order)}
-                    >
-                      Annuler la commande
-                    </Button>
-                  </div>
+                  {order.status._id !== '62b7419ff50332eb3572ff19' ? (
+                    <div className="justify-center align-center items-center flex flex-auto flex-col my-2">
+                      <Button
+                        className="mt-4 m-4"
+                        overrides={{
+                          BaseButton: {
+                            style: () => ({
+                              width: '100%',
+                              maxWidth: '200px',
+                            }),
+                          },
+                        }}
+                        size={SIZE.compact}
+                        kind={KIND.primary}
+                        onClick={() => cancelOrder(order)}
+                      >
+                        Annuler la commande
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="justify-center align-center items-center flex flex-auto flex-col my-2">
+                      <Button
+                        className="mt-4 m-4"
+                        overrides={{
+                          BaseButton: {
+                            style: () => ({
+                              width: '100%',
+                              maxWidth: '200px',
+                            }),
+                          },
+                        }}
+                        size={SIZE.compact}
+                        kind={KIND.primary}
+                        onClick={() => cancelOrder(order, false)}
+                      >
+                        Ok!
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ))
             )}

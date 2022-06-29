@@ -5,9 +5,11 @@ import { Heading, HeadingLevel } from 'baseui/heading';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../../api';
+import { SocketContext } from '../../AppShell';
 const Cart = props => {
   var history = useHistory();
   const [carts, setCarts] = React.useState(null);
+  const socket = React.useContext(SocketContext);
 
   // 62b74143f50332eb3572ff13
 
@@ -38,6 +40,10 @@ const Cart = props => {
     );
 
     if (response) {
+      socket.emit('orderStatus', {
+        to: 'restaurant',
+        message: "Une nouvelle commande vient d'arriver!",
+      });
       history.push('/users/orders');
     }
   };
