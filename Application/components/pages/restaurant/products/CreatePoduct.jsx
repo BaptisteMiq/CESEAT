@@ -65,8 +65,8 @@ const CreateProduct = (props) => {
     let history = useHistory();
     var handleCreate = async (productForms) => {
         var response = await api('post', {
-            query: `mutation ProductCreateOne($record: CreateOneProductInput!) {
-                productCreateOne(record: $record) {
+            query: `mutation AddProductToMyRestaurant ($record: CreateOneProductInput!) {
+                addProductToMyRestaurant (record: $record) {
                   recordId
                 }
               }`,
@@ -81,6 +81,7 @@ const CreateProduct = (props) => {
                 }
             }`
         }, '', 'Le produit a bien été créé !', true);
+        history.push('/restaurant/product');
     }
     var cancelButton = () => {
         history.goBack();

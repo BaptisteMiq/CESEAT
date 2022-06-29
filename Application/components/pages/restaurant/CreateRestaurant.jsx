@@ -197,8 +197,6 @@ const CreateRestaurant = (props) => {
             }`
         }, '', 'L\'adresse a bien été créé !', true);
 
-
-        console.log(props);
         var response = await api('post', {
             query: `mutation RestaurantCreateOne($record: CreateOneRestaurantInput!) {
                 restaurantCreateOne(record: $record) {
@@ -221,7 +219,7 @@ const CreateRestaurant = (props) => {
                     "type": "${menuForms.elements.Type.value.map(type => { return type.id ;})}",
                     "mail": "${menuForms.elements.Mail.value}",
                     "phoneNumber": "${menuForms.elements.PhoneNumber.value}",
-                    "ownerId": "${props.user ? props.user.ID : null}",
+                    "ownerId": "${localStorage.getItem('UserID')}",
                     "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
                     "address": "${responseAddress.data.addressCreateOne.record._id}",
                     "products": [],

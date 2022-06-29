@@ -7,49 +7,48 @@ import * as React from 'react';
 import { useHistory } from "react-router-dom";
 import api from "../../../api";
 
-const ListMenu = (props) => {
+const ListCategory = (props) => {
     var history = useHistory();
-    var [menus, setMenu] = React.useState([]);
-    var [getMenu, setGetMenu] = React.useState(true);
+    var [categories, setCategories] = React.useState([]);
+    var [getCategorie, setGetCategorie] = React.useState(true);
 
-    var getListOfMenu = async () => {
+    var getListOfCategories = async () => {
 
         var response = await api('post', {
-            query: `query Menus {
+            query: `query MyRestaurant {
                 myRestaurant {
-                  menus {
+                  categories {
                     name
-                    description
-                    price
-                    picture
-                    createdAt
-                    available
-                    products {
-                      _id
+                    menus {
                       name
+                      _id
+                    }
+                    products {
+                      name
+                      _id
                     }
                     _id
                   }
                 }
               }`
-        }, '', 'Liste des menus bien récupérée !', false);
+        }, '', 'Liste des catégories bien récupérée !', false);
         if(response) {
-            setMenu(response.data.myRestaurant.menus);
-            setGetMenu(false);
+            setCategories(response.data.myRestaurant.categories);
+            setGetCategorie(false);
         }
     }
 
-    var modifyMenu = (menu) => {
-        localStorage.setItem('modifyMenuID', menu._id);
+    var modifyCategory = (category) => {
+        localStorage.setItem('modifyCategoryID', category._id);
         history.push({
-            pathname: '/restaurant/menu/modify',
-            state: {menuID: menu._id}
+            pathname: '/restaurant/category/modify',
+            state: {categoryID: category._id}
         })
     }
 
-    var addMenu = () => {
+    var addCategory = () => {
         history.push({
-            pathname: '/restaurant/menu/create'
+            pathname: '/restaurant/category/create'
         })
     }
 
@@ -60,27 +59,34 @@ const ListMenu = (props) => {
         })
     }
 
-    var deleteMenu = async (menu) => {
+    var redirectToMenu = (id) => {
+        history.push({
+            pathname: '/restaurant/menu/modify',
+            state: {menuID: id}
+        })
+    }
+
+    var deleteCategory = async (category) => {
         var response = await api('post', {
-            query: `mutation DeleteMenuFromMyRestaurant($deleteMenuFromMyRestaurantId: MongoID!) {
-                deleteMenuFromMyRestaurant(id: $deleteMenuFromMyRestaurantId) {
+            query: `mutation DeleteCategoryFromMyRestaurant($deleteCategoryFromMyRestaurantId: MongoID!) {
+                deleteCategoryFromMyRestaurant(id: $deleteCategoryFromMyRestaurantId) {
                   recordId
                 }
               }`,
             variables: `
             {
-                "deleteMenuFromMyRestaurantId": "${menu._id}"
+                "deleteCategoryFromMyRestaurantId": "${category._id}"
             }
             `
-        }, '', 'Menu ' + menu.name + ' supprimé !', true);
+        }, '', 'Catégorie ' + category.name + ' supprimé !', true);
         if(response) {
-            setGetMenu(true);
+            setGetCategorie(true);
         }
     }
  
     React.useEffect(async () => {
-        await getListOfMenu();
-    }, [getMenu])
+        await getListOfCategories();
+    }, [getCategorie])
 
     return (
         <IonPage className="overflow-y-auto mb-5 flex flex-col">
@@ -97,14 +103,14 @@ const ListMenu = (props) => {
                     }}
                     size={SIZE.default}
                     kind={KIND.primary}
-                    onClick={() => addMenu()}
+                    onClick={() => addCategory()}
                 >
-                    Ajout d'un menu
+                    Ajout d'une catégorie
                 </Button>
             </div>
             <div className="mb-6 flex flex-wrap align-center justify-center">
             {
-                menus.map((menu) => (
+                categories.map((category) => (
                 <Card
                     className="m-3"
                     overrides={{
@@ -119,19 +125,23 @@ const ListMenu = (props) => {
                 >
                     <StyledBody className="flex flex-wrap flex-col align-middle items-center">
                         <div className="self-center m-1">
-                            <h1 className="mx-2 font-bold self-center text-center">{menu.name}</h1>
-                        </div>
-                        <div className="self-center m-1">
-                            <h1 className="mx-2 self-center text-center">{menu.description}</h1>
-                        </div>
-                        <div className="self-center m-1">
-                            <h1 className="ml-auto">{menu.price} €</h1>
-                        </div>
-                        <div className="self-cente m-1">
-                            <h1 className={menu.available ?  "ml-auto text-center text-green-600" : "ml-auto text-center text-red-600"}>{menu.available ? "Disponible" : "Indisponible"}</h1>
+                            <h1 className="mx-2 font-bold self-center text-center">{category.name}</h1>
                         </div>
                         <div className="self-center flex flex-wrap justify-center m-1">
-                            { menu.products.map(product => (
+                            { category.menus.map(menu => (
+                                <Tag
+                                closeable={false}
+                                kind="green"
+                                onClick={() => redirectToMenu(menu._id)}
+                                onActionClick={() => redirectToMenu(menu._id)}
+                                variant={VARIANT.solid}
+                              >
+                                {menu.name}
+                              </Tag>
+                            ))}
+                        </div>
+                        <div className="self-center flex flex-wrap justify-center m-1">
+                            { category.products.map(product => (
                                 <Tag
                                 closeable={false}
                                 kind="primary"
@@ -157,7 +167,7 @@ const ListMenu = (props) => {
                                     }}
                                     kind={KIND.primary}
                                     size={SIZE.compact}
-                                    onClick={() => modifyMenu(menu)}
+                                    onClick={() => modifyCategory(category)}
                                 >
                                     Modifier
                                 </Button>
@@ -173,7 +183,7 @@ const ListMenu = (props) => {
                                     }}
                                     size={SIZE.compact}
                                     kind={KIND.primary}
-                                    onClick={() => deleteMenu(menu)}
+                                    onClick={() => deleteCategory(category)}
                                 >
                                     Supprimer
                                 </Button>
@@ -188,4 +198,4 @@ const ListMenu = (props) => {
     );
 };
 
-export default ListMenu;
+export default ListCategory;

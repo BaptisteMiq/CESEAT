@@ -3,8 +3,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { cart, home, person, search } from 'ionicons/icons';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import HomePage from '../pages/Home';
-import ListDetail from '../pages/ListDetail';
-import Lists from '../pages/Lists';
+import RestaurantDetails from '../pages/RestaurantDetails';
 import Menu from '../pages/Menu';
 import CreateAccount from '../pages/users/createAccount';
 import ListUsers from '../pages/users/ListUsers';
@@ -28,8 +27,6 @@ const Users = (props) => {
           <IonRouterOutlet className='mt-14 overflow-y-auto'>
             <Switch>
             <AuthRoute path="/users/home" component={HomePage} roleId={[1]} accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/browse" component={Lists} accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/browse/:listId" component={ListDetail} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/modify" component={Modify} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/list" component={ListUsers}  accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/address/create" component={CreateAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
@@ -37,6 +34,7 @@ const Users = (props) => {
               <AuthRoute path="/users/address/modify"component={ModifyAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/cart" component={Cart} roleId={[1]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/orders" component={Order} roleId={[1]} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/restaurant/details" component={RestaurantDetails} roleId={[1]} accessWithoutAuth={false} exact />
               <AuthRoute path="/users/register" component={CreateAccount} accessWithoutAuth={true} exact={true} />
               <AuthRoute path="/users/login" component={Login} accessWithoutAuth={true} exact={true} />
               <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
@@ -49,8 +47,6 @@ const Users = (props) => {
           <IonRouterOutlet className='overflow-y-auto'>
             <Switch>
               <AuthRoute path="/users/home" component={HomePage} roleId={[1]} accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/browse" component={Lists} accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/browse/:listId" component={ListDetail} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/modify" component={Modify} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/list" component={ListUsers}  accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/address/create" component={CreateAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
@@ -58,6 +54,7 @@ const Users = (props) => {
               <AuthRoute path="/users/address/modify"component={ModifyAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/cart" component={Cart} roleId={[1]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/orders" component={Order} roleId={[1]} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/restaurant/details" component={RestaurantDetails} roleId={[1]} accessWithoutAuth={false} exact />
               <AuthRoute path="/users/register" component={CreateAccount} accessWithoutAuth={true} exact={true} />
               <AuthRoute path="/users/login" component={Login} accessWithoutAuth={true} exact={true} />
               <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />

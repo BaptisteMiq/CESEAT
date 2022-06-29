@@ -35,6 +35,13 @@ var generateModal = {
 
 const Login = (props) => {
     var history = useHistory();
+    if(localStorage.getItem('authenticated') === "true") {
+        if(localStorage.getItem('RoleID') === "1") {
+            history.push('/users/home');
+        } else if(localStorage.getItem('RoleID') === "2"){
+            history.push('/restaurant/orders');
+        }
+    }
     var handleLogin = async (registerForms) => {
 
         var response = await api('post', {

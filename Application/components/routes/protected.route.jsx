@@ -1,11 +1,13 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import api from "../api";
 
 export const AuthRoute = ({ component: Component, roleId, accessWithoutAuth , ...rest }) => {
 
   var [isAuthenticated, setIsAuthenticated] = React.useState(null);
   var [user, setUser] = React.useState(null);
+  var history = useHistory();
   var checkIfAuthenticated = async ( ) => {
     var response = await api('post', {
       query: `mutation IsLoggedIn {
@@ -27,8 +29,10 @@ export const AuthRoute = ({ component: Component, roleId, accessWithoutAuth , ..
     if(response.data.isLoggedIn) {
       setUser({...response.data.isLoggedIn.record});
       localStorage.setItem('RoleID', response.data.isLoggedIn.record.Role_ID);
+      localStorage.setItem('UserID', response.data.isLoggedIn.record.ID);
       localStorage.setItem('authenticated', true);
       setIsAuthenticated(true);
+      // history.push()
     } else {
       localStorage.removeItem('Token');
       localStorage.setItem('authenticated', false);
@@ -39,7 +43,7 @@ export const AuthRoute = ({ component: Component, roleId, accessWithoutAuth , ..
   React.useEffect(() => {
     checkIfAuthenticated();
   }, [isAuthenticated])
-  console.log(user);
+  
   return (
     <Route
       {...rest}
@@ -48,7 +52,26 @@ export const AuthRoute = ({ component: Component, roleId, accessWithoutAuth , ..
           return <Component {...props} user={user} {...rest}/>;
         } else if (accessWithoutAuth) {
             return <Component {...props} user={user} {...rest}/>;
-        } else {
+        } else if (localStorage.getItem('authenticated') && (localStorage.getItem('RoleID') === "1")) {
+          return <Redirect
+            to={{
+              pathname: "/users/home",
+              state: {
+                from: props.location
+              },
+            }}
+          />
+        } else if (localStorage.getItem('authenticated') && (localStorage.getItem("RoleID") === "2")) {
+          return <Redirect
+            to={{
+              pathname: "/restaurant/orders",
+              state: {
+                from: props.location
+              },
+            }}
+          />
+        }
+        else {
           return (
             <Redirect
               to={{

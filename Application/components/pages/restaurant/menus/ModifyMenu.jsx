@@ -89,17 +89,21 @@ const ModifyMenu = (props) => {
     var getListOfProducts = async () => {
 
         var response = await api('post', {
-            query: `query Query {
-                products {
-                  name
+            query: `query MyRestaurant {
+                myRestaurant {
                   _id
+                  products {
+                    name
+                    _id
+                  }
                 }
               }`
         }, '', 'Liste des produits bien récupérée !', false);
         if(response) {
-            response.data.products.map(product => {
+            response.data.myRestaurant.products.map(product => {
                 listOfproducts.push({"label": product.name, "id": product._id});
             });
+            console.log(listOfproducts);
 
             setGetProducts(false);
         }
@@ -119,7 +123,7 @@ const ModifyMenu = (props) => {
                       available
                       _id
                       products {
-                        name
+                        label: name
                         id: _id
                       }
                     }
@@ -131,6 +135,7 @@ const ModifyMenu = (props) => {
           }).then(response => {
             setMenu(response.data.data.menuById);
             if(menu) {
+                console.log(menu);
                 generateModal = {
                     title: "Modifier le menu",
                     elements: {

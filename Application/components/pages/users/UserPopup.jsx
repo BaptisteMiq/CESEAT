@@ -37,6 +37,7 @@ const UserPopup = (props) => {
     var logout = () => {
         localStorage.removeItem('Token');
         localStorage.setItem('authenticated', false);
+        localStorage.setItem('RoleID', 0);
         history.push('/users/login');
         history.go(0);
     }
