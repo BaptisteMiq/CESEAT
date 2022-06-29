@@ -77,9 +77,7 @@ const Menu = (props) => {
   if (roleID != localStorage.getItem('RoleID')) {
     setRoleId(localStorage.getItem('RoleID'));
   }
-  console.log(localStorage.getItem('RoleID'));
   var setType = () => {
-    console.log('test');
     switch (localStorage.getItem('RoleID')) {
       case '0':
         setTypeUser('visitor');
@@ -113,7 +111,11 @@ const Menu = (props) => {
           { navigationByUsers[typeUser].map(navigationItem => (
             <StyledNavigationItem key={navigationItem.label} className="mr-12 ml-6">
               <StyledLink href={navigationItem.link} animateUnderline onClick={(e) => {
-                history.push(navigationItem.link);
+                if(localStorage.getItem('RoleID') === "2" && localStorage.getItem('ownRestaurant') !== "true") {
+                  props.history.push(navigationItem.link);
+                } else {
+                  history.push(navigationItem.link);
+                }
                 e.preventDefault();
                 <Redirect to={navigationItem.link}></Redirect>
               }}>

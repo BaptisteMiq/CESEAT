@@ -70,8 +70,20 @@ export const AuthRoute = ({ component: Component, roleId, accessWithoutAuth , ..
               },
             }}
           />
+        } 
+        
+        else if (localStorage.getItem('authenticated') && (localStorage.getItem("RoleID") === "2")) {
+          return <Redirect
+            to={{
+              pathname: "/restaurant/orders",
+              state: {
+                from: props.location
+              },
+            }}
+          />
         }
-        else {
+        
+        else if(!localStorage.getItem('authenticated')){
           return (
             <Redirect
               to={{
