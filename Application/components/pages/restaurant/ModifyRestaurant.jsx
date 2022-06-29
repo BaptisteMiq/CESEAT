@@ -6,7 +6,7 @@ import { useHistory  } from "react-router-dom";
 import api from "../../api";
 
 var generateModal = {
-    title: "Créer un restaurant",
+    title: "Modifier un restaurant",
     elements: {
         UploadFile: {
             title: 'File Upload',
@@ -75,7 +75,7 @@ var generateModal = {
 const ModifyRestaurant = (props) => {
     if(props.location.state) {
         var id = props.location.state.restaurantID ? props.location.state.restaurantID : null;
-    } else if (localStorage.getItem('modifyCategoryID')) {
+    } else if (localStorage.getItem('restaurantID')) {
         var id = localStorage.getItem('restaurantID') ? localStorage.getItem('restaurantID') : null;
     } 
     else {
@@ -144,7 +144,7 @@ const ModifyRestaurant = (props) => {
             setRestaurant(response.data.myRestaurant);
             if(restaurant) {
                 var generateModal = {
-                    title: "Créer un restaurant",
+                    title: "Modifier un restaurant",
                     elements: {
                         UploadFile: {
                             title: 'File Upload',

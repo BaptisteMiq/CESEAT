@@ -38,6 +38,11 @@ const UserPopup = (props) => {
         localStorage.removeItem('Token');
         localStorage.setItem('authenticated', false);
         localStorage.setItem('RoleID', 0);
+        localStorage.removeItem('restaurantID');
+        localStorage.removeItem('modifyMenuID');
+        localStorage.removeItem('modifyCategoryID');
+        localStorage.removeItem('modifyUserID');
+        localStorage.removeItem('UserID');
         history.push('/users/login');
         history.go(0);
     }

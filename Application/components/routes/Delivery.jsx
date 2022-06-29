@@ -1,17 +1,10 @@
 import { IonHeader, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, isPlatform } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { cart, home, person, search } from 'ionicons/icons';
-import { Route, Switch } from 'react-router-dom';
-import Menu from '../pages/Menu';
-import CreateProduct from '../pages/restaurant/products/CreatePoduct';
-import ListProduct from '../pages/restaurant/products/ListProduct';
-import Modify from '../pages/restaurant/products/ModifyProduct';
-import CreateMenu from '../pages/restaurant/menus/CreateMenu';
-import ListMenu from '../pages/restaurant/menus/ListMenu';
-import ModifyMenu from '../pages/restaurant/menus/ModifyMenu';
-import CreateRestaurant from '../pages/restaurant/CreateRestaurant';
-import { AuthRoute } from './protected.route';
+import { Switch } from 'react-router-dom';
 import Order from '../pages/delivery/order/Order';
+import Menu from '../pages/Menu';
+import { AuthRoute } from './protected.route';
 
 const Restaurants = () => {
   return (
@@ -19,7 +12,7 @@ const Restaurants = () => {
       {isPlatform('desktop') &&
         <IonReactRouter>
           <IonHeader>
-            <Menu type="restaurant"/>
+            <Menu type="orders"/>
           </IonHeader>
           <IonRouterOutlet className='mt-14 overflow-y-auto'>
             <Switch>
