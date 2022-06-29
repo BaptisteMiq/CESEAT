@@ -39,7 +39,7 @@ const Cart = props => {
       true
     );
 
-    if (response) {
+    if (response && response.data.myOrderCreateOne) {
       socket.emit('orderStatus', {
         to: 'restaurant',
         message: "Une nouvelle commande vient d'arriver!",

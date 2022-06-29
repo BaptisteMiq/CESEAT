@@ -245,7 +245,7 @@ app.post("/register", (req, res) => {
                 values,
                 function (err, result) {
                     const token = jwt.sign(
-                        { Mail, Firstname, Lastname, PhoneNumber, Role_ID: RoleID, ID: result.insertId },
+                        { Mail, Firstname, Lastname, PhoneNumber, Role_ID: RoleID, ID: result.insertId, Avatar: user.Avatar },
                         process.env.TOKEN_KEY,
                         {
                             expiresIn: "200h",
@@ -325,6 +325,7 @@ app.post("/login", (req, res) => {
                     Lastname: user.Lastname,
                     PhoneNumber: user.PhoneNumber,
                     Role_ID: user.Role_ID,
+                    Avatar: user.Avatar,
                     ID: user.ID,
                 },
                 process.env.TOKEN_KEY,
