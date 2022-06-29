@@ -65,7 +65,7 @@ const ListUsers = (props) => {
         await getusers();
     }, [getUsers])
     return (
-        <IonPage className="overflow-y-auto mb-5 flex flex-col">
+        <IonPage className="top-14 overflow-y-auto mb-5 flex flex-col">
             <div className="mb-5 flex flex-wrap align-center justify-center">
             {
                 users.map((user) => (

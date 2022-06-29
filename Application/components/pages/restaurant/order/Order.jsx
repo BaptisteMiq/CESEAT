@@ -1,26 +1,19 @@
-import { IonPage } from '@ionic/react';
+// @ts-check
+
+import { IonPage, isPlatform } from '@ionic/react';
 import { Button, KIND, SIZE } from 'baseui/button';
 import { Card, StyledBody } from 'baseui/card';
 import { Heading, HeadingLevel } from 'baseui/heading';
+import { cart } from 'ionicons/icons';
+import Image from 'next/image';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../../../api';
-import { SocketContext } from '../../../AppShell';
-import { newNotification } from '../../../ui/Notifs';
+import { Accordion, Panel } from 'baseui/accordion';
 
 const Order = props => {
   var history = useHistory();
   const [orders, setOrders] = React.useState(null);
-  const socket = React.useContext(SocketContext);
-
-  React.useEffect(() => {
-    socket.on('orderStatus', data => {
-      if (window.location.href.includes(data.to)) {
-        newNotification(data.message);
-        getOrders();
-      }
-    });
-  }, []);
 
   var getOrders = async () => {
     var response = await api(
@@ -38,14 +31,6 @@ const Order = props => {
             status {
               _id
             }
-            cart {
-              products {
-                name
-              }
-              menus {
-                name
-              }
-            }
           }
         }`,
         variables: {
@@ -59,41 +44,12 @@ const Order = props => {
       false
     );
     if (response) {
-      console.log(response);
-      const orders = response.data.orders.filter(order => order.cart);
+      const orders = response.data.orders;
       setOrders(orders);
     }
   };
 
-  const cancelOrder = async order => {
-    const response = await api(
-      'post',
-      {
-        query: `mutation Mutation {
-            orderDeleteById(_id: "${order._id}") {
-              recordId
-            }
-          }
-        `,
-      },
-      '',
-      'Commande annulée !',
-      true
-    );
-    if (response) {
-      socket.emit('orderStatus', {
-        to: 'users',
-        message: `La commande ${order.tag} vient d'être annulée par le restaurateur.`,
-      });
-      socket.emit('orderStatus', {
-        to: 'delivery',
-        message: ``,
-      });
-      getOrders();
-    }
-  };
-
-  const orderBeingDelivered = async order => {
+  const orderReady = async order => {
     const response = await api(
       'post',
       {
@@ -114,25 +70,16 @@ const Order = props => {
       true
     );
     if (response) {
-      socket.emit('orderStatus', {
-        to: 'delivery',
-        message: `Une nouvelle commande est disponible !`,
-      });
-      socket.emit('orderStatus', {
-        to: 'users',
-        message: ``,
-      });
       getOrders();
     }
   };
 
   React.useEffect(() => {
     getOrders();
-    console.log(orders);
   }, []);
 
   return (
-    <IonPage className="overflow-y-auto mb-5 flex flex-col justify-center items-center">
+    <IonPage className="top-14 overflow-y-auto mb-5 flex flex-col justify-center items-center">
       <div
         className="mb-5 flex flex-wrap align-center justify-center overflow-scroll"
         style={{ maxWidth: '500px' }}
@@ -166,12 +113,12 @@ const Order = props => {
                           },
                         }}
                       >
-                        <StyledBody className="flex flex-col align-middle items-center">
+                        <StyledBody className="flex flex-row align-middle items-center">
                           <div className="flex flex-row items-center" style={{ width: '100%' }}>
                             <div>
-                              {/* <h1 className="flex-1 mx-2 font-bold self-center text-center">
+                              <h1 className="flex-1 mx-2 font-bold self-center text-center">
                                 {order.restaurant.name}
-                              </h1> */}
+                              </h1>
                             </div>
                             <div className="flex-1">
                               <h1 className="ml-auto">
@@ -185,8 +132,25 @@ const Order = props => {
                               </h1>
                             </div>
                             <div className="flex-1">
-                              N° <b>{order.tag}</b>
+                              <b>{order.tag}</b>
                             </div>
+                            <div className="mr-4">
+                              <Button
+                                className="flex-1 m-2"
+                                overrides={{
+                                  BaseButton: {
+                                    style: () => ({
+                                      width: '100%',
+                                      maxWidth: '100px',
+                                    }),
+                                  },
+                                }}
+                                size={SIZE.compact}
+                                kind={KIND.primary}
+                                onClick={() => orderReady(order)}
+                              >
+                                Préparée
+                              </Button>
                           </div>
                           <div
                             className="flex flex-row items-center mt-4"
@@ -236,24 +200,6 @@ const Order = props => {
                               </table>
                             </div>
                           </div>
-                          <div className="justify-center align-center items-center flex flex-auto mt-4">
-                            <Button
-                              className="m-2"
-                              size={SIZE.compact}
-                              kind={KIND.primary}
-                              onClick={() => orderBeingDelivered(order)}
-                            >
-                              Commande prête
-                            </Button>
-                            <Button
-                              className="m-2"
-                              size={SIZE.compact}
-                              kind={KIND.secondary}
-                              onClick={() => cancelOrder(order)}
-                            >
-                              Annuler
-                            </Button>
-                          </div>
                         </StyledBody>
                       </Card>
                     </>
@@ -286,7 +232,7 @@ const Order = props => {
                           <div className="flex flex-row items-center" style={{ width: '100%' }}>
                             <div>
                               <h1 className="flex-1 mx-2 font-bold self-center text-center">
-                                Attente d'un livreur...
+                                {order.restaurant.name}
                               </h1>
                             </div>
                             <div className="flex-1">

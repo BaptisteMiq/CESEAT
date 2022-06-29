@@ -65,7 +65,7 @@ const UserPopup = (props) => {
                 />
             </div>
             <div className="UserName mb-5">
-                { props.user.name }
+                { props.user.Firstname + " " + props.user.Lastname }
             </div>
             <div className="UserButton mb-5">
                 <Button

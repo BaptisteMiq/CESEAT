@@ -259,7 +259,7 @@ const CreateRestaurant = (props) => {
     var [buttons, setButtons] = React.useState(buttonsModel);
 
     return (
-        <IonPage className="overflow-y-auto mb-5">
+        <IonPage className="top-14 overflow-y-auto mb-5">
             <AutoForms dataForms={dataForms} setDataForms={setDataForms} buttons={buttons}></AutoForms>
         </IonPage>
     );

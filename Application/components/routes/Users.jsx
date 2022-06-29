@@ -17,17 +17,19 @@ import Order from '../pages/users/Order';
 import { AuthRoute } from './protected.route';
 
 const Users = (props) => {
+  console.log('tests');
   return (
     <div>
       {isPlatform('desktop') &&
-        <IonReactRouter>
-          <IonHeader>
+        <div >
+          <IonHeader style={{zIndex: 9999}}>
             <Menu user={props.user} type="users"/>
           </IonHeader>
-          <IonRouterOutlet className='mt-14 overflow-y-auto'>
+          <div className='mt-24 top-12 overflow-y-auto'>
+            <div></div>
             <Switch>
             <AuthRoute path="/users/home" component={HomePage} roleId={[1]} accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/modify" component={Modify} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/modify" component={Modify} roleId={[1, 2]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/list" component={ListUsers}  accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/address/create" component={CreateAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/address" component={ListAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
@@ -39,8 +41,8 @@ const Users = (props) => {
               <AuthRoute path="/users/login" component={Login} accessWithoutAuth={true} exact={true} />
               <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
             </Switch>
-          </IonRouterOutlet>
-        </IonReactRouter>
+          </div>
+        </div>
       }
       { !isPlatform('desktop') && 
           <IonTabs>
