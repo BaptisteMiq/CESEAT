@@ -18,14 +18,16 @@ var generateModal = {
             type: "Input",
             value: "",
             fullWidth: true,
-            placeholder: "Mail"
+            placeholder: "Mail",
+            isValid: true
         },
         Password: {
             title: "Mot de passe",
             type: "PasswordInput",
             value: "",
             fullWidth: true,
-            placeholder: "Mot de passe"
+            placeholder: "Mot de passe",
+            isValid: true
         }
     }
 }
@@ -33,6 +35,13 @@ var generateModal = {
 
 const Login = (props) => {
     var history = useHistory();
+    if(localStorage.getItem('authenticated') === "true") {
+        if(localStorage.getItem('RoleID') === "1") {
+            history.push('/users/home');
+        } else if(localStorage.getItem('RoleID') === "2"){
+            history.push('/restaurant/orders');
+        }
+    }
     var handleLogin = async (registerForms) => {
 
         var response = await api('post', {
@@ -50,11 +59,11 @@ const Login = (props) => {
                 "mail": "${registerForms.elements.Mail.value}"
             }`
         }, '', 'Le compte utilisateur est bien connecté !', true);
-        
-        if(response) {
+        if(response.data.userLogin) {
             localStorage.setItem('Token', response.data.userLogin.token);
             localStorage.setItem('authenticated', true);
             history.push('/users/home');
+            history.go(0);
         }
     }
     var registerButton = () => {

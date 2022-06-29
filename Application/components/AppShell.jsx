@@ -1,5 +1,5 @@
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonHeader, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Users from './routes/Users';
@@ -8,6 +8,7 @@ import { ReactNotifications } from 'react-notifications-component';
 import Restaurants from './routes/Restaurants';
 import Delivery from './routes/Delivery';
 import { AuthRoute } from './routes/protected.route';
+import Menu from './pages/Menu';
 import socketIOClient from 'socket.io-client';
 import React, { useEffect, useState } from 'react';
 import { newNotification } from './ui/Notifs';
@@ -35,8 +36,8 @@ const AppShell = () => {
       <SocketContext.Provider value={socket}>
         <IonReactRouter history={history}>
           <IonRouterOutlet id="main">
-            <Route path="/users" component={Users} />
-            <Route path="/restaurant" component={Restaurants} />
+            <AuthRoute path="/users" accessWithoutAuth={true} roleId={[1, 2]} component={Users} />
+            <AuthRoute path="/restaurant" accessWithoutAuth={false} roleId={[2]} component={Restaurants} />
             <Route path="/delivery" component={Delivery} />
             <Route exact path="/" render={() => <Redirect to="/users" />} />
           </IonRouterOutlet>

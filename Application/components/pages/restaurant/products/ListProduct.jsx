@@ -14,21 +14,23 @@ const ListProduct = (props) => {
     var getListOfProducts = async () => {
 
         var response = await api('post', {
-            query: `query Query {
-                products {
-                  name
-                  description
-                  price
-                  picture
-                  createdAt
-                  allergenicIngredients
-                  available
-                  _id
+            query: `query Products {
+                myRestaurant {
+                  products {
+                    _id
+                    name
+                    description
+                    price
+                    picture
+                    allergenicIngredients
+                    available
+                    createdAt
+                  }
                 }
               }`
         }, '', 'Liste des produits bien récupérée !', false);
         if(response) {
-            setProducts(response.data.products);
+            setProducts(response.data.myRestaurant.products);
             setGetProducts(false);
         }
     }
@@ -47,16 +49,14 @@ const ListProduct = (props) => {
 
     var deleteProduct = async (product) => {
         var response = await api('post', {
-            query: `mutation ProductDeleteById($id: MongoID!) {
-                productDeleteById(_id: $id) {
-                  record {
-                    _id
-                  }
+            query: `mutation DeleteProductFromMyRestaurant($deleteProductFromMyRestaurantId: MongoID!) {
+                deleteProductFromMyRestaurant(id: $deleteProductFromMyRestaurantId) {
+                  recordId
                 }
               }`,
             variables: `
             {
-                "id": "${product._id}"
+                "deleteProductFromMyRestaurantId": "${product._id}"
             }
             `
         }, '', 'Produit ' + product.name + ' supprimé !', true);

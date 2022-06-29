@@ -14,6 +14,7 @@ import { useHistory  } from "react-router-dom";
 import Notifications from './Notifications';
 import UserPopup from './users/UserPopup';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import { Button, SHAPE, SIZE } from 'baseui/button';
 
 var user = {
   name: "Baptiste Miquel",
@@ -21,14 +22,11 @@ var user = {
 }
 // Affichage du menu par rapport au rôle de l'utilisateur TODO : Le link avec l'authentification
 var navigationByUsers = {
+  visitor: [],
   users: [
     {
       label: "Accueil",
       link: "/users/home"
-    },
-    {
-      label: "Parcourir",
-      link: "/users/browse"
     },
     {
       label: "Panier",
@@ -45,20 +43,24 @@ var navigationByUsers = {
   ],
   restaurant: [
     {
-      label: "Nouvelle Commande",
-      link: "/users/home"
+      label: "Commande",
+      link: "/restaurant/orders"
     },
     {
-      label: "Commande en cours",
-      link: "/users/browse"
+      label: "Catégorie",
+      link: "/restaurant/category"
     },
     {
-      label: "Commande prête",
-      link: "/users/cart"
+      label: "Menu",
+      link: "/restaurant/menu"
+    },
+    {
+      label: "Produit",
+      link: "/restaurant/product"
     },
     {
       label: "Paramètre restaurant",
-      link: "/users/cart"
+      link: "/restaurant/modify"
     }
   ],
   deliveryMan: {
@@ -67,11 +69,39 @@ var navigationByUsers = {
 }
 
 const Menu = (props) => {
-  var typeUser = props.type;
+  var [typeUser, setTypeUser] = React.useState('users');
+  var [roleID, setRoleId] = React.useState(0);
+  if (roleID != localStorage.getItem('RoleID')) {
+    setRoleId(localStorage.getItem('RoleID'));
+  }
+  console.log(localStorage.getItem('RoleID'));
+  var setType = () => {
+    console.log('test');
+    switch (localStorage.getItem('RoleID')) {
+      case '0':
+        setTypeUser('visitor');
+        break;
+      case '1':
+        setTypeUser('users');
+        break;
+      case '2':
+        setTypeUser('restaurant');
+        break;
+      case '3':
+        setTypeUser('deliveryMan');
+        break;
+      default:
+        break;
+    }
+  }
   let history = useHistory();
   const [showNotifications, setShowNotifications] = useState(false);
+
+  React.useEffect(() => {
+    setType();
+  }, [typeUser, roleID])
   return (
-      <HeaderNavigation className="">
+      <HeaderNavigation className="max-h-16">
         <Notifications open={showNotifications} onDidDismiss={() => setShowNotifications(false)} />
         <StyledNavigationList $align={ALIGN.left}>
           <StyledNavigationItem className="font-bold text-xl">CES&apos;EAT</StyledNavigationItem>
@@ -90,27 +120,50 @@ const Menu = (props) => {
           )) }
         </StyledNavigationList>
         <StyledNavigationList $align={ALIGN.left}>
-          <IonButtons slot="end" style={{ paddingRight: "10px"}} >
-            <IonButton onClick={() => setShowNotifications(true)}>
-              <IonIcon icon={notificationsOutline} />
-            </IonButton>
-          </IonButtons>
-          <StatefulPopover
-            content={() => (
-             <UserPopup user={user}/>
-            )}
-            placement={PLACEMENT.leftTop}
-            triggerType={TRIGGER_TYPE.hover}
-          >
-            <IonButtons slot="end" style={{ paddingRight: "20px"}}>
-                <Avatar
-                  name={user.name}
-                  size="scale900"
-                  src={user.avatarUrl}
+          { props.user ? (
+            <div className='flex'>
+              <IonButtons slot="end" style={{ paddingRight: "10px"}} >
+                <IonButton onClick={() => setShowNotifications(true)}>
+                  <IonIcon icon={notificationsOutline} />
+                </IonButton>
+              </IonButtons>
+              <StatefulPopover
+                content={() => (
+                <UserPopup user={props.user}/>
+                )}
+                placement={PLACEMENT.leftTop}
+                triggerType={TRIGGER_TYPE.hover}
+              >
+                <IonButtons slot="end" style={{ paddingRight: "20px"}}>
+                    <Avatar
+                      name={props.user.Firstname + " " + props.user.Lastname}
+                      size="scale900"
+                      src={props.user.avatarUrl}
+                    >
+                    </Avatar>
+                </IonButtons>
+              </StatefulPopover>
+            </div>) :
+            <div>
+              <Button
+                onClick={() => (history.push('/users/register'))}
+                shape={SHAPE.pill}
+                size={SIZE.compact}
+                className="mx-2"
+                kind='secondary'
                 >
-                </Avatar>
-            </IonButtons>
-          </StatefulPopover>
+                S'inscrire
+              </Button>
+              <Button
+                onClick={() => (history.push('/users/login'))}
+                shape={SHAPE.pill}
+                size={SIZE.compact}
+                className="mx-2"
+                kind='primary'
+                >
+                Se connecter
+              </Button>
+            </div> }
         </StyledNavigationList>
       </HeaderNavigation>
   );

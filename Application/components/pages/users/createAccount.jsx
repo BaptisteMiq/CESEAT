@@ -128,6 +128,7 @@ const CreateAccount = (props) => {
             localStorage.setItem('Token', response.data.userCreateOne.token);
             localStorage.setItem('authenticated', true);
             history.push('/users/home');
+            history.go(0);
         }
     }
     var loginButton = () => {

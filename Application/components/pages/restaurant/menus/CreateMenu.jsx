@@ -78,17 +78,19 @@ const CreateMenu = (props) => {
     var getListOfProducts = async () => {
 
         var response = await api('post', {
-            query: `query Query {
-                products {
-                  name
-                  _id
+            query: `query Menus {
+                myRestaurant {
+                  products {
+                    _id
+                    name
+                  }
                 }
               }`
-        }, '', 'Liste des menus bien récupérée !', false);
+        }, '', 'Liste des produits bien récupérée !', false);
         if(response) {
 
             var listOfproducts = [];
-            response.data.products.map(product => {
+            response.data.myRestaurant.products.map(product => {
                 listOfproducts.push({"label": product.name, id: product._id});
             });
 
@@ -143,7 +145,7 @@ const CreateMenu = (props) => {
                     Products: {
                         title: "Sélectionner des produits à ajouter dans le menu",
                         type: "SelectInput",
-                        value: [listOfproducts[0] ? listOfproducts[0] : null],
+                        value: [],
                         options: listOfproducts,
                         fullWidth: false,
                         multi: true,
@@ -163,25 +165,12 @@ const CreateMenu = (props) => {
             listProductId.push(product.id);
         });
 
+        console.log(menuForms);
         var response = await api('post', {
-            query: `mutation MenuUpdateById($id: MongoID!, $record: UpdateByIdMenuInput!) {
-                menuUpdateById(_id: $id, record: $record) {
+            query: `mutation Mutation($record: CreateOneMenuInput!) {
+                addMenuToMyRestaurant(record: $record) {
                   record {
-                    name
-                    description
-                    price
-                    picture
-                    available
                     _id
-                    products {
-                      name
-                      description
-                      price
-                      picture
-                      allergenicIngredients
-                      available
-                      _id
-                    }
                   }
                 }
               }`,
@@ -196,6 +185,7 @@ const CreateMenu = (props) => {
                 }
             }`
         }, '', 'Le menu a bien été créé !', true);
+        history.push('/restaurant/menu');
     }
     var cancelButton = () => {
         history.goBack();

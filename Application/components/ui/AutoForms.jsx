@@ -104,6 +104,7 @@ const AutoForms = (props) => {
                         })}}
                         placeholder={element.placeholder}
                         clearOnEscape
+                        id="mail"
                     />
                 </FormControl>
             );

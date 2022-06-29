@@ -25,47 +25,53 @@ var generateModal = {
             type: "Input",
             value: '',
             fullWidth: false,
-            placeholder: "Prénom"
+            placeholder: "Prénom",
+            isValid: true
         },
         Lastname: {
             title: "Nom",
             type: "Input",
             value: '',
             fullWidth: false,
-            placeholder: "Nom"
+            placeholder: "Nom",
+            isValid: true
         },
         Mail: {
             title: "Mail",
             type: "Input",
             value: '',
             fullWidth: true,
-            placeholder: "Mail"
+            placeholder: "Mail",
+            isValid: true
         },
         Password: {
             title: "Mot de passe",
             type: "PasswordInput",
             value: '',
             fullWidth: true,
-            placeholder: "Mot de passe"
+            placeholder: "Mot de passe",
+            isValid: true
         },
         PhoneNumber: {
             title: "Numéro de téléphone",
             type: "PhoneInput",
             flag: {label: 'France', id: 'FR', dialCode: '+33'},
             fullWidth: false,
-            value: ''
+            value: '',
+            isValid: true
         }
     }
 };
 const Modify = (props) => {
     if(props.location.state) {
-        var id = props.location.state.userID ? props.location.state.userID : 2;
-    } else if (localStorage.getItem('modifyUserID')) {
-        var id = localStorage.getItem('modifyUserID') ? localStorage.getItem('modifyUserID') : 2;
+        var id = props.location.state.userID ? props.location.state.userID : props.user.ID;
+    } else if (localStorage.getItem('modifyUserID') && props.user.Role_ID === 3) {
+        var id = localStorage.getItem('modifyUserID') ? localStorage.getItem('modifyUserID') : props.user.ID;
     }
-    else {
-        var id =  2;
+    else if(props.user.ID) {
+        var id = props.user.ID;
     }
+
     var [updateId, setUpdateid] = React.useState(null); 
     var [user, setUser] = React.useState({
         ID: '',
@@ -86,7 +92,6 @@ const Modify = (props) => {
                       Firstname
                       ID
                       Lastname
-                      Password
                       Mail
                       PhoneNumber
                       Avatar
@@ -119,35 +124,40 @@ const Modify = (props) => {
                             type: "Input",
                             value: user.Firstname,
                             fullWidth: false,
-                            placeholder: "Prénom"
+                            placeholder: "Prénom",
+                            isValid: true
                         },
                         Lastname: {
                             title: "Nom",
                             type: "Input",
                             value: user.Lastname,
                             fullWidth: false,
-                            placeholder: "Nom"
+                            placeholder: "Nom",
+                            isValid: true
                         },
                         Mail: {
                             title: "Mail",
                             type: "Input",
                             value: user.Mail,
                             fullWidth: true,
-                            placeholder: "Mail"
+                            placeholder: "Mail",
+                            isValid: true
                         },
                         Password: {
                             title: "Mot de passe",
                             type: "PasswordInput",
-                            value: user.Password,
+                            value: "",
                             fullWidth: true,
-                            placeholder: "Mot de passe"
+                            placeholder: "Mot de passe",
+                            isValid: true
                         },
                         PhoneNumber: {
                             title: "Numéro de téléphone",
                             type: "PhoneInput",
                             flag: {label: 'France', id: 'FR', dialCode: '+33'},
                             fullWidth: false,
-                            value: user.PhoneNumber
+                            value: user.PhoneNumber,
+                            isValid: true
                         }
                     }
                 };
