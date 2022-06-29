@@ -97,6 +97,16 @@ services:
       - "3102:3001"
     restart: always
 
+  # Microservice for the Sockets
+  microservice_sockets_1:
+    build: ./Microservices/Sockets
+    command: npm run prod
+    volumes:
+      - ./Microservices/Sockets:/app
+    ports:
+      - "4700:4700"
+    restart: always
+
   # Proxy
   nginx:
     build: ./Proxy

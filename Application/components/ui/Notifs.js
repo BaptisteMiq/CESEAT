@@ -3,7 +3,7 @@ export function newNotification(message) {
 
   // Vérifions si le navigateur prend en charge les notifications
   if (!('Notification' in window)) {
-    alert('Ce navigateur ne prend pas en charge la notification de bureau');
+    alert(message);
   }
 
   // Vérifions si les autorisations de notification ont déjà été accordées

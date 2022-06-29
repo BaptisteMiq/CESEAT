@@ -84,10 +84,10 @@ import { Server } from "socket.io";
         // Socket.IO
         const io = new Server(socketAndGQLServer, {
             cors: {
-                origin: "https://baptistemiq-ceseat-57vjjjpqh7549-3000.githubpreview.dev",
-            },
-            path: '/socket.io',
-            transports: ['websocket'],
+                origin: "https://baptistemiq-ceseat-p57444qrh9474-3000.githubpreview.dev",
+                methods: ["GET", "POST"],
+                credentials: true
+              }
         });
         io.engine.on("connection_error", (err: any) => {
             console.log(err);
