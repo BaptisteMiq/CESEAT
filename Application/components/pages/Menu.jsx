@@ -63,9 +63,12 @@ var navigationByUsers = {
       link: "/restaurant/modify"
     }
   ],
-  deliveryMan: {
-
-  }
+  deliveryMan: [
+    {
+      label: "Commandes",
+      link: "/delivery/orders"
+    },
+  ]
 }
 
 const Menu = (props) => {

@@ -197,34 +197,42 @@ const Order = props => {
                               style={{ width: '100%' }}
                             >
                               <table className="restaurant-table">
-                                <thead>
-                                  <tr>
-                                    <th>Produits</th>
-                                    <th>Quantité</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {order.cart.products.map(product => (
-                                    <tr>
-                                      <td>{product.name}</td>
-                                      <td>x1</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                                <thead>
-                                  <tr>
-                                    <th>Menus</th>
-                                    <th>Quantité</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {order.cart.menus.map(menu => (
-                                    <tr>
-                                      <td>{menu.name}</td>
-                                      <td>x1</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
+                                {order.cart.products.length > 0 && (
+                                  <>
+                                    <thead>
+                                      <tr>
+                                        <th>Produits</th>
+                                        <th>Quantité</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {order.cart.products.map(product => (
+                                        <tr>
+                                          <td>{product.name}</td>
+                                          <td>x1</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </>
+                                )}
+                                {order.cart.menus.length > 0 && (
+                                  <>
+                                    <thead>
+                                      <tr>
+                                        <th>Menus</th>
+                                        <th>Quantité</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {order.cart.menus.map(menu => (
+                                        <tr>
+                                          <td>{menu.name}</td>
+                                          <td>x1</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </>
+                                )}
                               </table>
                             </div>
                           </div>
