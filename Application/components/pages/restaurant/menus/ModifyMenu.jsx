@@ -103,7 +103,6 @@ const ModifyMenu = (props) => {
             response.data.myRestaurant.products.map(product => {
                 listOfproducts.push({"label": product.name, "id": product._id});
             });
-            console.log(listOfproducts);
 
             setGetProducts(false);
         }
@@ -111,7 +110,7 @@ const ModifyMenu = (props) => {
 
     var getMenu = async (id) => {
         await axios({
-            url: process.env.NEXT_PUBLIC_MDW_URL,
+            url: 'http://localhost:4000/graphql',
             method: 'post',
             data: {
                 query: `query MenuById($id: MongoID!) {
@@ -135,7 +134,6 @@ const ModifyMenu = (props) => {
           }).then(response => {
             setMenu(response.data.data.menuById);
             if(menu) {
-                console.log(menu);
                 generateModal = {
                     title: "Modifier le menu",
                     elements: {
@@ -271,7 +269,7 @@ const ModifyMenu = (props) => {
     var [buttons, setButtons] = React.useState(buttonsModel);
 
     return (
-        <IonPage className="overflow-y-auto mb-5 bg-white">
+        <IonPage className="top-14 overflow-y-auto mb-5 bg-white">
             <AutoForms dataForms={dataForms} setDataForms={setDataForms} buttons={buttons}></AutoForms>
         </IonPage>
     );

@@ -4,6 +4,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import React, { useEffect, useState } from 'react';
 import { ReactNotifications } from 'react-notifications-component';
 import { Redirect, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom/cjs/react-router-dom.min';
 import socketIOClient from 'socket.io-client';
 import Delivery from './routes/Delivery';
 import history from './routes/history';
@@ -36,9 +37,11 @@ const AppShell = () => {
       <SocketContext.Provider value={socket}>
         <IonReactRouter history={history}>
           <IonRouterOutlet id="main">
-            <AuthRoute path="/users" accessWithoutAuth={true} roleId={[0, 1, 2]} component={Users} />
-            <AuthRoute path="/restaurant" accessWithoutAuth={false} roleId={[0, 2]} component={Restaurants} />
-            <AuthRoute path="/delivery" accessWithoutAuth={false} roleId={[0, 3]} component={Delivery} />
+            <Switch>
+              <AuthRoute path="/users" accessWithoutAuth={true} roleId={[0, 1, 2]} component={Users} />
+              <AuthRoute path="/restaurant" accessWithoutAuth={false} roleId={[0, 2]} component={Restaurants} />
+              <AuthRoute path="/delivery" accessWithoutAuth={false} roleId={[0, 3]} component={Delivery} />
+            </Switch>
             <Route exact path="/" render={() => <Redirect to="/users" />} />
           </IonRouterOutlet>
         </IonReactRouter>

@@ -80,7 +80,6 @@ const CreateCategory = (props) => {
               }`
         }, '', 'Liste des articles bien récupérée !', false);
         if(response) {
-            console.log(response);
 
             var listOfProducts = [];
             var listOfMenus = [];
@@ -123,7 +122,6 @@ const CreateCategory = (props) => {
                     }
                 }
             }
-            console.log(generateModal);
             setDataForms(generateModal);
             setProducts(listOfProducts);
             setMenus(listOfMenus);
@@ -183,7 +181,7 @@ const CreateCategory = (props) => {
     var [buttons, setButtons] = React.useState(buttonsModel);
 
     return (
-        <IonPage className="overflow-y-auto mb-5">
+        <IonPage className="top-14 overflow-y-auto mb-5">
             <AutoForms dataForms={dataForms} setDataForms={setDataForms} buttons={buttons}></AutoForms>
         </IonPage>
     );

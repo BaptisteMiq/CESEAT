@@ -46,29 +46,29 @@ const Restaurants = (props) => {
   return (
     <div>
       {isPlatform('desktop') &&
-        <IonReactRouter>
-          <IonHeader>
+        <div>
+          <IonHeader style={{zIndex: 9999}}>
             <Menu user={props.user} history={history} type="restaurant"/>
           </IonHeader>
-          <IonRouterOutlet className='mt-14 overflow-y-auto'>
-            { localStorage.getItem('ownRestaurant') === "true" ? 
-            <Switch>
-              <AuthRoute path="/restaurant/modify" roleId={[2]} component={ModifyRestaurant} exact={true} />
-              <AuthRoute path="/restaurant/product/create" roleId={[2]} component={CreateProduct} exact={true} />
-              <AuthRoute path="/restaurant/product" roleId={[2]} component={ListProduct} exact={true} />
-              <AuthRoute path="/restaurant/product/modify" roleId={[2]} component={Modify} exact={true} />
-              <AuthRoute path="/restaurant/menu/create" roleId={[2]} component={CreateMenu} exact={true} />
-              <AuthRoute path="/restaurant/menu" roleId={[2]} component={ListMenu} exact={true} />
-              <AuthRoute path="/restaurant/menu/modify" roleId={[2]} component={ModifyMenu} exact={true} />
-              <AuthRoute path="/restaurant/orders" roleId={[2]} component={Order} exact={true} />
-              <AuthRoute path="/restaurant/category/create" roleId={[2]} component={CreateCategory} exact={true} />
-              <AuthRoute path="/restaurant/category" roleId={[2]} component={ListCategory} exact={true} />
-              <AuthRoute path="/restaurant/category/modify" roleId={[2]} component={ModifyCategory} exact={true} />
-              </Switch>  
-              : <AuthRoute path="/restaurant/create" roleId={[2]} component={CreateRestaurant} exact={true} />
-            }
-          </IonRouterOutlet>
-        </IonReactRouter>
+          <div className='mt-14 overflow-y-auto'>
+              { localStorage.getItem('ownRestaurant') === "true" ? 
+                <Switch>
+                  <AuthRoute path="/restaurant/modify" roleId={[2]} component={ModifyRestaurant} exact={true} />
+                  <AuthRoute path="/restaurant/product/create" roleId={[2]} component={CreateProduct} exact={true} />
+                  <AuthRoute path="/restaurant/product" roleId={[2]} component={ListProduct} exact={true} />
+                  <AuthRoute path="/restaurant/product/modify" roleId={[2]} component={Modify} exact={true} />
+                  <AuthRoute path="/restaurant/menu/create" roleId={[2]} component={CreateMenu} exact={true} />
+                  <AuthRoute path="/restaurant/menu" roleId={[2]} component={ListMenu} exact={true} />
+                  <AuthRoute path="/restaurant/menu/modify" roleId={[2]} component={ModifyMenu} exact={true} />
+                  <AuthRoute path="/restaurant/orders" roleId={[2]} component={Order} exact={true} />
+                  <AuthRoute path="/restaurant/category/create" roleId={[2]} component={CreateCategory} exact={true} />
+                  <AuthRoute path="/restaurant/category" roleId={[2]} component={ListCategory} exact={true} />
+                  <AuthRoute path="/restaurant/category/modify" roleId={[2]} component={ModifyCategory} exact={true} />
+                </Switch>  
+               : <AuthRoute path="/restaurant/create" roleId={[2]} component={CreateRestaurant} exact={true} />
+              }
+          </div>
+        </div>
       }
       { !isPlatform('desktop') && 
           <IonTabs>

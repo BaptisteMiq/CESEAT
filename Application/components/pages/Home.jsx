@@ -68,7 +68,7 @@ const Home = () => {
   }, [getRestaurants]);
 
   return (
-    <IonPage className='bg-white flex justify-center flex-wrap flex-row static overflow-visible' style={{contain: 'None'}}>
+    <IonPage className='top-14 bg-white flex justify-center flex-wrap flex-row static overflow-visible' style={{contain: 'None'}}>
         <div className='justify-center w-full m-5'>
           <Input
             value={searchValue}

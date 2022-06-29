@@ -174,9 +174,7 @@ const RestaurantDetails = () => {
     );
 
     if (response) {
-      console.log(response);
       if (response.data.myCarts.length != 0) {
-        console.log('test');
         setCart(response.data.myCarts[0]);
       }
     }
@@ -308,7 +306,6 @@ const RestaurantDetails = () => {
       );
 
       if (response) {
-        console.log(response);
         setCart(response.data.myCartUpdateById.record);
       }
     }
@@ -440,7 +437,7 @@ const RestaurantDetails = () => {
   }, [getRestaurant]);
 
   return (
-    <IonPage className="flex flex-col overflow-scroll">
+    <IonPage className="top-14 flex flex-col overflow-scroll">
       <div className="h-auto w-auto relative m-2" style={{ minHeight: '200px' }}>
         <Image
           className="rounded-md"
