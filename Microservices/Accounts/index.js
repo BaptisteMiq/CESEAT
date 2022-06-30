@@ -197,7 +197,7 @@ app.get("/users/:id", (req, res) => {
     const id = req.params.id;
     con.query("SELECT * FROM User WHERE ID = ?", [id], function (err, result, fields) {
         if (err) res.status(400).send(err.sqlMessage);
-        if (result.length === 0) {
+        if (result && result.length === 0) {
             res.status(400).send("Cet utilisateur n'existe pas.");
             return;
         }
