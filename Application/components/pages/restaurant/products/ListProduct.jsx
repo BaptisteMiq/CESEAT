@@ -5,6 +5,7 @@ import Image from 'next/image';
 import * as React from 'react';
 import { useHistory } from "react-router-dom";
 import api from "../../../api";
+import { defaultImage } from "../../../ui/Images";
 
 const ListProduct = (props) => {
     var history = useHistory();
@@ -106,7 +107,7 @@ const ListProduct = (props) => {
                     <StyledBody className="flex flex-row flex-wrap align-middle items-center">
                         <div className="w-1/6 flex justify-center">
                             <div>
-                                <Image className="" objectFit="cover" src={product.Image ? product.Image : "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} alt="" height="60px" width="60px" />
+                                <Image className="" objectFit="cover" src={process.env.NEXT_PUBLIC_CDN + product.picture ?? defaultImage} alt="" height="60px" width="60px" />
                             </div>
                         </div>
                         <div className="w-1/2 flex flex-row flex-wrap">

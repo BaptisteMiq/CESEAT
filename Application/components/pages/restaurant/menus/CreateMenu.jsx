@@ -4,6 +4,7 @@ import * as React from 'react';
 import AutoForms from "../../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
 import api from "../../../api";
+import { defaultImage } from "../../../ui/Images";
 
 // title = Permet d'afficher le nom de l'input
 // type = Permet de choisir letype d'input : ['UploadFile','Input','PasswordInput','PhoneInput']
@@ -27,7 +28,7 @@ const CreateMenu = (props) => {
             },
             Image: {
                 title: 'Image',
-                src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+                src: defaultImage,
                 type: "Image",
                 fullWidth: false
             },
@@ -105,7 +106,7 @@ const CreateMenu = (props) => {
                     },
                     Image: {
                         title: 'Image',
-                        src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+                        src: defaultImage,
                         type: "Image",
                         fullWidth: false
                     },

@@ -1,5 +1,3 @@
-// @ts-check
-
 import { IonPage, isPlatform } from '@ionic/react';
 import { Button, KIND, SIZE } from 'baseui/button';
 import { Card, StyledBody } from 'baseui/card';
@@ -44,7 +42,7 @@ const Order = props => {
       false
     );
     if (response) {
-      const orders = response.data.orders;
+      const orders = response.data.orders.filter(o => o.cart);
       setOrders(orders);
     }
   };
@@ -151,53 +149,54 @@ const Order = props => {
                               >
                                 Préparée
                               </Button>
-                          </div>
-                          <div
-                            className="flex flex-row items-center mt-4"
-                            style={{ width: '100%' }}
-                          >
+                            </div>
                             <div
-                              className="flex flex-row items-center justify-center ml-auto mr-auto"
+                              className="flex flex-row items-center mt-4"
                               style={{ width: '100%' }}
                             >
-                              <table className="restaurant-table">
-                                {order.cart.products.length > 0 && (
-                                  <>
-                                    <thead>
-                                      <tr>
-                                        <th>Produits</th>
-                                        <th>Quantité</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {order.cart.products.map(product => (
+                              <div
+                                className="flex flex-row items-center justify-center ml-auto mr-auto"
+                                style={{ width: '100%' }}
+                              >
+                                <table className="restaurant-table">
+                                  {order.cart.products.length > 0 && (
+                                    <>
+                                      <thead>
                                         <tr>
-                                          <td>{product.name}</td>
-                                          <td>x1</td>
+                                          <th>Produits</th>
+                                          <th>Quantité</th>
                                         </tr>
-                                      ))}
-                                    </tbody>
-                                  </>
-                                )}
-                                {order.cart.menus.length > 0 && (
-                                  <>
-                                    <thead>
-                                      <tr>
-                                        <th>Menus</th>
-                                        <th>Quantité</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {order.cart.menus.map(menu => (
+                                      </thead>
+                                      <tbody>
+                                        {order.cart.products.map(product => (
+                                          <tr>
+                                            <td>{product.name}</td>
+                                            <td>x1</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </>
+                                  )}
+                                  {order.cart.menus.length > 0 && (
+                                    <>
+                                      <thead>
                                         <tr>
-                                          <td>{menu.name}</td>
-                                          <td>x1</td>
+                                          <th>Menus</th>
+                                          <th>Quantité</th>
                                         </tr>
-                                      ))}
-                                    </tbody>
-                                  </>
-                                )}
-                              </table>
+                                      </thead>
+                                      <tbody>
+                                        {order.cart.menus.map(menu => (
+                                          <tr>
+                                            <td>{menu.name}</td>
+                                            <td>x1</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </>
+                                  )}
+                                </table>
+                              </div>
                             </div>
                           </div>
                         </StyledBody>

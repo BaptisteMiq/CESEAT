@@ -33,6 +33,8 @@ function CustomFlag(props) {
 const AutoForms = (props) => {
     
     const [isOpen, setIsOpen] = React.useState(false);
+    const [isUploading, setIsUploading] = React.useState(false);
+
     var checkMail = (key) => {
         return validateEmail(props.dataForms.elements[key].value);
     }
@@ -49,6 +51,44 @@ const AutoForms = (props) => {
         var data = props.dataForms.elements[key];
         if(data.confirm) {
             return (value === props.dataForms.elements[data.confirm].value ? true : false);
+        }
+    }
+
+    const uploadFiles = async (key, files) => {
+        setIsUploading(true);
+        var formData = new FormData();
+        formData.append('image', files[0]);
+        const APIURL = `${process.env.NEXT_PUBLIC_CDN}upload`;
+        const response = await fetch(APIURL, {
+            method: 'POST',
+            body: formData
+        }).catch(error => {
+            console.log(error);
+            throw error;
+        });
+        const data = await response.json();
+        setIsUploading(false);
+        if(data && data.success) {
+            const path = data.path; // Do not set CDN URL here!!!
+            props.setDataForms({
+                ...props.dataForms, elements: {
+                    ...props.dataForms.elements,
+                    [key]: {
+                        ...props.dataForms.elements[key],
+                        value: path,
+                            }
+                }
+            });
+
+            props.setDataForms({
+                ...props.dataForms, elements: {
+                    ...props.dataForms.elements,
+                    ["Image"]: {
+                        ...props.dataForms.elements["Image"],
+                        src: path,
+                            }
+                }
+            });
         }
     }
 
@@ -349,8 +389,15 @@ const AutoForms = (props) => {
             case 'UploadFile':
                 return (
                     <div className="flex flex-row justify-center w-full">
-                        <div className="m-4 w-1/2">
-                            <FileUploader />
+                        <div className="m-4 mt-8">
+                            <FileUploader
+                                  onDrop={(acceptedFiles, rejectedFiles) => {
+                                    uploadFiles(key, acceptedFiles);
+                                  }}
+                                  progressMessage={
+                                    isUploading ? `Upload...` : ''
+                                  }
+                                />
                         </div>
                     </div>
                 );
@@ -358,7 +405,7 @@ const AutoForms = (props) => {
                 return (
                     <div className="flex flex-row justify-center" style={{width: '100%', height: '100%', minHeight: "200px", position: 'relative'}}>
                         <div className="m-2">
-                            <Image objectFit="cover" src={props.dataForms.elements[key].src} alt="" layout="fill"/>
+                            <Image objectFit="cover" src={process.env.NEXT_PUBLIC_CDN + props.dataForms.elements[key].src} alt="" layout="fill"/>
                         </div>
                     </div>
                 );
@@ -388,7 +435,7 @@ const AutoForms = (props) => {
                             Object.entries(props.dataForms.elements).map( ([key, element]) => (
 
                                 <div className={element.fullWidth ? 'flex flex-auto flex-col m-3 w-full' : 'flex flex-auto flex-col m-3'} style={{minWidth: '240px'}}>
-                                    <HeadingXSmall>{element.title}</HeadingXSmall>
+                                    <HeadingXSmall className="mb-4">{element.title}</HeadingXSmall>
                                     {  generateBody(key, element)  }
                                 </div> 
                             ))

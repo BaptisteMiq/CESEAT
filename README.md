@@ -1,55 +1,40 @@
-# Démarrer l'application
+# Application CESEAT
 
-## Lancer l'application en local
+## Démarrer l'application
 
-### En mode production
-
-```bash
-docker compose build
-docker compose down
-docker compose up
-```
-
-### En mode développement
-
-### 1. Démarrer la BDD MySQL
+### Lancer l'application en mode développement
 
 ```bash
-cd Database
-docker compose up
+./start.dev.sh
 ```
 
-- Hôte: localhost
-- Port: 3306
-- Utilisateur: root
-- Mot de passe: mysqlpw
-- BDD: mydb
-
-### 2. Démarrer les Microservices
-
-#### 2.1 Accounts
+### Lancer l'application en mode production
 
 ```bash
-cd Microservices/Accounts
-npm run dev
+./start.prod.sh
 ```
 
-- Hôte: <http://localhost:5000/>
+## Ports utilisés par l'application
 
-### 3. Démarrer le Middleware
+| Port | Service |
+| ---- | ------ |
+| 5100 | Microservice Accounts |
+| 3100 | Microservice CDN |
+| 4600 | Microservice Orders |
+| 4700 | Microservice Sockets |
+| 3000 | Application Next.JS |
+| 3306 | Serveur MySQL |
+| 4000 | Middleware (Serveur GraphQL) |
 
-```bash
-cd Middleware
-npm run dev
-```
+# Documentation de l'API
 
-- Hôte: <http://localhost:4000/>
+```Documentation API.pdf```
 
-### 4. Démarrer l'Application NextJS
+# Requis et recommandations
 
-```bash
-cd Application
-npm run dev
-```
+Pour faire fonctionner l'application, la machine hôte doit avoir **au minimum** les services suivants :
 
-- Hôte: <http://localhost:3000/>
+- CPU 4 Core
+- 8GB de RAM
+- 32 GB de stockage
+

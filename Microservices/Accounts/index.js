@@ -245,7 +245,15 @@ app.post("/register", (req, res) => {
                 values,
                 function (err, result) {
                     const token = jwt.sign(
-                        { Mail, Firstname, Lastname, PhoneNumber, Role_ID: RoleID, ID: result.insertId, Avatar: user.Avatar },
+                        {
+                            Mail,
+                            Firstname,
+                            Lastname,
+                            PhoneNumber,
+                            Role_ID: RoleID,
+                            ID: result.insertId,
+                            Avatar: user.Avatar,
+                        },
                         process.env.TOKEN_KEY,
                         {
                             expiresIn: "200h",
@@ -351,6 +359,40 @@ app.get("/decode", (req, res) => {
         res.send(decoded);
     } catch (err) {
         return res.status(401).send("Token invalide.");
+    }
+});
+
+app.get("/refresh", (req, res) => {
+    let token = req.headers["authorization"];
+    if (!token) {
+        return res.status(403).send("Un token d'autorisation est requis.");
+    }
+    token = token.replace("Bearer ", "");
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+        // Query user in DB
+        con.query("SELECT * FROM User WHERE ID = ?", [decoded.ID], function (err, result, fields) {
+            if (err) res.status(400).send(err.sqlMessage);
+            const user = result[0];
+            const token = jwt.sign(
+                {
+                    Mail: user.Mail,
+                    Firstname: user.Firstname,
+                    Lastname: user.Lastname,
+                    PhoneNumber: user.PhoneNumber,
+                    Role_ID: user.Role_ID,
+                    Avatar: user.Avatar,
+                    ID: user.ID,
+                },
+                process.env.TOKEN_KEY,
+                {
+                    expiresIn: "200h",
+                }
+            );
+            res.send({ user, token });
+        });
+    } catch (error) {
+        res.status(400).send(error);
     }
 });
 

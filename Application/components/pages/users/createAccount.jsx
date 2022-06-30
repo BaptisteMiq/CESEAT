@@ -4,6 +4,7 @@ import * as React from 'react';
 import AutoForms from "../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
 import api from "../../api";
+import { defaultUserImage } from "../../ui/Images";
 // title = Permet d'afficher le nom de l'input
 // type = Permet de choisir letype d'input : ['UploadFile','Input','MailInput','PasswordInput','PhoneInput', 'Image']
 // fullWidth = Permet de chosir si l'input doit être en full largeur ou non [true, false]
@@ -21,7 +22,7 @@ var generateModal = {
         },
         Image: {
             title: 'Avatar',
-            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+            src: defaultUserImage,
             type: "Image",
             fullWidth: false
         },
@@ -118,7 +119,7 @@ const CreateAccount = (props) => {
                     "Mail": "${registerForms.elements.Mail.value}",
                     "PhoneNumber": "${registerForms.elements.PhoneNumber.value}",
                     "Role_ID": "${registerForms.elements.RoleSelect.value[0].id}",
-                    "Avatar": null
+                    "Avatar": "${registerForms.elements.Image.src ?? defaultUserImage}"
                 }
             }`
         }, '', 'Le compte utilisateur a bien été créé !', true);

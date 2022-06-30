@@ -4,6 +4,7 @@ import { Tag, VARIANT } from 'baseui/tag';
 import Image from 'next/image';
 import React from 'react';
 import api from '../api';
+import { defaultImage } from '../ui/Images';
 
 const RestaurantDetails = () => {
   var [getRestaurant, setGetRestaurant] = React.useState(false);
@@ -313,16 +314,12 @@ const RestaurantDetails = () => {
   };
 
   const productCard = product => (
-    <div className="rounded-md p-3 max-w-md w-80 shadow-lg m-4 bg-gray-50 hover:bg-gray-100">
+    <div className="rounded-md p-3 max-w-md w-80 shadow-lg m-4 bg-gray-50 hover:bg-gray-100 cursor-pointer">
       <div className="h-32 w-full relative">
         <Image
           className="rounded-md"
           objectFit="cover"
-          src={
-            product.picture
-              ? product.picture
-              : 'https://static.actu.fr/uploads/2020/04/mcdonalds-deconfinement-ouverture-fast-food-coronavirus-960x640.jpg'
-          }
+          src={process.env.NEXT_PUBLIC_CDN + product.picture ?? defaultImage}
           alt=""
           layout="fill"
         />
@@ -370,16 +367,12 @@ const RestaurantDetails = () => {
   );
 
   const menuCard = menu => (
-    <div className="rounded-md p-3 max-w-md w-80 shadow-lg m-4 bg-gray-50 hover:bg-gray-100">
+    <div className="rounded-md p-3 max-w-md w-80 shadow-lg m-4 bg-gray-50 hover:bg-gray-100 cursor-pointer">
       <div className="h-32 w-full relative">
         <Image
           className="rounded-md"
           objectFit="cover"
-          src={
-            menu.picture
-              ? menu.picture
-              : 'https://static.actu.fr/uploads/2020/04/mcdonalds-deconfinement-ouverture-fast-food-coronavirus-960x640.jpg'
-          }
+          src={process.env.NEXT_PUBLIC_CDN + menu.picture ?? defaultImage}
           alt=""
           layout="fill"
         />
@@ -443,9 +436,7 @@ const RestaurantDetails = () => {
         <Image
           className="rounded-md"
           objectFit="cover"
-          src={
-            'https://static.actu.fr/uploads/2020/04/mcdonalds-deconfinement-ouverture-fast-food-coronavirus-960x640.jpg'
-          }
+          src={process.env.NEXT_PUBLIC_CDN + (restaurant.picture ? restaurant.picture : defaultImage)}
           alt=""
           layout="fill"
         />
