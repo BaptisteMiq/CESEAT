@@ -70,15 +70,15 @@ const Users = (props) => {
               <IonIcon icon={home} />
               <IonLabel>Accueil</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab2" href="/users/browse">
+            <IonTabButton tab="tab2" href="/users/cart">
               <IonIcon icon={search} />
-              <IonLabel>Parcourir</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab3" href="/users/cart">
-              <IonIcon icon={cart} />
               <IonLabel>Paniers</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab4" href="/users/settings">
+            <IonTabButton tab="tab3" href="/users/orders">
+              <IonIcon icon={cart} />
+              <IonLabel>Commande</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab4" href="/users/modify">
               <IonIcon icon={person} />
               <IonLabel>Compte</IonLabel>
             </IonTabButton>
