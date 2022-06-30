@@ -12,7 +12,7 @@ module.exports = {
       'www.lebarasushi.com',
       'www.lamontagne.fr',
       'institutcoop.hec.ca',
-      'baptistemiq-ceseat-xgr777qwcvr4j-3100.githubpreview.dev',
+      'baptistemiq-ceseat-57vjjjpqhv766-3100.githubpreview.dev',
     ],
   },
   eslint: {
