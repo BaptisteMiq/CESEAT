@@ -1,3 +1,5 @@
+// @ts-check
+
 import { IonPage } from '@ionic/react';
 import { Accordion, Panel } from 'baseui/accordion';
 import { Button, KIND, SIZE } from 'baseui/button';
@@ -31,6 +33,7 @@ const Order = props => {
           myOrders {
             _id
             userId
+            deliveryUserId
             restaurant {
               name
               address {
@@ -67,6 +70,38 @@ const Order = props => {
     );
     if (response) {
       const orders = response.data.myOrders.filter(order => order.cart);
+
+      // Get delivery user for each order
+      if (orders && orders.length > 0) {
+        await Promise.all(
+          orders.map(async order => {
+            if (order.deliveryUserId) {
+              var response = await api(
+                'post',
+                {
+                  query: `query ($id: String) {
+                    userById(ID: $id) {
+                      Firstname
+                      Lastname
+                      Avatar
+                    }
+                  }`,
+                  variables: `{
+                      "id": "${order.deliveryUserId}"
+                  }`,
+                },
+                '',
+                '',
+                false
+              );
+              console.log(response);
+              if (response) {
+                order.deliveryUser = response.data.userById;
+              }
+            }
+          })
+        );
+      }
       setOrders(orders);
     }
   };
@@ -106,7 +141,7 @@ const Order = props => {
   }, []);
 
   return (
-    <IonPage className="overflow-y-auto mb-5 flex flex-col justify-center items-center">
+    <IonPage className="top-14 mb-20 overflow-y-auto mb-5 flex flex-col justify-center items-center">
       <div
         className="mb-5 flex flex-wrap align-center justify-center overflow-scroll"
         style={{ maxWidth: '500px' }}
@@ -174,8 +209,8 @@ const Order = props => {
                             Votre livreur est en route!
                           </Heading>
                           <p className="mt-4">
-                            Votre livreur <b>{'Michel Depuis'}</b> est en route pour aller chercher
-                            votre plat.
+                            Votre livreur <b>{order.deliveryUser.Firstname} {order.deliveryUser.Lastname}</b> est en route pour
+                            aller chercher votre plat.
                           </p>
                           <div className="justify-center align-center items-center flex flex-auto my-10">
                             <Image src="/img/cyclisme.gif" height="180" width="180" />
@@ -194,8 +229,8 @@ const Order = props => {
                             Votre livreur est en route!
                           </Heading>
                           <p className="mt-4">
-                            Votre livreur <b>{'Michel Depuis'}</b> vient de récupérer la commande
-                            aurpès du restaurant et est en route vers chez vous.
+                            Votre livreur <b>{order.deliveryUser.Firstname} {order.deliveryUser.Lastname}</b> vient de récupérer
+                            la commande aurpès du restaurant et est en route vers chez vous.
                           </p>
                           <div className="justify-center align-center items-center flex flex-auto my-10">
                             <Image src="/img/cyclisme.gif" height="180" width="180" />

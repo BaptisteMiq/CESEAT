@@ -4,6 +4,7 @@ import * as React from 'react';
 import AutoForms from "../../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
 import api from "../../../api";
+import { defaultImage } from "../../../ui/Images";
 
 // title = Permet d'afficher le nom de l'input
 // type = Permet de choisir letype d'input : ['UploadFile','Input','PasswordInput','PhoneInput']
@@ -21,7 +22,7 @@ var generateModal = {
         },
         Image: {
             title: 'Image',
-            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+            src: defaultImage,
             type: "Image",
             fullWidth: false
         },
@@ -76,7 +77,7 @@ const CreateProduct = (props) => {
                     "description": "${productForms.elements.Description.value}",
                     "price": ${productForms.elements.Price.value},
                     "allergenicIngredients": "${productForms.elements.AllergenicIngredients.value}",
-                    "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+                    "picture": "${productForms.elements.Image.src ?? defaultImage}",
                     "available": true
                 }
             }`
@@ -104,7 +105,7 @@ const CreateProduct = (props) => {
     var [buttons, setButtons] = React.useState(buttonsModel);
 
     return (
-        <IonPage className="overflow-y-auto mb-5">
+        <IonPage className="top-14 mb-20 overflow-y-auto mb-5">
             <AutoForms dataForms={dataForms} setDataForms={setDataForms} buttons={buttons}></AutoForms>
         </IonPage>
     );

@@ -15,20 +15,22 @@ import ModifyAddress from '../pages/address/ModifyAddress';
 import Cart from '../pages/users/Cart';
 import Order from '../pages/users/Order';
 import { AuthRoute } from './protected.route';
+import Footer from '../ui/FooterApp';
+import LegalMention from '../pages/LegalMention';
 
 const Users = (props) => {
   return (
     <div>
       {isPlatform('desktop') &&
-        <IonReactRouter>
-          <IonHeader>
+        <div >
+          <IonHeader style={{zIndex: 9999}}>
             <Menu user={props.user} type="users"/>
           </IonHeader>
-          <IonRouterOutlet className='mt-14 overflow-y-auto'>
+          <div className='mt-24 top-12 overflow-y-auto'>
+            <div></div>
             <Switch>
             <AuthRoute path="/users/home" component={HomePage} roleId={[1]} accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/modify" component={Modify} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/list" component={ListUsers}  accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/modify" component={Modify} roleId={[1, 2, 3, 4]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/address/create" component={CreateAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/address" component={ListAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/address/modify"component={ModifyAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
@@ -37,20 +39,22 @@ const Users = (props) => {
               <AuthRoute path="/users/restaurant/details" component={RestaurantDetails} roleId={[1]} accessWithoutAuth={false} exact />
               <AuthRoute path="/users/register" component={CreateAccount} accessWithoutAuth={true} exact={true} />
               <AuthRoute path="/users/login" component={Login} accessWithoutAuth={true} exact={true} />
-              <Route path="/users" render={() => <Redirect to="/users/home" />} exact={true} />
+              <AuthRoute path="/users/legal-mentions" component={LegalMention} accessWithoutAuth={true} exact={true} />
+              <Route path="/users/*" render={() => <Redirect to="/users/home" />} exact={true} />
             </Switch>
-          </IonRouterOutlet>
-        </IonReactRouter>
+          </div>
+          <Footer></Footer>
+        </div>
       }
       { !isPlatform('desktop') && 
           <IonTabs>
           <IonRouterOutlet className='overflow-y-auto'>
             <Switch>
               <AuthRoute path="/users/home" component={HomePage} roleId={[1]} accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/modify" component={Modify} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/modify" component={Modify} roleId={[1,2, 3, 4]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/list" component={ListUsers}  accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/address/create" component={CreateAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
-              <AuthRoute path="/users/address" component={ListAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/address/create" component={CreateAddress} roleId={[1,2, 3, 4]} accessWithoutAuth={false} exact={true} />
+              <AuthRoute path="/users/address" component={ListAddress} roleId={[1,2, 3, 4]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/address/modify"component={ModifyAddress} roleId={[1,2]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/cart" component={Cart} roleId={[1]} accessWithoutAuth={false} exact={true} />
               <AuthRoute path="/users/orders" component={Order} roleId={[1]} accessWithoutAuth={false} exact={true} />
@@ -65,15 +69,15 @@ const Users = (props) => {
               <IonIcon icon={home} />
               <IonLabel>Accueil</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab2" href="/users/browse">
+            <IonTabButton tab="tab2" href="/users/cart">
               <IonIcon icon={search} />
-              <IonLabel>Parcourir</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab3" href="/users/cart">
-              <IonIcon icon={cart} />
               <IonLabel>Paniers</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab4" href="/users/settings">
+            <IonTabButton tab="tab3" href="/users/orders">
+              <IonIcon icon={cart} />
+              <IonLabel>Commande</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab4" href="/users/modify">
               <IonIcon icon={person} />
               <IonLabel>Compte</IonLabel>
             </IonTabButton>

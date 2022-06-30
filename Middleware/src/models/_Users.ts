@@ -209,7 +209,31 @@ export const getUsersMutations = (schemaComposer: SchemaComposer) => {
                     .then((res) => {
                         return {
                             record: res.data,
-                            token: token
+                            token: token,
+                        };
+                    })
+                    .catch((err) => {
+                        throw new ApolloError(err.response.data);
+                    });
+            },
+        },
+        refreshToken: {
+            type: ResultUserPayload,
+            resolve: async (root: any, args: any, context: any) => {
+                const token = context.req.cookies?.token || context.req.headers?.authorization;
+                if (!token) {
+                    throw new ApolloError("Vous n'êtes pas connecté.");
+                }
+                return axios
+                    .get(`http://${process.env.MSC_HOST}:${process.env.MSC_PORT}/refresh/`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    })
+                    .then((res) => {
+                        return {
+                            record: res.data,
+                            token: res.data.token,
                         };
                     })
                     .catch((err) => {

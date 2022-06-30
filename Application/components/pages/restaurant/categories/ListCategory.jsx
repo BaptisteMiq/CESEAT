@@ -89,7 +89,7 @@ const ListCategory = (props) => {
     }, [getCategorie])
 
     return (
-        <IonPage className="overflow-y-auto mb-5 flex flex-col">
+        <IonPage className="top-14 mb-20 overflow-y-auto mb-5 flex flex-col">
             <div className="justify-center align-center items-center flex flex-auto">
                 <Button
                     className="m-2"

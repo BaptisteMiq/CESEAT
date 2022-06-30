@@ -4,12 +4,14 @@ import { IonReactRouter } from '@ionic/react-router';
 import React, { useEffect, useState } from 'react';
 import { ReactNotifications } from 'react-notifications-component';
 import { Redirect, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom/cjs/react-router-dom.min';
 import socketIOClient from 'socket.io-client';
 import Delivery from './routes/Delivery';
 import history from './routes/history';
 import { AuthRoute } from './routes/protected.route';
 import Restaurants from './routes/Restaurants';
 import Users from './routes/Users';
+import Commercial from './routes/Commercial';
 
 const socket = socketIOClient(process.env.NEXT_PUBLIC_SOCKET, {
   withCredentials: true
@@ -36,9 +38,12 @@ const AppShell = () => {
       <SocketContext.Provider value={socket}>
         <IonReactRouter history={history}>
           <IonRouterOutlet id="main">
-            <AuthRoute path="/users" accessWithoutAuth={true} roleId={[1, 2]} component={Users} />
-            <AuthRoute path="/restaurant" accessWithoutAuth={false} roleId={[2]} component={Restaurants} />
-            <Route path="/delivery" component={Delivery} />
+            <Switch>
+              <AuthRoute path="/users" accessWithoutAuth={true} roleId={[0, 1, 2, 3, 4]} component={Users} />
+              <AuthRoute path="/restaurant" accessWithoutAuth={false} roleId={[0, 2]} component={Restaurants} />
+              <AuthRoute path="/delivery" accessWithoutAuth={false} roleId={[0, 3]} component={Delivery} />
+              <AuthRoute path="/commercial" accessWithoutAuth={false} roleId={[0, 4]} component={Commercial} />
+            </Switch>
             <Route exact path="/" render={() => <Redirect to="/users" />} />
           </IonRouterOutlet>
         </IonReactRouter>

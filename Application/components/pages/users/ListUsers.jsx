@@ -5,6 +5,7 @@ import Image from 'next/image';
 import * as React from 'react';
 import { useHistory } from "react-router-dom";
 import api from "../../api";
+import { defaultUserImage } from "../../ui/Images";
 
 const ListUsers = (props) => {
     var history = useHistory();
@@ -65,7 +66,7 @@ const ListUsers = (props) => {
         await getusers();
     }, [getUsers])
     return (
-        <IonPage className="overflow-y-auto mb-5 flex flex-col">
+        <IonPage className="top-14 overflow-y-auto mb-5 flex flex-col">
             <div className="mb-5 flex flex-wrap align-center justify-center">
             {
                 users.map((user) => (
@@ -83,7 +84,7 @@ const ListUsers = (props) => {
                     <StyledBody className="flex flex-row flex-wrap align-middle items-center">
                         <div className="w-1/6 flex justify-center">
                             <div>
-                                <Image className="" objectFit="cover" src={user.Avatar} alt="" height="60px" width="60px" />
+                                <Image className="" objectFit="cover" src={process.env.NEXT_PUBLIC_CDN + (user.Avatar ?? defaultUserImage)} alt="" height="60px" width="60px" />
                             </div>
                         </div>
                         <div className="w-1/2 flex flex-row flex-wrap">

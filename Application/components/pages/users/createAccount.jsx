@@ -4,6 +4,7 @@ import * as React from 'react';
 import AutoForms from "../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
 import api from "../../api";
+import { defaultUserImage } from "../../ui/Images";
 // title = Permet d'afficher le nom de l'input
 // type = Permet de choisir letype d'input : ['UploadFile','Input','MailInput','PasswordInput','PhoneInput', 'Image']
 // fullWidth = Permet de chosir si l'input doit être en full largeur ou non [true, false]
@@ -21,7 +22,7 @@ var generateModal = {
         },
         Image: {
             title: 'Avatar',
-            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+            src: defaultUserImage,
             type: "Image",
             fullWidth: false
         },
@@ -81,7 +82,7 @@ var generateModal = {
             title: "Sélectionner le type de compte",
             type: "SelectInput",
             value: [{ label: "Utilisateur", id: "1"}],
-            options: [{label: "Utilisateur", id: "1"}, {label: "Restaurateur", id: "2"}, {label: "Livreur", id: "3"}, {label: "Développeur", id: "4"}],
+            options: [{label: "Utilisateur", id: "1"}, {label: "Restaurateur", id: "2"}, {label: "Livreur", id: "3"}, {label: "Commercial", id: "4"}, {label: "Développeur", id: "5"}],
             fullWidth: true,
             multi: false,
             placeholder: ""
@@ -106,6 +107,7 @@ const CreateAccount = (props) => {
                 userCreateOne(record: $record) {
                     record {
                         ID
+                        Role_ID
                     }
                     token
                 }
@@ -118,7 +120,7 @@ const CreateAccount = (props) => {
                     "Mail": "${registerForms.elements.Mail.value}",
                     "PhoneNumber": "${registerForms.elements.PhoneNumber.value}",
                     "Role_ID": "${registerForms.elements.RoleSelect.value[0].id}",
-                    "Avatar": null
+                    "Avatar": "${registerForms.elements.Image.src ?? defaultUserImage}"
                 }
             }`
         }, '', 'Le compte utilisateur a bien été créé !', true);
@@ -127,8 +129,24 @@ const CreateAccount = (props) => {
         if(response) {
             localStorage.setItem('Token', response.data.userCreateOne.token);
             localStorage.setItem('authenticated', true);
-            history.push('/users/home');
-            history.go(0);
+            if(response.data.userCreateOne.record.Role_ID === "1") {
+                history.push('/users/home');
+                history.go(0);
+            } else if(response.data.userCreateOne.record.Role_ID === "2"){
+                if(localStorage.getItem('ownRestaurant') === "true") {
+                    history.push('/restaurant/orders');
+                    history.go(0);
+                } else {
+                    history.push('/restaurant/create');
+                    history.go(0);
+                }
+            } else if(response.data.userCreateOne.record.Role_ID === "3"){
+                history.push('/delivery/orders');
+                history.go(0);
+            } else if(response.data.userCreateOne.record.Role_ID === "4") {
+                history.push('/commercial/dashboard');
+                history.go(0);
+            }
         }
     }
     var loginButton = () => {
@@ -152,7 +170,7 @@ const CreateAccount = (props) => {
     var [buttons, setButtons] = React.useState(buttonsModel);
 
     return (
-        <IonPage className="overflow-y-auto mb-5">
+        <IonPage className="top-14 mb-20 overflow-y-auto mb-5">
             <AutoForms dataForms={dataForms} setDataForms={setDataForms} buttons={buttons}></AutoForms>
         </IonPage>
     );

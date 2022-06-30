@@ -4,6 +4,7 @@ import * as React from 'react';
 import AutoForms from "../../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
 import api from "../../../api";
+import { defaultImage } from "../../../ui/Images";
 
 var generateModal = {
     title: "Modifier le menu",
@@ -16,7 +17,7 @@ var generateModal = {
         },
         Image: {
             title: 'Image',
-            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+            src: defaultImage,
             type: "Image",
             fullWidth: false
         },
@@ -103,7 +104,6 @@ const ModifyMenu = (props) => {
             response.data.myRestaurant.products.map(product => {
                 listOfproducts.push({"label": product.name, "id": product._id});
             });
-            console.log(listOfproducts);
 
             setGetProducts(false);
         }
@@ -111,7 +111,7 @@ const ModifyMenu = (props) => {
 
     var getMenu = async (id) => {
         await axios({
-            url: process.env.NEXT_PUBLIC_MDW_URL,
+            url: 'http://localhost:4000/graphql',
             method: 'post',
             data: {
                 query: `query MenuById($id: MongoID!) {
@@ -135,7 +135,6 @@ const ModifyMenu = (props) => {
           }).then(response => {
             setMenu(response.data.data.menuById);
             if(menu) {
-                console.log(menu);
                 generateModal = {
                     title: "Modifier le menu",
                     elements: {
@@ -147,7 +146,7 @@ const ModifyMenu = (props) => {
                         },
                         Image: {
                             title: 'Image',
-                            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+                            src: menu.picture ?? defaultImage,
                             type: "Image",
                             fullWidth: false
                         },
@@ -243,7 +242,7 @@ const ModifyMenu = (props) => {
                     "name": "${menuForms.elements.Name.value}",
                     "description": "${menuForms.elements.Description.value}",
                     "price": ${menuForms.elements.Price.value},
-                    "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+                    "picture": "${menuForms.elements.Image.src ?? defaultImage}",
                     "available": ${menuForms.elements.Available.value[0].label === "Disponible" ? true : false},
                     "products": [${menuForms.elements.Products.value.map(product => { return '"'+ product.id +'"';})}]
                 }
@@ -271,7 +270,7 @@ const ModifyMenu = (props) => {
     var [buttons, setButtons] = React.useState(buttonsModel);
 
     return (
-        <IonPage className="overflow-y-auto mb-5 bg-white">
+        <IonPage className="top-14 mb-20 overflow-y-auto mb-5 bg-white">
             <AutoForms dataForms={dataForms} setDataForms={setDataForms} buttons={buttons}></AutoForms>
         </IonPage>
     );

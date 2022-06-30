@@ -3,6 +3,7 @@ import { StatefulMenu, OptionProfile } from "baseui/menu";
 import { Avatar } from "baseui/avatar";
 import { Button, SHAPE, SIZE } from "baseui/button";
 import { useHistory } from "react-router-dom";
+import { defaultUserImage } from "../../ui/Images";
 
 const ITEMS = Array.from({length: 4}, () => ({
     title: 'David Smith',
@@ -38,6 +39,11 @@ const UserPopup = (props) => {
         localStorage.removeItem('Token');
         localStorage.setItem('authenticated', false);
         localStorage.setItem('RoleID', 0);
+        localStorage.removeItem('restaurantID');
+        localStorage.removeItem('modifyMenuID');
+        localStorage.removeItem('modifyCategoryID');
+        localStorage.removeItem('modifyUserID');
+        localStorage.removeItem('UserID');
         history.push('/users/login');
         history.go(0);
     }
@@ -49,7 +55,7 @@ const UserPopup = (props) => {
                 <Avatar
                         name={props.user.Firstname + " " + props.user.Lastname}
                         size="scale1600"
-                        src={props.user.Avatar}
+                        src={process.env.NEXT_PUBLIC_CDN + (props.user.Avatar ?? defaultUserImage)}
                         overrides={{
                             Avatar: {
                             style: ({ $theme }) => ({
@@ -60,7 +66,7 @@ const UserPopup = (props) => {
                 />
             </div>
             <div className="UserName mb-5">
-                { props.user.name }
+                { props.user.Firstname + " " + props.user.Lastname }
             </div>
             <div className="UserButton mb-5">
                 <Button

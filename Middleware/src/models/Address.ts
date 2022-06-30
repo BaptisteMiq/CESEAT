@@ -40,7 +40,7 @@ const generateQueriesMutations = (schemaComposer: any) => {
     const MongooseObject = composeMongoose(Model, { schemaComposer, name: "Address" });
 
     const queries = {
-        addresses: MongooseObject.mongooseResolvers.findMany().withMiddlewares([RequireComm, AuthMiddleware]),
+        addresses: MongooseObject.mongooseResolvers.findMany().withMiddlewares([RequireDriver, RequireComm, AuthMiddleware]),
         myAddresses: MongooseObject.mongooseResolvers.findMany().withMiddlewares(Require([U.OWN])),
         addressById: MongooseObject.mongooseResolvers.findById(),
     };

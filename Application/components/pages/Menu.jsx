@@ -15,6 +15,7 @@ import Notifications from './Notifications';
 import UserPopup from './users/UserPopup';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 import { Button, SHAPE, SIZE } from 'baseui/button';
+import { defaultUserImage } from '../ui/Images';
 
 var user = {
   name: "Baptiste Miquel",
@@ -35,10 +36,6 @@ var navigationByUsers = {
     {
       label: 'Commandes',
       link: '/users/orders'
-    },
-    {
-      label: 'Liste',
-      link: '/users/list'
     },
   ],
   restaurant: [
@@ -63,9 +60,26 @@ var navigationByUsers = {
       link: "/restaurant/modify"
     }
   ],
-  deliveryMan: {
-
-  }
+  deliveryMan: [
+    {
+      label: "Commandes",
+      link: "/delivery/orders"
+    }
+  ],
+  commercial: [
+    {
+      label: 'Dashboard',
+      link: '/commercial/dashboard'
+    },
+    {
+      label: 'Liste',
+      link: '/commercial/users/list'
+    },
+    {
+      label: 'Statistique',
+      link: '/commercial/statistique'
+    }
+  ]
 }
 
 const Menu = (props) => {
@@ -74,9 +88,7 @@ const Menu = (props) => {
   if (roleID != localStorage.getItem('RoleID')) {
     setRoleId(localStorage.getItem('RoleID'));
   }
-  console.log(localStorage.getItem('RoleID'));
   var setType = () => {
-    console.log('test');
     switch (localStorage.getItem('RoleID')) {
       case '0':
         setTypeUser('visitor');
@@ -89,6 +101,9 @@ const Menu = (props) => {
         break;
       case '3':
         setTypeUser('deliveryMan');
+        break;
+      case '4':
+        setTypeUser('commercial');
         break;
       default:
         break;
@@ -110,7 +125,11 @@ const Menu = (props) => {
           { navigationByUsers[typeUser].map(navigationItem => (
             <StyledNavigationItem key={navigationItem.label} className="mr-12 ml-6">
               <StyledLink href={navigationItem.link} animateUnderline onClick={(e) => {
-                history.push(navigationItem.link);
+                if(localStorage.getItem('RoleID') === "2" && localStorage.getItem('ownRestaurant') !== "true") {
+                  props.history.push(navigationItem.link);
+                } else {
+                  history.push(navigationItem.link);
+                }
                 e.preventDefault();
                 <Redirect to={navigationItem.link}></Redirect>
               }}>
@@ -138,7 +157,7 @@ const Menu = (props) => {
                     <Avatar
                       name={props.user.Firstname + " " + props.user.Lastname}
                       size="scale900"
-                      src={props.user.avatarUrl}
+                      src={process.env.NEXT_PUBLIC_CDN + (props.user.Avatar ?? defaultUserImage)}
                     >
                     </Avatar>
                 </IonButtons>

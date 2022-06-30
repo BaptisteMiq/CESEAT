@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const cors = require("cors");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -15,12 +16,15 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const app = express();
+app.use(cors());
 
-app.post("/profile", upload.single("avatar"), function (req, res, next) {
+app.post("/upload", upload.single("image"), function (req, res, next) {
+    // Remove the beggining "uploads" from path
+    const path = req.file.path.replace(/^uploads/, "");
     return res.json({
         success: true,
         message: "File uploaded successfully",
-        path: req.file.path,
+        path,
     });
 });
 

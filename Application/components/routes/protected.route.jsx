@@ -49,9 +49,9 @@ export const AuthRoute = ({ component: Component, roleId, accessWithoutAuth , ..
       {...rest}
       render={(props) => {
         if (localStorage.getItem('authenticated') === 'true' && (roleId ? roleId.includes(parseInt(localStorage.getItem('RoleID'))) : true)) {
-          return <Component {...props} user={user} {...rest}/>;
+          return isAuthenticated ? <Component {...props} user={user} {...rest}/> : <div></div>
         } else if (accessWithoutAuth) {
-            return <Component {...props} user={user} {...rest}/>;
+            return <Component {...props} user={user} {...rest}/>
         } else if (localStorage.getItem('authenticated') && (localStorage.getItem('RoleID') === "1")) {
           return <Redirect
             to={{
@@ -70,8 +70,19 @@ export const AuthRoute = ({ component: Component, roleId, accessWithoutAuth , ..
               },
             }}
           />
+        } 
+        else if (localStorage.getItem('authenticated') && (localStorage.getItem("RoleID") === "2")) {
+          return <Redirect
+            to={{
+              pathname: "/restaurant/orders",
+              state: {
+                from: props.location
+              },
+            }}
+          />
         }
-        else {
+        
+        else if(!localStorage.getItem('authenticated')){
           return (
             <Redirect
               to={{

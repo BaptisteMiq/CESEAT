@@ -4,6 +4,7 @@ import * as React from 'react';
 import AutoForms from "../../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
 import api from "../../../api";
+import { defaultImage } from "../../../ui/Images";
 
 var generateModal = {
     title: "Modifier le produit",
@@ -16,7 +17,7 @@ var generateModal = {
         },
         Image: {
             title: 'Image',
-            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+            src: defaultImage,
             type: "Image",
             fullWidth: false
         },
@@ -115,7 +116,7 @@ const Modify = (props) => {
                     },
                     Image: {
                         title: 'Image',
-                        src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+                        src: product.picture ?? defaultImage,
                         type: "Image",
                         fullWidth: false
                     },
@@ -177,6 +178,7 @@ const Modify = (props) => {
 
     var history = useHistory();
     var handleModify = async (modifyForms) => {
+        console.log(modifyForms.elements.Image.src);
         var response = await api('post', {
             query: `mutation ProductUpdateById($id: MongoID!, $record: UpdateByIdProductInput!) {
                 productUpdateById(_id: $id, record: $record) {
@@ -198,7 +200,7 @@ const Modify = (props) => {
                     "price": ${modifyForms.elements.Price.value},
                     "allergenicIngredients": "${modifyForms.elements.AllergenicIngredients.value}",
                     "available": ${modifyForms.elements.Available.value[0].label === "Disponible" ? true : false},
-                    "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                    "picture": "${modifyForms.elements.Image.src ?? defaultImage}"
                 }
               }`
         }, '', 'Le produit a bien été modifié !', true);
@@ -224,7 +226,7 @@ const Modify = (props) => {
     var [buttons, setButtons] = React.useState(buttonsModel);
 
     return (
-        <IonPage className="overflow-y-auto mb-5 bg-white">
+        <IonPage className="top-14 mb-20 overflow-y-auto mb-5 bg-white">
             <AutoForms dataForms={dataForms} setDataForms={setDataForms} buttons={buttons}></AutoForms>
         </IonPage>
     );

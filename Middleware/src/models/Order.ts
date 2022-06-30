@@ -76,6 +76,9 @@ const generateQueriesMutations = (schemaComposer: any) => {
                         headers: {
                             "Content-Type": "application/json",
                         },
+                    }).catch((err: any) => {
+                        console.log(err);
+                        throw new ApolloError("Impossible de créer la commande.");
                     });
 
                     // Execute query using GraphQL

@@ -10,11 +10,12 @@ import api from '../api';
 import { restaurant } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { Input } from 'baseui/input';
+import { defaultImage } from '../ui/Images';
 
-const HomeCard = ({ name, address, image }) => (
-  <div className='HomeCard rounded-md p-3 max-w-md w-80 shadow-lg m-4 bg-gray-50 hover:bg-gray-100'>
+const HomeCard = ({ name, address, picture }) => (
+  <div className='HomeCard rounded-md p-3 max-w-md w-80 shadow-lg m-4 bg-gray-50 hover:bg-gray-100 cursor-pointer'>
     <div className="h-32 w-full relative">
-      <Image className="rounded-md" objectFit="cover" src={image ? image : "https://static.actu.fr/uploads/2020/04/mcdonalds-deconfinement-ouverture-fast-food-coronavirus-960x640.jpg"} alt="" layout='fill' />
+      <Image className="rounded-md" objectFit="cover" src={process.env.NEXT_PUBLIC_CDN + (picture ?? defaultImage)} alt="" layout='fill' />
     </div>
     <div>
       <h4 className="font-bold py-0 text-s text-black-400 dark:text-black-500 uppercase">{name} - {address.city}</h4>
@@ -55,6 +56,7 @@ const Home = () => {
     if(response.data.restaurants) {
       setGetRestaurants(true);
       setListOfRestaurant(response.data.restaurants);
+      console.log(response.data.restaurants);
     }
   }
 
@@ -68,7 +70,7 @@ const Home = () => {
   }, [getRestaurants]);
 
   return (
-    <IonPage className='bg-white flex justify-center flex-wrap flex-row static overflow-visible' style={{contain: 'None'}}>
+    <IonPage className='top-14 mb-20 bg-white flex justify-center flex-wrap flex-row overflow-y-scroll' style={{contain: 'None'}}>
         <div className='justify-center w-full m-5'>
           <Input
             value={searchValue}
