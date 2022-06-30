@@ -319,7 +319,7 @@ const RestaurantDetails = () => {
         <Image
           className="rounded-md"
           objectFit="cover"
-          src={process.env.NEXT_PUBLIC_CDN + product.picture ?? defaultImage}
+          src={process.env.NEXT_PUBLIC_CDN + (product.picture ?? defaultImage)}
           alt=""
           layout="fill"
         />
@@ -372,7 +372,7 @@ const RestaurantDetails = () => {
         <Image
           className="rounded-md"
           objectFit="cover"
-          src={process.env.NEXT_PUBLIC_CDN + menu.picture ?? defaultImage}
+          src={process.env.NEXT_PUBLIC_CDN + (menu.picture ?? defaultImage)}
           alt=""
           layout="fill"
         />

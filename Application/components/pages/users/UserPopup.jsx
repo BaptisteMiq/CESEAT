@@ -3,6 +3,7 @@ import { StatefulMenu, OptionProfile } from "baseui/menu";
 import { Avatar } from "baseui/avatar";
 import { Button, SHAPE, SIZE } from "baseui/button";
 import { useHistory } from "react-router-dom";
+import { defaultUserImage } from "../../ui/Images";
 
 const ITEMS = Array.from({length: 4}, () => ({
     title: 'David Smith',
@@ -54,7 +55,7 @@ const UserPopup = (props) => {
                 <Avatar
                         name={props.user.Firstname + " " + props.user.Lastname}
                         size="scale1600"
-                        src={process.env.NEXT_PUBLIC_CDN + props.user.Avatar}
+                        src={process.env.NEXT_PUBLIC_CDN + (props.user.Avatar ?? defaultUserImage)}
                         overrides={{
                             Avatar: {
                             style: ({ $theme }) => ({

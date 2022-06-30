@@ -24,6 +24,7 @@ import {
 } from 'baseui/typography';
 import Image from 'next/image';
 import * as React from 'react';
+import { defaultImage } from "./Images";
 
 function CustomFlag(props) {
     const {children, ...rest} = props;
@@ -405,7 +406,7 @@ const AutoForms = (props) => {
                 return (
                     <div className="flex flex-row justify-center" style={{width: '100%', height: '100%', minHeight: "200px", position: 'relative'}}>
                         <div className="m-2">
-                            <Image objectFit="cover" src={process.env.NEXT_PUBLIC_CDN + props.dataForms.elements[key].src} alt="" layout="fill"/>
+                            <Image objectFit="cover" src={process.env.NEXT_PUBLIC_CDN + (props.dataForms.elements[key].src ?? defaultImage)} alt="" layout="fill"/>
                         </div>
                     </div>
                 );

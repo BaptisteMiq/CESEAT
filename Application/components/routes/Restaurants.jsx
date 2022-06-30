@@ -19,6 +19,7 @@ import CreateCategory from '../pages/restaurant/categories/CreateCategory';
 import ListCategory from '../pages/restaurant/categories/ListCategory';
 import ModifyCategory from '../pages/restaurant/categories/ModifyCategory';
 import ModifyRestaurant from '../pages/restaurant/ModifyRestaurant';
+import Footer from '../ui/FooterApp';
 
 const Restaurants = (props) => {
   var history = useHistory();

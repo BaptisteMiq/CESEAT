@@ -15,6 +15,7 @@ import Notifications from './Notifications';
 import UserPopup from './users/UserPopup';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 import { Button, SHAPE, SIZE } from 'baseui/button';
+import { defaultUserImage } from '../ui/Images';
 
 var user = {
   name: "Baptiste Miquel",
@@ -156,7 +157,7 @@ const Menu = (props) => {
                     <Avatar
                       name={props.user.Firstname + " " + props.user.Lastname}
                       size="scale900"
-                      src={process.env.NEXT_PUBLIC_CDN + props.user.Avatar}
+                      src={process.env.NEXT_PUBLIC_CDN + (props.user.Avatar ?? defaultUserImage)}
                     >
                     </Avatar>
                 </IonButtons>
