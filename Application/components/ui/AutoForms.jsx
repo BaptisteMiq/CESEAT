@@ -58,7 +58,7 @@ const AutoForms = (props) => {
         setIsUploading(true);
         var formData = new FormData();
         formData.append('image', files[0]);
-        const APIURL = `${process.env.NEXT_PUBLIC_CDN}upload`;
+        const APIURL = `${process.env.NEXT_PUBLIC_CDN}/upload`;
         const response = await fetch(APIURL, {
             method: 'POST',
             body: formData
