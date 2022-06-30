@@ -4,6 +4,7 @@ import * as React from 'react';
 import AutoForms from "../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
 import api from "../../api";
+import { defaultUserImage } from "../../ui/Images";
 
 var generateModal = {
     title: "Modifier son compte",
@@ -16,7 +17,7 @@ var generateModal = {
         },
         Image: {
             title: 'Avatar',
-            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+            src: defaultUserImage,
             type: "Image",
             fullWidth: false
         },
@@ -119,7 +120,7 @@ const Modify = (props) => {
                         },
                         Image: {
                             title: 'Avatar',
-                            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+                            src: user.Avatar ?? defaultUserImage,
                             type: "Image",
                             fullWidth: false
                         },
@@ -197,11 +198,22 @@ const Modify = (props) => {
                     "Password": "${modifyForms.elements.Password.value}",
                     "Mail": "${modifyForms.elements.Mail.value}",
                     "PhoneNumber": "${modifyForms.elements.PhoneNumber.value}",
-                    "Avatar": null
+                    "Avatar": "${modifyForms.elements.Image.src ?? defaultUserImage}"
                 }
               }`
         }, '', 'Le compte utilisateur a bien été modifié !', true);
-        history.goBack();
+        // Login to recreate token
+        await api('post', {
+            query: `mutation {
+                refreshToken {
+                        token
+                  }
+                }`
+        }, '', '', false).then(response => {
+            console.log(response);
+        localStorage.setItem('Token', response.data.refreshToken.token);
+        window.location.reload();
+        });
     }
     var cancelButton = () => {
         history.goBack();

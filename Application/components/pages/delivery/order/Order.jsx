@@ -70,8 +70,34 @@ const Order = props => {
             order.status._id === '62b7416df50332eb3572ff15' ||
             order.status._id === '62b74190f50332eb3572ff17'
         );
+        console.log(currOrder);
         if (currOrder && currOrder.length > 0) {
-          setCurrentOrder(currOrder[0]);
+          // Get user of the order
+          if (currOrder[0].userId) {
+            var response = await api(
+              'post',
+              {
+                query: `query ($id: String) {
+                  userById(ID: $id) {
+                    Firstname
+                    Lastname
+                    Avatar
+                  }
+                }`,
+                variables: `{
+                    "id": "${currOrder[0].userId}"
+                }`,
+              },
+              '',
+              '',
+              false
+            );
+            console.log(response);
+            if (response) {
+              currOrder[0].user = response.data.userById;
+              setCurrentOrder(currOrder[0]);
+            }
+          }
         } else {
           setCurrentOrder(null);
         }
@@ -93,7 +119,7 @@ const Order = props => {
           id: order._id,
           record: {
             status: '62b7419ff50332eb3572ff19',
-            deliveryUserId: '',
+            deliveryUserId: props.user?.ID,
           },
         },
       },
@@ -123,7 +149,7 @@ const Order = props => {
           id: order._id,
           record: {
             status: '62b7416df50332eb3572ff15',
-            deliveryUserId: '',
+            deliveryUserId: props.user?.ID,
           },
         },
       },
@@ -157,7 +183,7 @@ const Order = props => {
           id: order._id,
           record: {
             status: '62b74190f50332eb3572ff17',
-            deliveryUserId: '',
+            deliveryUserId: props.user?.ID,
           },
         },
       },
@@ -237,9 +263,7 @@ const Order = props => {
                       </Map>
                       <div className="justify-center align-center items-center flex-col flex flex-auto mt-5">
                         <HeadingLevel>
-                          <Heading styleLevel={6}>
-                            Numéro de commande à communiquer:
-                          </Heading>
+                          <Heading styleLevel={6}>Numéro de commande à communiquer:</Heading>
                           <Heading styleLevel={2}>{currentOrder.tag}</Heading>
                         </HeadingLevel>
                       </div>
@@ -262,52 +286,48 @@ const Order = props => {
                   </>
                 ) : (
                   <>
-                   <div>
                     <div>
-                      <div className="mb-5">
-                        <HeadingLevel>
-                          <Heading styleLevel={1}>Allez livrer le plat au client</Heading>
-                        </HeadingLevel>
-                        <p className="mt-2">
-                          <div>Adresse complète:</div>
-                          <b>
-                            {currentOrder.restaurant.name}, {currentOrder.restaurant.address.line1},{' '}
-                            {currentOrder.restaurant.address.line2},{' '}
-                            {currentOrder.restaurant.address.PC}{' '}
-                            {currentOrder.restaurant.address.city}
-                          </b>
-                        </p>
-                        <p className="mt-2">
-                          Temps de trajet estimé à vélo: <b>7 minutes</b>
-                        </p>
-                      </div>
-                      <Map
-                        initialViewState={{
-                          longitude: 1.5028242,
-                          latitude: 43.5483358,
-                          zoom: 17,
-                        }}
-                        style={{ width: '100%', height: '400px' }}
-                        mapStyle="mapbox://styles/mapbox/streets-v9"
-                        mapboxAccessToken={MAPBOX_TOKEN}
-                      >
-                        <Marker
-                          longitude={1.5028242}
-                          latitude={43.5483358}
-                          style={{ width: '40px' }}
+                      <div>
+                        <div className="mb-5">
+                          <HeadingLevel>
+                            <Heading styleLevel={1}>Allez livrer le plat au client</Heading>
+                          </HeadingLevel>
+                          <p className="mt-2">
+                            <div>Adresse complète:</div>
+                            <b>16 Rue Magellan Bâtiment Alpha, Campus CESI, 31670, Labège</b>
+                          </p>
+                          <p className="mt-2">
+                            Temps de trajet estimé à vélo: <b>7 minutes</b>
+                          </p>
+                        </div>
+                        <Map
+                          initialViewState={{
+                            longitude: 1.5028242,
+                            latitude: 43.5483358,
+                            zoom: 17,
+                          }}
+                          style={{ width: '100%', height: '400px' }}
+                          mapStyle="mapbox://styles/mapbox/streets-v9"
+                          mapboxAccessToken={MAPBOX_TOKEN}
                         >
-                          <img src="/img/marker.png" />
-                        </Marker>
-                      </Map>
-                      <div className="justify-center align-center items-center flex-col flex flex-auto mt-5">
-                        <HeadingLevel>
-                          <Heading styleLevel={6}>
-                            Nom du client
-                          </Heading>
-                          <Heading styleLevel={2}>Michel Dupuis</Heading>
-                        </HeadingLevel>
+                          <Marker
+                            longitude={1.5028242}
+                            latitude={43.5483358}
+                            style={{ width: '40px' }}
+                          >
+                            <img src="/img/marker.png" />
+                          </Marker>
+                        </Map>
+                        <div className="justify-center align-center items-center flex-col flex flex-auto mt-5">
+                          <HeadingLevel>
+                            <Heading styleLevel={6}>Nom du client</Heading>
+                            <Heading styleLevel={2}>
+                              {currentOrder.user.Firstname} {currentOrder.user.Lastname}
+                            </Heading>
+                          </HeadingLevel>
+                        </div>
                       </div>
-                    </div></div>
+                    </div>
                     <Button
                       className="flex-1 m-2 mt-10"
                       overrides={{

@@ -61,7 +61,7 @@ var navigationByUsers = {
   ],
   deliveryMan: [
     {
-      label: "Commande",
+      label: "Commandes",
       link: "/delivery/orders"
     }
   ],
@@ -156,7 +156,7 @@ const Menu = (props) => {
                     <Avatar
                       name={props.user.Firstname + " " + props.user.Lastname}
                       size="scale900"
-                      src={props.user.avatarUrl}
+                      src={process.env.NEXT_PUBLIC_CDN + props.user.Avatar}
                     >
                     </Avatar>
                 </IonButtons>

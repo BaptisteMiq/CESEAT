@@ -4,6 +4,7 @@ import * as React from 'react';
 import AutoForms from "../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
 import api from "../../api";
+import { defaultImage } from "../../ui/Images";
 
 // title = Permet d'afficher le nom de l'input
 // type = Permet de choisir letype d'input : ['UploadFile','Input','PasswordInput','PhoneInput']
@@ -26,7 +27,7 @@ const CreateRestaurant = (props) => {
             },
             Image: {
                 title: 'Image',
-                src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+                src: defaultImage,
                 type: "Image",
                 fullWidth: false
             },
@@ -112,7 +113,7 @@ const CreateRestaurant = (props) => {
                     },
                     Image: {
                         title: 'Image',
-                        src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+                        src: defaultImage,
                         type: "Image",
                         fullWidth: false
                     },
@@ -221,7 +222,7 @@ const CreateRestaurant = (props) => {
                     "mail": "${menuForms.elements.Mail.value}",
                     "phoneNumber": "${menuForms.elements.PhoneNumber.value}",
                     "ownerId": "${localStorage.getItem('UserID')}",
-                    "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+                    "picture": "${menuForms.elements.Image.src ?? defaultImage}",
                     "address": "${responseAddress.data.addressCreateOne.record._id}",
                     "products": [],
                     "menus": [],

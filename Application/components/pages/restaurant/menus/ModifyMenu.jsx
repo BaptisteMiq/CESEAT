@@ -4,6 +4,7 @@ import * as React from 'react';
 import AutoForms from "../../../ui/AutoForms";
 import { useHistory  } from "react-router-dom";
 import api from "../../../api";
+import { defaultImage } from "../../../ui/Images";
 
 var generateModal = {
     title: "Modifier le menu",
@@ -16,7 +17,7 @@ var generateModal = {
         },
         Image: {
             title: 'Image',
-            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+            src: defaultImage,
             type: "Image",
             fullWidth: false
         },
@@ -145,7 +146,7 @@ const ModifyMenu = (props) => {
                         },
                         Image: {
                             title: 'Image',
-                            src: "https://institutcoop.hec.ca/es/wp-content/uploads/sites/3/2020/02/Deafult-Profile-Pitcher.png",
+                            src: menu.picture ?? defaultImage,
                             type: "Image",
                             fullWidth: false
                         },
@@ -241,7 +242,7 @@ const ModifyMenu = (props) => {
                     "name": "${menuForms.elements.Name.value}",
                     "description": "${menuForms.elements.Description.value}",
                     "price": ${menuForms.elements.Price.value},
-                    "picture": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+                    "picture": "${menuForms.elements.Image.src ?? defaultImage}",
                     "available": ${menuForms.elements.Available.value[0].label === "Disponible" ? true : false},
                     "products": [${menuForms.elements.Products.value.map(product => { return '"'+ product.id +'"';})}]
                 }
