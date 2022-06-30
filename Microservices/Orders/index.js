@@ -45,6 +45,7 @@ app.post("/makeOrder", async (req, res) => {
                 additionalInfo: gqlData.additionalInfo,
                 status: gqlData.status,
                 tag: randomOrderId(8),
+                createdAt: new Date(),
             },
         },
         {

@@ -1,4 +1,5 @@
 import { IonPage } from '@ionic/react';
+import { Accordion, Panel } from 'baseui/accordion';
 import { Button, KIND, SIZE } from 'baseui/button';
 import { Card, StyledBody } from 'baseui/card';
 import { Heading, HeadingLevel } from 'baseui/heading';
@@ -7,6 +8,8 @@ import { useHistory } from 'react-router-dom';
 import api from '../../../api';
 import { SocketContext } from '../../../AppShell';
 import { newNotification } from '../../../ui/Notifs';
+
+import { TableComponent } from "project-table-from-order";
 
 const Order = props => {
   var history = useHistory();
@@ -62,6 +65,7 @@ const Order = props => {
       console.log(response);
       const orders = response.data.orders.filter(order => order.cart);
       setOrders(orders);
+      console.log(orders);
     }
   };
 
@@ -139,7 +143,10 @@ const Order = props => {
       >
         {orders !== null && (
           <>
-            {orders.length < 1 && (
+            {(orders.length < 1 ||
+              (orders.filter(o => o.status._id === '62b74143f50332eb3572ff13').length < 1 &&
+                orders.filter(o => o.status._id === '62b74119f50332eb3572ff11').length < 1 &&
+                orders.filter(o => o.status._id === '62b7416df50332eb3572ff15').length < 1)) && (
               <div className="justify-center align-center items-center flex flex-auto">
                 Aucune commande en attente.
               </div>
@@ -196,44 +203,7 @@ const Order = props => {
                               className="flex flex-row items-center justify-center ml-auto mr-auto"
                               style={{ width: '100%' }}
                             >
-                              <table className="restaurant-table">
-                                {order.cart.products.length > 0 && (
-                                  <>
-                                    <thead>
-                                      <tr>
-                                        <th>Produits</th>
-                                        <th>Quantité</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {order.cart.products.map(product => (
-                                        <tr>
-                                          <td>{product.name}</td>
-                                          <td>x1</td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </>
-                                )}
-                                {order.cart.menus.length > 0 && (
-                                  <>
-                                    <thead>
-                                      <tr>
-                                        <th>Menus</th>
-                                        <th>Quantité</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {order.cart.menus.map(menu => (
-                                        <tr>
-                                          <td>{menu.name}</td>
-                                          <td>x1</td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </>
-                                )}
-                              </table>
+                              <TableComponent order={order} />
                             </div>
                           </div>
                           <div className="justify-center align-center items-center flex flex-auto mt-4">
@@ -260,7 +230,11 @@ const Order = props => {
                   ))}
               </>
             )}
-            {orders.filter(o => o.status._id === '62b74119f50332eb3572ff11').length > 0 && (
+            {orders.filter(
+              o =>
+                o.status._id === '62b74119f50332eb3572ff11' ||
+                o.status._id === '62b7416df50332eb3572ff15'
+            ).length > 0 && (
               <>
                 <div className="justify-center align-center items-center flex flex-auto mt-10">
                   <HeadingLevel>
@@ -283,26 +257,81 @@ const Order = props => {
                         }}
                       >
                         <StyledBody className="flex flex-row align-middle items-center">
-                          <div className="flex flex-row items-center" style={{ width: '100%' }}>
+                          <div className="flex flex-col items-center" style={{ width: '100%' }}>
+                            <HeadingLevel>
+                              <Heading styleLevel={4}>{order.tag}</Heading>
+                            </HeadingLevel>
                             <div>
-                              <h1 className="flex-1 mx-2 font-bold self-center text-center">
-                                Attente d'un livreur...
+                              <h1 className="flex-1 mt-4 mx-2 font-bold self-center text-center">
+                                En attente d'un livreur...
                               </h1>
                             </div>
                             <div className="flex-1">
-                              <h1 className="ml-auto">
-                                Il y a{' '}
+                              <small className="ml-auto">
+                                Commande réalisée il y a{' '}
                                 {Math.round(
                                   (new Date().getTime() - new Date(order.createdAt).getTime()) /
                                     1000 /
                                     60
                                 )}{' '}
                                 minutes
+                              </small>
+                            </div>
+                            <Accordion>
+                              <Panel title="Récapitulatif de la commande">
+                                <div className="flex flex-row items-center justify-center">
+                                  <TableComponent order={order} />
+                                </div>
+                              </Panel>
+                            </Accordion>
+                          </div>
+                        </StyledBody>
+                      </Card>
+                    </>
+                  ))}
+                {orders
+                  .filter(o => o.status._id === '62b7416df50332eb3572ff15')
+                  .map(order => (
+                    <>
+                      <Card
+                        className="m-3"
+                        overrides={{
+                          Root: {
+                            style: {
+                              top: '20px',
+                              width: '95vw',
+                            },
+                          },
+                        }}
+                      >
+                        <StyledBody className="flex flex-row align-middle items-center">
+                          <div className="flex flex-col items-center" style={{ width: '100%' }}>
+                            <HeadingLevel>
+                              <Heading styleLevel={4}>{order.tag}</Heading>
+                            </HeadingLevel>
+                            <div>
+                              <h1 className="flex-1 mt-4 mx-2 font-bold self-center text-center">
+                                Un livreur est en route (temps estimé : <b>7 minutes</b>)
                               </h1>
                             </div>
                             <div className="flex-1">
-                              <b>{order.tag}</b>
+                              <small className="ml-auto">
+                                Commande réalisée il y a{' '}
+                                {Math.round(
+                                  (new Date().getTime() - new Date(order.createdAt).getTime()) /
+                                    1000 /
+                                    60
+                                )}{' '}
+                                minutes
+                              </small>
                             </div>
+                            <Accordion>
+                              <Panel title="Récapitulatif de la commande">
+                                <div className="flex flex-row items-center justify-center">
+                                  <TableComponent order={order} />
+                                </div>
+                              </Panel>
+                            </Accordion>
                           </div>
                         </StyledBody>
                       </Card>
@@ -316,5 +345,48 @@ const Order = props => {
     </IonPage>
   );
 };
+
+// const TableComponent = ({ order }) => {
+//   return (
+//     <table className="restaurant-table">
+//       {order.cart.products.length > 0 && (
+//         <>
+//           <thead>
+//             <tr>
+//               <th>Produits</th>
+//               <th>Quantité</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {order.cart.products.map(product => (
+//               <tr>
+//                 <td>{product.name}</td>
+//                 <td>x1</td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </>
+//       )}
+//       {order.cart.menus.length > 0 && (
+//         <>
+//           <thead>
+//             <tr>
+//               <th>Menus</th>
+//               <th>Quantité</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {order.cart.menus.map(menu => (
+//               <tr>
+//                 <td>{menu.name}</td>
+//                 <td>x1</td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </>
+//       )}
+//     </table>
+//   );
+// };
 
 export default Order;

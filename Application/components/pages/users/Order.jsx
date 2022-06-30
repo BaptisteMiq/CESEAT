@@ -5,6 +5,7 @@ import { Accordion, Panel } from 'baseui/accordion';
 import { Button, KIND, SIZE } from 'baseui/button';
 import { Heading, HeadingLevel } from 'baseui/heading';
 import Image from 'next/image';
+import { TableComponent } from 'project-table-from-order';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../../api';
@@ -273,14 +274,8 @@ const Order = props => {
                             {order.restaurant.address.PC} {order.restaurant.address.city}
                           </p>
                         </div>
-                        <div className="flex flex-wrap flex-col">
-                          {order.cart.products.concat(order.cart.menus).map(item => (
-                            <p>
-                              1x {item.name} - {item.price}€
-                            </p>
-                          ))}
-                        </div>
-                        <p>
+                        <TableComponent order={order} />
+                        <p className="mt-2">
                           Prix total de la commande :{' '}
                           {order.cart.products
                             .concat(order.cart.menus)
