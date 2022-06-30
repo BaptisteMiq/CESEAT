@@ -42,6 +42,8 @@ const Login = (props) => {
             history.push('/restaurant/orders');
         } else if(localStorage.getItem('RoleID') === "3"){
             history.push('/delivery/orders');
+        } else if(localStorage.getItem('RoleID') === "4") {
+            history.push('/commercial/dashboard');
         }
     }
     var handleLogin = async (registerForms) => {
@@ -77,6 +79,9 @@ const Login = (props) => {
                 }
             } else if(response.data.userLogin.record.Role_ID === "3"){
                 history.push('/delivery/orders');
+                history.go(0);
+            } else if(response.data.userLogin.record.Role_ID === "4") {
+                history.push('/commercial/dashboard');
                 history.go(0);
             }
         }

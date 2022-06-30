@@ -11,6 +11,7 @@ import history from './routes/history';
 import { AuthRoute } from './routes/protected.route';
 import Restaurants from './routes/Restaurants';
 import Users from './routes/Users';
+import Commercial from './routes/Commercial';
 
 const socket = socketIOClient(process.env.NEXT_PUBLIC_SOCKET, {
   withCredentials: true
@@ -38,9 +39,10 @@ const AppShell = () => {
         <IonReactRouter history={history}>
           <IonRouterOutlet id="main">
             <Switch>
-              <AuthRoute path="/users" accessWithoutAuth={true} roleId={[0, 1, 2]} component={Users} />
+              <AuthRoute path="/users" accessWithoutAuth={true} roleId={[0, 1, 2, 3, 4]} component={Users} />
               <AuthRoute path="/restaurant" accessWithoutAuth={false} roleId={[0, 2]} component={Restaurants} />
               <AuthRoute path="/delivery" accessWithoutAuth={false} roleId={[0, 3]} component={Delivery} />
+              <AuthRoute path="/commercial" accessWithoutAuth={false} roleId={[0, 4]} component={Commercial} />
             </Switch>
             <Route exact path="/" render={() => <Redirect to="/users" />} />
           </IonRouterOutlet>

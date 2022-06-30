@@ -4,94 +4,72 @@ import { Card, StyledBody } from "baseui/card";
 import Image from 'next/image';
 import * as React from 'react';
 import { useHistory } from "react-router-dom";
-import api from "../../../api";
+import api from "../../api";
 
-const ListProduct = (props) => {
+const ListUsers = (props) => {
+    console.log('test');
     var history = useHistory();
-    var [products, setProducts] = React.useState([]);
-    var [getProducts, setGetProducts] = React.useState(true);
+    var [users, setUsers] = React.useState([]);
+    var [getUsers, setGetUsers] = React.useState(true);
 
-    var getListOfProducts = async () => {
+    var getusers = async () => {
 
         var response = await api('post', {
-            query: `query Products {
-                myRestaurant {
-                  products {
-                    _id
-                    name
-                    description
-                    price
-                    picture
-                    allergenicIngredients
-                    available
-                    createdAt
-                  }
+            query: `query Query {
+                users {
+                  ID
+                  Firstname
+                  Lastname
+                  Password
+                  Mail
+                  PhoneNumber
+                  Avatar
+                  Role_ID
                 }
               }`
-        }, '', 'Liste des produits bien récupérée !', false);
+        }, '', 'Liste des utilisateurs bien récupérée !', false);
         if(response) {
-            setProducts(response.data.myRestaurant.products);
-            setGetProducts(false);
+            setUsers(response.data.users ? response.data.users : []);
+            setGetUsers(false);
         }
     }
 
-    var addProduct = () => {
-        history.push('/restaurant/product/create');
-    }
-
-    var modifyProduct = (product) => {
-        localStorage.setItem('modifyProductID', product._id);
+    var modifyUser = (user) => {
+        localStorage.setItem('modifyUserID', user.ID);
         history.push({
-            pathname: '/restaurant/product/modify',
-            state: {productID: product._id}
+            pathname: '/users/modify',
+            state: {userID: user.ID}
         })
     }
 
-    var deleteProduct = async (product) => {
+    var deleteUser = async (user) => {
         var response = await api('post', {
-            query: `mutation DeleteProductFromMyRestaurant($deleteProductFromMyRestaurantId: MongoID!) {
-                deleteProductFromMyRestaurant(id: $deleteProductFromMyRestaurantId) {
-                  recordId
+            query: `mutation UserDeleteById($id: String) {
+                userDeleteById(ID: $id) {
+                  record {
+                    ID
+                  }
                 }
-              }`,
+            }`,
             variables: `
             {
-                "deleteProductFromMyRestaurantId": "${product._id}"
+                "id": "${user.ID}"
             }
             `
-        }, '', 'Produit ' + product.name + ' supprimé !', true);
+        }, '', 'Utilisateur ' + user.Mail + ' supprimé !', true);
         if(response) {
-            setGetProducts(true);
+            setGetUsers(true);
         }
     }
  
     React.useEffect(async () => {
-        await getListOfProducts();
-    }, [getProducts]);
-
+        await getusers();
+    }, [getUsers])
     return (
         <IonPage className="top-14 mb-20 overflow-y-auto mb-5 flex flex-col">
-            <div className="justify-center align-center items-center flex flex-auto">
-                <Button
-                    className="m-2"
-                    overrides={{
-                    BaseButton: {
-                        style: () => ({
-                            width: '100%',
-                            maxWidth: '200px'
-                        })
-                    }
-                    }}
-                    size={SIZE.default}
-                    kind={KIND.primary}
-                    onClick={() => addProduct()}
-                >
-                    Ajout d'un produit
-                </Button>
-            </div>
             <div className="mb-5 flex flex-wrap align-center justify-center">
             {
-                products.map((product) => (
+                users.map((user) => (
                 <Card
                     className="m-3"
                     overrides={{
@@ -106,23 +84,20 @@ const ListProduct = (props) => {
                     <StyledBody className="flex flex-row flex-wrap align-middle items-center">
                         <div className="w-1/6 flex justify-center">
                             <div>
-                                <Image className="" objectFit="cover" src={product.Image ? product.Image : "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} alt="" height="60px" width="60px" />
+                                <Image className="" objectFit="cover" src={user.Avatar} alt="" height="60px" width="60px" />
                             </div>
                         </div>
                         <div className="w-1/2 flex flex-row flex-wrap">
                             <div className={isPlatform('desktop') ? "w-2/6 self-center" : "w-1/2 self-center"}>
-                                <h1 className="mx-2 font-bold self-center text-center">{product.name}</h1>
+                                <h1 className="mx-2 font-bold self-center text-center">{user.Lastname} {user.Firstname}</h1>
                             </div>
                             {isPlatform('desktop') &&
                                 <div className="w-2/6 self-center">
-                                    <h1 className="ml-auto">{product.description}</h1>
+                                    <h1 className="ml-auto">{user.Mail}</h1>
                                 </div>
                             }
-                            <div className={isPlatform('desktop') ? "w-1/6 self-center" : "w-1/2 self-center"}>
-                                <h1 className="ml-auto text-center">{product.price}</h1>
-                            </div>
-                            <div className={isPlatform('desktop') ? "w-1/6 self-center" : "w-1/2 self-center"}>
-                                <h1 className="ml-auto text-center">{product.available ? "Disponible" : "Indisponible"}</h1>
+                            <div className={isPlatform('desktop') ? "w-2/6 self-center" : "w-1/2 self-center"}>
+                                <h1 className="ml-auto text-center">{user.Role_ID}</h1>
                             </div>
                         </div>
                         <div className="w-2/6 flex flex-row flex-wrap justify-end">
@@ -138,7 +113,7 @@ const ListProduct = (props) => {
                                 }}
                                 kind={KIND.primary}
                                 size={SIZE.compact}
-                                onClick={() => modifyProduct(product)}
+                                onClick={() => modifyUser(user)}
                             >
                                 Modifier
                             </Button>
@@ -155,7 +130,7 @@ const ListProduct = (props) => {
                                 }}
                                 size={SIZE.compact}
                                 kind={KIND.primary}
-                                onClick={() => deleteProduct(product)}
+                                onClick={() => deleteUser(user)}
                             >
                                 Supprimer
                             </Button>
@@ -170,4 +145,4 @@ const ListProduct = (props) => {
     );
 };
 
-export default ListProduct;
+export default ListUsers;

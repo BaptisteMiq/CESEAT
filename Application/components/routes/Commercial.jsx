@@ -1,29 +1,34 @@
-import { IonHeader, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, isPlatform } from '@ionic/react';
+import { IonHeader, IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, isPlatform } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { cart, home, person, search } from 'ionicons/icons';
 import { Switch } from 'react-router-dom';
-import { Route } from 'react-router-dom/cjs/react-router-dom.min';
+import ListUsers from '../pages/commercial/listUsers';
 import Order from '../pages/delivery/order/Order';
 import Menu from '../pages/Menu';
-import Footer from '../ui/FooterApp';
 import { AuthRoute } from './protected.route';
+import Dashboard from '../pages/commercial/dashboard';
+import Statistique from '../pages/commercial/statistiques';
+import { Route } from 'react-router-dom/cjs/react-router-dom.min';
+import Footer from '../ui/FooterApp';
 
 const Restaurants = (props) => {
   return (
     <div>
       {isPlatform('desktop') &&
-        <div>
+        <IonPage>
           <IonHeader>
-            <Menu user={props.user} type="orders"/>
+            <Menu user={props.user} type="commercial"/>
           </IonHeader>
           <div className='mt-14 overflow-y-auto'>
             <Switch>
-              <AuthRoute path="/delivery/orders" component={Order} exact={true} />
-              <Route path="/delivery/*" render={() => <Redirect to="/delivery/orders" />} exact={true} />
+              <AuthRoute path="/commercial/users/list" roleId={[4]} component={ListUsers} exact={true} />
+              <AuthRoute path="/commercial/dashboard" roleId={[4]} component={Dashboard} exact={true} />
+              <AuthRoute path="/commercial/statistique" roleId={[4]} component={Statistique} exact={true} />
+              <Route path="/commercial/*" render={() => <Redirect to="/commercial/dashboard" />} exact={true} />
             </Switch>
           </div>
           <Footer></Footer>
-        </div>
+        </IonPage>
       }
       { !isPlatform('desktop') && 
           <IonTabs>

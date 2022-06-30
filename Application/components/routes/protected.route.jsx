@@ -71,7 +71,6 @@ export const AuthRoute = ({ component: Component, roleId, accessWithoutAuth , ..
             }}
           />
         } 
-        
         else if (localStorage.getItem('authenticated') && (localStorage.getItem("RoleID") === "2")) {
           return <Redirect
             to={{

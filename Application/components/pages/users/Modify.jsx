@@ -66,7 +66,7 @@ const Modify = (props) => {
     if(props.location.state) {
         var id = props.location.state.userID ? props.location.state.userID : props.user.ID;
     }
-    else if (localStorage.getItem('modifyUserID') && props.user.Role_ID === 3) {
+    else if (localStorage.getItem('modifyUserID') && props.user ? props.user.Role_ID  === 3 : false) {
         var id = localStorage.getItem('modifyUserID') ? localStorage.getItem('modifyUserID') : props.user.ID;
     }
     else if(localStorage.getItem('UserID')) {
@@ -223,7 +223,7 @@ const Modify = (props) => {
     var [buttons, setButtons] = React.useState(buttonsModel);
 
     return (
-        <IonPage className="top-14 overflow-y-auto mb-5 bg-white">
+        <IonPage className="top-14 mb-20 overflow-y-auto mb-5 bg-white">
             <AutoForms dataForms={dataForms} setDataForms={setDataForms} buttons={buttons}></AutoForms>
         </IonPage>
     );

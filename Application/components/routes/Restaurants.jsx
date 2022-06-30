@@ -64,10 +64,12 @@ const Restaurants = (props) => {
                   <AuthRoute path="/restaurant/category/create" roleId={[2]} component={CreateCategory} exact={true} />
                   <AuthRoute path="/restaurant/category" roleId={[2]} component={ListCategory} exact={true} />
                   <AuthRoute path="/restaurant/category/modify" roleId={[2]} component={ModifyCategory} exact={true} />
+                  <Route path="/restaurant/*" render={() => <Redirect to="/restaurant/orders" />} exact={true} />
                 </Switch>  
                : <AuthRoute path="/restaurant/create" roleId={[2]} component={CreateRestaurant} exact={true} />
               }
           </div>
+          <Footer></Footer>
         </div>
       }
       { !isPlatform('desktop') && 

@@ -36,10 +36,6 @@ var navigationByUsers = {
       label: 'Commandes',
       link: '/users/orders'
     },
-    {
-      label: 'Liste',
-      link: '/users/list'
-    },
   ],
   restaurant: [
     {
@@ -68,6 +64,20 @@ var navigationByUsers = {
       label: "Commande",
       link: "/delivery/orders"
     }
+  ],
+  commercial: [
+    {
+      label: 'Dashboard',
+      link: '/commercial/dashboard'
+    },
+    {
+      label: 'Liste',
+      link: '/commercial/users/list'
+    },
+    {
+      label: 'Statistique',
+      link: '/commercial/statistique'
+    }
   ]
 }
 
@@ -90,6 +100,9 @@ const Menu = (props) => {
         break;
       case '3':
         setTypeUser('deliveryMan');
+        break;
+      case '4':
+        setTypeUser('commercial');
         break;
       default:
         break;

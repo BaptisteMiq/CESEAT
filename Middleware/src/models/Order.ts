@@ -76,6 +76,8 @@ const generateQueriesMutations = (schemaComposer: any) => {
                         headers: {
                             "Content-Type": "application/json",
                         },
+                    }).catch((error: any) => {
+                        throw new ApolloError(error);
                     });
 
                     // Execute query using GraphQL
