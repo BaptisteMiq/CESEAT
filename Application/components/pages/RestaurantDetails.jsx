@@ -431,7 +431,7 @@ const RestaurantDetails = () => {
   }, [getRestaurant]);
 
   return (
-    <IonPage className="top-14 flex flex-col overflow-scroll">
+    <IonPage className="top-14 mb-20 flex flex-col overflow-scroll">
       <div className="h-auto w-auto relative m-2" style={{ minHeight: '200px' }}>
         <Image
           className="rounded-md"

@@ -82,7 +82,7 @@ var generateModal = {
             title: "Sélectionner le type de compte",
             type: "SelectInput",
             value: [{ label: "Utilisateur", id: "1"}],
-            options: [{label: "Utilisateur", id: "1"}, {label: "Restaurateur", id: "2"}, {label: "Livreur", id: "3"}, {label: "Développeur", id: "4"}],
+            options: [{label: "Utilisateur", id: "1"}, {label: "Restaurateur", id: "2"}, {label: "Livreur", id: "3"}, {label: "Commercial", id: "4"}, {label: "Développeur", id: "5"}],
             fullWidth: true,
             multi: false,
             placeholder: ""
@@ -107,6 +107,7 @@ const CreateAccount = (props) => {
                 userCreateOne(record: $record) {
                     record {
                         ID
+                        Role_ID
                     }
                     token
                 }
@@ -128,8 +129,24 @@ const CreateAccount = (props) => {
         if(response) {
             localStorage.setItem('Token', response.data.userCreateOne.token);
             localStorage.setItem('authenticated', true);
-            history.push('/users/home');
-            history.go(0);
+            if(response.data.userCreateOne.record.Role_ID === "1") {
+                history.push('/users/home');
+                history.go(0);
+            } else if(response.data.userCreateOne.record.Role_ID === "2"){
+                if(localStorage.getItem('ownRestaurant') === "true") {
+                    history.push('/restaurant/orders');
+                    history.go(0);
+                } else {
+                    history.push('/restaurant/create');
+                    history.go(0);
+                }
+            } else if(response.data.userCreateOne.record.Role_ID === "3"){
+                history.push('/delivery/orders');
+                history.go(0);
+            } else if(response.data.userCreateOne.record.Role_ID === "4") {
+                history.push('/commercial/dashboard');
+                history.go(0);
+            }
         }
     }
     var loginButton = () => {
@@ -153,7 +170,7 @@ const CreateAccount = (props) => {
     var [buttons, setButtons] = React.useState(buttonsModel);
 
     return (
-        <IonPage className="top-14 overflow-y-auto mb-5">
+        <IonPage className="top-14 mb-20 overflow-y-auto mb-5">
             <AutoForms dataForms={dataForms} setDataForms={setDataForms} buttons={buttons}></AutoForms>
         </IonPage>
     );
