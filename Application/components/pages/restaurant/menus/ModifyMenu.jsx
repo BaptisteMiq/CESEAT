@@ -111,7 +111,7 @@ const ModifyMenu = (props) => {
 
     var getMenu = async (id) => {
         await axios({
-            url: 'http://localhost:4000/graphql',
+            url: process.env.NEXT_PUBLIC_MDW_URL,
             method: 'post',
             data: {
                 query: `query MenuById($id: MongoID!) {
