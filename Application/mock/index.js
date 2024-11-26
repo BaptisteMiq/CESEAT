@@ -1,35 +1,36 @@
 export const images = [
-  'https://images.unsplash.com/photo-1610235554447-41505d7962f8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=882&q=80',
-  'https://images.unsplash.com/photo-1610212594948-370947a3ba0b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80',
-  'https://images.unsplash.com/photo-1610155180433-9994da6a323b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+  'https://static.actu.fr/uploads/2020/04/mcdonalds-deconfinement-ouverture-fast-food-coronavirus-960x640.jpg',
+  'https://images.lanouvellerepublique.fr/image/upload/60fa128f37dcf51d408b48a6.jpg',
+  'https://i2.wp.com/www.tommys-cafe.com/wp-content/uploads/2017/03/header_news-caen.jpg?fit=2000%2C1037&ssl=1',
+  'https://www.lebarasushi.com/images/lebarasushi/facadeIzumi0417.jpg',
+  'https://www.lamontagne.fr/photoSRC/Gw--/tour-de-ville_4162444.jpeg'
 ];
 
 export const homeItems = [
   {
-    title: 'Exploring Maui',
-    type: 'Blog',
-    text: 'We just got back from a trip to Maui, and we had a great time...',
-    author: 'Max Lynch',
-    authorAvatar: '/img/max.jpg',
+    Restaurant: 'McDonald',
+    Adresse: 'Labège',
     image: images[0],
   },
   {
-    title: 'Arctic Adventures',
-    type: 'Blog',
-    text:
-      'Last month we took a trek to the Arctic Circle. The isolation was just what we needed after...',
-    author: 'Max Lynch',
-    authorAvatar: '/img/max.jpg',
+    Restaurant: 'Burger King',
+    Adresse: 'Labège',
     image: images[1],
   },
   {
-    title: 'Frolicking in the Faroe Islands',
-    type: 'Blog',
-    text:
-      'The Faroe Islands are a North Atlantic archipelago located 320 kilometres (200 mi) north-northwest of Scotland...',
-    author: 'Max Lynch',
-    authorAvatar: '/img/max.jpg',
+    Restaurant: 'Tommys Cafe',
+    Adresse: 'Labège',
     image: images[2],
+  },
+  {
+    Restaurant: 'Sushi IZUMI',
+    Adresse: 'Labège',
+    image: images[3],
+  },
+  {
+    Restaurant: 'Del Arte',
+    Adresse: 'Labège',
+    image: images[4],
   },
 ];
 

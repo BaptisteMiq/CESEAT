@@ -1,18 +1,12 @@
+import {
+  IonContent, IonHeader, IonItem,
+  IonLabel, IonPage, IonTitle, IonToolbar
+} from '@ionic/react';
 import Store from '../../store';
 import * as selectors from '../../store/selectors';
 
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonItem,
-  IonLabel,
-} from '@ionic/react';
-
 const ListEntry = ({ list, ...props }) => (
-  <IonItem routerLink={`/tabs/lists/${list.id}`} className="list-entry">
+  <IonItem routerLink={`/users/browse/${list.id}`} className="list-entry">
     <IonLabel>{list.name}</IonLabel>
   </IonItem>
 );
@@ -32,11 +26,6 @@ const AllLists = ({ onSelect }) => {
 const Lists = () => {
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Parcourir</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>

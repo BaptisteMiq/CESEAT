@@ -1,6 +1,6 @@
 module.exports = {
   basePath: '',
   images: {
-    domains: ['images.unsplash.com'],
+    domains: ['static.actu.fr','images.lanouvellerepublique.fr','i2.wp.com','www.lebarasushi.com','www.lamontagne.fr'],
   },
 };
